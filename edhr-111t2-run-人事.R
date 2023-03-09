@@ -5,7 +5,7 @@
 rm(list=ls())
 
 #套件名稱
-packages <- c("DBI", "odbc", "magrittr", "dplyr", "rJava", "xlsx", "RStata", "readxl", "mailR", "stringr", "haven", "openxlsx", "tidyr", "maditr")
+packages <- c("DBI", "odbc", "magrittr", "dplyr", "rJava", "xlsx", "readxl", "stringr", "haven", "openxlsx", "tidyr", "maditr")
 
 # 安裝尚未安裝的套件
 installed_packages <- packages %in% rownames(installed.packages())
@@ -24,7 +24,7 @@ lapply(packages, require, character.only = TRUE)
 edhr <- dbConnect(odbc::odbc(), "CHER01-EDHR-NEW", timeout = 10)
 
 #請輸入本次填報設定檔標題(字串需與標題完全相符，否則會找不到)
-title <- "111學年度上學期高級中等學校教育人力資源資料庫（公立學校人事）"
+title <- "111學年度下學期高級中等學校教育人力資源資料庫（私立學校人事）"
 
 department <- "人事室"
 
@@ -43,7 +43,78 @@ WHERE a.agree = 1 AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teache
                                                             WHERE title = '", title, "'))", sep = "")
 ) %>%
   distinct(organization_id, .keep_all = TRUE) %>%
-  subset(organization_id == "313301" | organization_id == "313302" | organization_id == "323301" | organization_id == "323302" | organization_id == "323401" | organization_id == "323402" | organization_id == "330301" | organization_id == "333301" | organization_id == "333304" | organization_id == "333401" | organization_id == "343301" | organization_id == "343302" | organization_id == "343303" | organization_id == "353301" | organization_id == "353302" | organization_id == "353303" | organization_id == "363301" | organization_id == "363302" | organization_id == "373301" | organization_id == "373302" | organization_id == "380301" | organization_id == "383301" | organization_id == "383302" | organization_id == "383401" | organization_id == "393301" | organization_id == "393302" | organization_id == "393401" | organization_id == "403301" | organization_id == "403302" | organization_id == "403303" | organization_id == "403401" | organization_id == "413301" | organization_id == "413302" | organization_id == "413401" | organization_id == "423301" | organization_id == "423302" | organization_id == "383303" | organization_id == "030305" | organization_id == "030403" | organization_id == "033302" | organization_id == "033304" | organization_id == "033306" | organization_id == "033316" | organization_id == "033325" | organization_id == "033327" | organization_id == "033407" | organization_id == "033408" | organization_id == "034306" | organization_id == "034312" | organization_id == "034314" | organization_id == "034319" | organization_id == "034332" | organization_id == "034335" | organization_id == "034347" | organization_id == "034348" | organization_id == "034399" | organization_id == "070301" | organization_id == "070304" | organization_id == "070307" | organization_id == "070316" | organization_id == "070319" | organization_id == "070401" | organization_id == "070402" | organization_id == "070403" | organization_id == "070405" | organization_id == "070406" | organization_id == "070408" | organization_id == "070409" | organization_id == "070410" | organization_id == "070415" | organization_id == "074308" | organization_id == "074313" | organization_id == "074323" | organization_id == "074328" | organization_id == "074339" | organization_id == "080302" | organization_id == "080305" | organization_id == "080307" | organization_id == "080308" | organization_id == "080401" | organization_id == "080403" | organization_id == "080404" | organization_id == "080406" | organization_id == "080410" | organization_id == "084309" | organization_id == "170301" | organization_id == "170302" | organization_id == "170403" | organization_id == "170404" | organization_id == "173304" | organization_id == "173306" | organization_id == "173307" | organization_id == "173314" | organization_id == "140301" | organization_id == "140302" | organization_id == "140303" | organization_id == "140404" | organization_id == "140405" | organization_id == "140408" | organization_id == "144322" | organization_id == "720301")
+  subset(organization_id %in% c( #管區
+    "421302",
+    "381302",
+    "331404",
+    "421303",
+    "411301",
+    "401302",
+    "351402",
+    "381305",
+    "411401",
+    "421301",
+    "361B09",
+    "331403",
+    "331402",
+    "341302",
+    "411302",
+    "401303",
+    "411303",
+    "401301",
+    "381306",
+    "381304",
+    "381303",
+    "331301",
+    "341402",
+    "361401",
+    "311401",
+    "331304",
+    "351B09",
+    "331302",
+    "361301",
+    "351301",
+    "421404",
+    "321399",
+    "381301",
+    "581301",
+    "121318",
+    "581401",
+    "121417",
+    "521303",
+    "581302",
+    "581402",
+    "521301",
+    "551303",
+    "121307",
+    "121410",
+    "121302",
+    "121415",
+    "551402",
+    "521401",
+    "551301",
+    "121413",
+    "121405",
+    "121320",
+    "121306",
+    "101303",
+    "101304",
+    "101406",
+    "141406",
+    "141307",
+    "141301",
+    "181305",
+    "181307",
+    "181308",
+    "181306",
+    "201314",
+    "201313",
+    "201304",
+    "201408",
+    "201309",
+    "201312",
+    "201310"
+  ))
 
 
 #讀取教員資料表名稱
@@ -85,7 +156,78 @@ teacher <- merge(x = teacher, y = list_agree, by = "organization_id", all.x = TR
 
 #管區
 teacher <- teacher %>%
-  subset(organization_id == "313301" | organization_id == "313302" | organization_id == "323301" | organization_id == "323302" | organization_id == "323401" | organization_id == "323402" | organization_id == "330301" | organization_id == "333301" | organization_id == "333304" | organization_id == "333401" | organization_id == "343301" | organization_id == "343302" | organization_id == "343303" | organization_id == "353301" | organization_id == "353302" | organization_id == "353303" | organization_id == "363301" | organization_id == "363302" | organization_id == "373301" | organization_id == "373302" | organization_id == "380301" | organization_id == "383301" | organization_id == "383302" | organization_id == "383401" | organization_id == "393301" | organization_id == "393302" | organization_id == "393401" | organization_id == "403301" | organization_id == "403302" | organization_id == "403303" | organization_id == "403401" | organization_id == "413301" | organization_id == "413302" | organization_id == "413401" | organization_id == "423301" | organization_id == "423302" | organization_id == "383303" | organization_id == "030305" | organization_id == "030403" | organization_id == "033302" | organization_id == "033304" | organization_id == "033306" | organization_id == "033316" | organization_id == "033325" | organization_id == "033327" | organization_id == "033407" | organization_id == "033408" | organization_id == "034306" | organization_id == "034312" | organization_id == "034314" | organization_id == "034319" | organization_id == "034332" | organization_id == "034335" | organization_id == "034347" | organization_id == "034348" | organization_id == "034399" | organization_id == "070301" | organization_id == "070304" | organization_id == "070307" | organization_id == "070316" | organization_id == "070319" | organization_id == "070401" | organization_id == "070402" | organization_id == "070403" | organization_id == "070405" | organization_id == "070406" | organization_id == "070408" | organization_id == "070409" | organization_id == "070410" | organization_id == "070415" | organization_id == "074308" | organization_id == "074313" | organization_id == "074323" | organization_id == "074328" | organization_id == "074339" | organization_id == "080302" | organization_id == "080305" | organization_id == "080307" | organization_id == "080308" | organization_id == "080401" | organization_id == "080403" | organization_id == "080404" | organization_id == "080406" | organization_id == "080410" | organization_id == "084309" | organization_id == "170301" | organization_id == "170302" | organization_id == "170403" | organization_id == "170404" | organization_id == "173304" | organization_id == "173306" | organization_id == "173307" | organization_id == "173314" | organization_id == "140301" | organization_id == "140302" | organization_id == "140303" | organization_id == "140404" | organization_id == "140405" | organization_id == "140408" | organization_id == "144322" | organization_id == "720301")
+  subset(organization_id %in% c(
+    "421302",
+    "381302",
+    "331404",
+    "421303",
+    "411301",
+    "401302",
+    "351402",
+    "381305",
+    "411401",
+    "421301",
+    "361B09",
+    "331403",
+    "331402",
+    "341302",
+    "411302",
+    "401303",
+    "411303",
+    "401301",
+    "381306",
+    "381304",
+    "381303",
+    "331301",
+    "341402",
+    "361401",
+    "311401",
+    "331304",
+    "351B09",
+    "331302",
+    "361301",
+    "351301",
+    "421404",
+    "321399",
+    "381301",
+    "581301",
+    "121318",
+    "581401",
+    "121417",
+    "521303",
+    "581302",
+    "581402",
+    "521301",
+    "551303",
+    "121307",
+    "121410",
+    "121302",
+    "121415",
+    "551402",
+    "521401",
+    "551301",
+    "121413",
+    "121405",
+    "121320",
+    "121306",
+    "101303",
+    "101304",
+    "101406",
+    "141406",
+    "141307",
+    "141301",
+    "181305",
+    "181307",
+    "181308",
+    "181306",
+    "201314",
+    "201313",
+    "201304",
+    "201408",
+    "201309",
+    "201312",
+    "201310"
+  ))
 
 #讀取職員(工)資料表名稱
 staff_tablename <- dbGetQuery(edhr, 
@@ -124,7 +266,78 @@ staff <- merge(x = staff, y = list_agree, by = "organization_id", all.x = TRUE) 
 
 #管區
 staff <- staff %>%
-  subset(organization_id == "313301" | organization_id == "313302" | organization_id == "323301" | organization_id == "323302" | organization_id == "323401" | organization_id == "323402" | organization_id == "330301" | organization_id == "333301" | organization_id == "333304" | organization_id == "333401" | organization_id == "343301" | organization_id == "343302" | organization_id == "343303" | organization_id == "353301" | organization_id == "353302" | organization_id == "353303" | organization_id == "363301" | organization_id == "363302" | organization_id == "373301" | organization_id == "373302" | organization_id == "380301" | organization_id == "383301" | organization_id == "383302" | organization_id == "383401" | organization_id == "393301" | organization_id == "393302" | organization_id == "393401" | organization_id == "403301" | organization_id == "403302" | organization_id == "403303" | organization_id == "403401" | organization_id == "413301" | organization_id == "413302" | organization_id == "413401" | organization_id == "423301" | organization_id == "423302" | organization_id == "383303" | organization_id == "030305" | organization_id == "030403" | organization_id == "033302" | organization_id == "033304" | organization_id == "033306" | organization_id == "033316" | organization_id == "033325" | organization_id == "033327" | organization_id == "033407" | organization_id == "033408" | organization_id == "034306" | organization_id == "034312" | organization_id == "034314" | organization_id == "034319" | organization_id == "034332" | organization_id == "034335" | organization_id == "034347" | organization_id == "034348" | organization_id == "034399" | organization_id == "070301" | organization_id == "070304" | organization_id == "070307" | organization_id == "070316" | organization_id == "070319" | organization_id == "070401" | organization_id == "070402" | organization_id == "070403" | organization_id == "070405" | organization_id == "070406" | organization_id == "070408" | organization_id == "070409" | organization_id == "070410" | organization_id == "070415" | organization_id == "074308" | organization_id == "074313" | organization_id == "074323" | organization_id == "074328" | organization_id == "074339" | organization_id == "080302" | organization_id == "080305" | organization_id == "080307" | organization_id == "080308" | organization_id == "080401" | organization_id == "080403" | organization_id == "080404" | organization_id == "080406" | organization_id == "080410" | organization_id == "084309" | organization_id == "170301" | organization_id == "170302" | organization_id == "170403" | organization_id == "170404" | organization_id == "173304" | organization_id == "173306" | organization_id == "173307" | organization_id == "173314" | organization_id == "140301" | organization_id == "140302" | organization_id == "140303" | organization_id == "140404" | organization_id == "140405" | organization_id == "140408" | organization_id == "144322" | organization_id == "720301")
+  subset(organization_id %in% c(
+    "421302",
+    "381302",
+    "331404",
+    "421303",
+    "411301",
+    "401302",
+    "351402",
+    "381305",
+    "411401",
+    "421301",
+    "361B09",
+    "331403",
+    "331402",
+    "341302",
+    "411302",
+    "401303",
+    "411303",
+    "401301",
+    "381306",
+    "381304",
+    "381303",
+    "331301",
+    "341402",
+    "361401",
+    "311401",
+    "331304",
+    "351B09",
+    "331302",
+    "361301",
+    "351301",
+    "421404",
+    "321399",
+    "381301",
+    "581301",
+    "121318",
+    "581401",
+    "121417",
+    "521303",
+    "581302",
+    "581402",
+    "521301",
+    "551303",
+    "121307",
+    "121410",
+    "121302",
+    "121415",
+    "551402",
+    "521401",
+    "551301",
+    "121413",
+    "121405",
+    "121320",
+    "121306",
+    "101303",
+    "101304",
+    "101406",
+    "141406",
+    "141307",
+    "141301",
+    "181305",
+    "181307",
+    "181308",
+    "181306",
+    "201314",
+    "201313",
+    "201304",
+    "201408",
+    "201309",
+    "201312",
+    "201310"
+  ))
 
 #讀取離退教職員(工)資料表名稱
 retire_tablename <- dbGetQuery(edhr, 
@@ -158,11 +371,82 @@ retire <- merge(x = retire, y = list_agree, by = "organization_id", all.x = TRUE
 
 #管區
 retire <- retire %>%
-  subset(organization_id == "313301" | organization_id == "313302" | organization_id == "323301" | organization_id == "323302" | organization_id == "323401" | organization_id == "323402" | organization_id == "330301" | organization_id == "333301" | organization_id == "333304" | organization_id == "333401" | organization_id == "343301" | organization_id == "343302" | organization_id == "343303" | organization_id == "353301" | organization_id == "353302" | organization_id == "353303" | organization_id == "363301" | organization_id == "363302" | organization_id == "373301" | organization_id == "373302" | organization_id == "380301" | organization_id == "383301" | organization_id == "383302" | organization_id == "383401" | organization_id == "393301" | organization_id == "393302" | organization_id == "393401" | organization_id == "403301" | organization_id == "403302" | organization_id == "403303" | organization_id == "403401" | organization_id == "413301" | organization_id == "413302" | organization_id == "413401" | organization_id == "423301" | organization_id == "423302" | organization_id == "383303" | organization_id == "030305" | organization_id == "030403" | organization_id == "033302" | organization_id == "033304" | organization_id == "033306" | organization_id == "033316" | organization_id == "033325" | organization_id == "033327" | organization_id == "033407" | organization_id == "033408" | organization_id == "034306" | organization_id == "034312" | organization_id == "034314" | organization_id == "034319" | organization_id == "034332" | organization_id == "034335" | organization_id == "034347" | organization_id == "034348" | organization_id == "034399" | organization_id == "070301" | organization_id == "070304" | organization_id == "070307" | organization_id == "070316" | organization_id == "070319" | organization_id == "070401" | organization_id == "070402" | organization_id == "070403" | organization_id == "070405" | organization_id == "070406" | organization_id == "070408" | organization_id == "070409" | organization_id == "070410" | organization_id == "070415" | organization_id == "074308" | organization_id == "074313" | organization_id == "074323" | organization_id == "074328" | organization_id == "074339" | organization_id == "080302" | organization_id == "080305" | organization_id == "080307" | organization_id == "080308" | organization_id == "080401" | organization_id == "080403" | organization_id == "080404" | organization_id == "080406" | organization_id == "080410" | organization_id == "084309" | organization_id == "170301" | organization_id == "170302" | organization_id == "170403" | organization_id == "170404" | organization_id == "173304" | organization_id == "173306" | organization_id == "173307" | organization_id == "173314" | organization_id == "140301" | organization_id == "140302" | organization_id == "140303" | organization_id == "140404" | organization_id == "140405" | organization_id == "140408" | organization_id == "144322" | organization_id == "720301")
+  subset(organization_id %in% c(
+    "421302",
+    "381302",
+    "331404",
+    "421303",
+    "411301",
+    "401302",
+    "351402",
+    "381305",
+    "411401",
+    "421301",
+    "361B09",
+    "331403",
+    "331402",
+    "341302",
+    "411302",
+    "401303",
+    "411303",
+    "401301",
+    "381306",
+    "381304",
+    "381303",
+    "331301",
+    "341402",
+    "361401",
+    "311401",
+    "331304",
+    "351B09",
+    "331302",
+    "361301",
+    "351301",
+    "421404",
+    "321399",
+    "381301",
+    "581301",
+    "121318",
+    "581401",
+    "121417",
+    "521303",
+    "581302",
+    "581402",
+    "521301",
+    "551303",
+    "121307",
+    "121410",
+    "121302",
+    "121415",
+    "551402",
+    "521401",
+    "551301",
+    "121413",
+    "121405",
+    "121320",
+    "121306",
+    "101303",
+    "101304",
+    "101406",
+    "141406",
+    "141307",
+    "141301",
+    "181305",
+    "181307",
+    "181308",
+    "181306",
+    "201314",
+    "201313",
+    "201304",
+    "201408",
+    "201309",
+    "201312",
+    "201310"
+  ))
 
 #輸出
 list_of_datasets <- list("教員資料表" = teacher, "職員(工)資料表" = staff, "離退教職員(工)資料表" = retire)
-path <- paste("\\\\192.168.110.244\\share_tmp\\給修恒\\1111\\edhr-111t1\\dta\\edhr_111t1-202210\\", title, ".xlsx", sep = "")
+path <- paste("\\\\192.168.110.244\\share_tmp\\給修恒\\1112\\edhr-111t2\\dta\\edhr_111t2-202303\\", title, ".xlsx", sep = "")
 openxlsx :: write.xlsx(list_of_datasets, file = path, rowNames = FALSE, overwrite = TRUE)
 
 excel_sheets(path)
@@ -179,11 +463,9 @@ data_retire   <- read_excel(path, sheet = "離退教職員(工)資料表")
   staff <- data_staff
 
 # 匯入上一期人事資料檔 -------------------------------------------------------------------
-# 整合20校試辦中的公立學校、所有公立教員資料表及職員(工)資料表
-
-# 1101 20校試辦 教員資料表
+# 1102私立學校 教員資料表
 #請輸入本次填報設定檔標題(字串需與標題完全相符，否則會找不到)
-title_pre <- "110學年度上學期高級中等學校教育人力資源資料庫（20校人事及教務）"
+title_pre <- "110學年度下學期高級中等學校教育人力資源資料庫（私立學校人事）"
 
 department_pre <- "人事室"
 
@@ -235,21 +517,15 @@ teacher_pre$desedym <- formatC(teacher_pre$desedym, dig = 0, wid = 4, format = "
 teacher_pre$beobdym <- formatC(teacher_pre$beobdym, dig = 0, wid = 4, format = "f", flag = "0")
 teacher_pre$organization_id <- formatC(teacher_pre$organization_id, dig = 0, wid = 6, format = "f", flag = "0")
 
-#只留下審核通過之名單 只留下公立
+#只留下審核通過之名單
 teacher_pre <- merge(x = teacher_pre, y = list_agree_pre, by = "organization_id", all.x = TRUE) %>%
   subset(agree == 1) %>%
   subset(select = -c(updated_at, agree))
-
-teacher_pre$try <- substr(teacher_pre$organization_id, 3, 3)
 
 teacher_pre <- teacher_pre %>%
-  subset(try == "0" | try == "3" | try == "4") %>%
-  subset(select = -c(try))
-
-teacher20_1101 <- teacher_pre %>%
   mutate(dta_teacher = "教員資料表")
 
-# 1101 20校試辦 職員(工)資料表
+# 1102私立學校 職員(工)資料表
 #讀取職員(工)資料表名稱
 staff_tablename_pre <- dbGetQuery(edhr, 
                               paste("
@@ -284,129 +560,12 @@ staff_pre$organization_id <- formatC(staff_pre$organization_id, dig = 0, wid = 6
 staff_pre <- merge(x = staff_pre, y = list_agree_pre, by = "organization_id", all.x = TRUE) %>%
   subset(agree == 1) %>%
   subset(select = -c(updated_at, agree))
-
-staff_pre$try <- substr(staff_pre$organization_id, 3, 3)
 
 staff_pre <- staff_pre %>%
-  subset(try == "0" | try == "3" | try == "4") %>%
-  subset(select = -c(try))
-
-staff20_1101 <- staff_pre %>%
-  mutate(dta_teacher = "職員(工)資料表")
-
-# 1101公立學校 教員資料表
-#請輸入本次填報設定檔標題(字串需與標題完全相符，否則會找不到)
-title_pre <- "110學年度上學期高級中等學校教育人力資源資料庫（公立學校人事）"
-
-department_pre <- "人事室"
-
-#讀取審核同意之學校名單
-list_agree_pre <- dbGetQuery(edhr, 
-                         paste("
-SELECT DISTINCT b.id AS organization_id , 1 AS agree
-FROM [plat5_edhr].[dbo].[teacher_fillers] a 
-LEFT JOIN 
-(SELECT a.reporter_id, c.id
-FROM [plat5_edhr].[dbo].[teacher_fillers] a LEFT JOIN [plat5_edhr].[dbo].[teacher_reporters] b ON a.reporter_id = b.id
-LEFT JOIN [plat5_edhr].[dbo].[organization_details] c ON b.organization_id = c.organization_id
-) b ON a.reporter_id = b.reporter_id
-WHERE a.agree = 1 AND department_id IN (SELECT id FROM [plat5_edhr].[dbo].[teacher_departments]
-                                        WHERE report_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_reports]
-                                                            WHERE title = '", title_pre, "'))", sep = "")
-) %>%
-  distinct(organization_id, .keep_all = TRUE)
-
-#讀取教員資料表名稱
-teacher_tablename_pre <- dbGetQuery(edhr, 
-                                paste("
-SELECT [name] FROM [plat5_edhr].[dbo].[row_tables] 
-	where sheet_id = (SELECT [id] FROM [plat5_edhr].[dbo].[row_sheets] 
-						          where file_id = (SELECT field_component_id FROM [plat5_edhr].[dbo].[teacher_datasets] 
-											                  WHERE title = '教員資料表' AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_departments] 
-																						                                              WHERE title = '", department_pre, "' AND  report_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_reports] 
-																												                                                                                      WHERE title = '", title_pre, "'))))", sep = "")
-) %>% as.character()
-
-#讀取教員資料表
-teacher_pre <- dbGetQuery(edhr, 
-                      paste("SELECT * FROM [rows].[dbo].[", teacher_tablename_pre, "] WHERE deleted_at IS NULL", sep = "")
-) %>%
-  subset(select = -c(id, created_at, deleted_at, updated_by, created_by, deleted_by))
-
-#欄位名稱更改為設定的欄位代號
-col_names_pre <- dbGetQuery(edhr, "SELECT id, name, title FROM [plat5_edhr].[dbo].[row_columns]")
-col_names_pre$id <- paste("C", col_names_pre$id, sep = "")
-for (i in 2 : dim(teacher_pre)[2]) #從2開始是因為第一的欄位是update_at
-{
-  colnames(teacher_pre)[i] <- col_names_pre$name[grep(paste(colnames(teacher_pre)[i], "$", sep = ""), col_names_pre$id)]
-}
-#格式調整
-teacher_pre$gender <- formatC(teacher_pre$gender, dig = 0, wid = 1, format = "f", flag = "0")
-teacher_pre$birthdate <- formatC(teacher_pre$birthdate, dig = 0, wid = 7, format = "f", flag = "0")
-teacher_pre$onbodat <- formatC(teacher_pre$onbodat, dig = 0, wid = 7, format = "f", flag = "0")
-teacher_pre$desedym <- formatC(teacher_pre$desedym, dig = 0, wid = 4, format = "f", flag = "0")
-teacher_pre$beobdym <- formatC(teacher_pre$beobdym, dig = 0, wid = 4, format = "f", flag = "0")
-teacher_pre$organization_id <- formatC(teacher_pre$organization_id, dig = 0, wid = 6, format = "f", flag = "0")
-
-#只留下審核通過之名單
-teacher_pre <- merge(x = teacher_pre, y = list_agree_pre, by = "organization_id", all.x = TRUE) %>%
-  subset(agree == 1) %>%
-  subset(select = -c(updated_at, agree))
-
-teacher_1101 <- teacher_pre %>%
-  mutate(dta_teacher = "教員資料表")
-
-# 1101公立學校 職員(工)資料表
-#讀取職員(工)資料表名稱
-staff_tablename_pre <- dbGetQuery(edhr, 
-                              paste("
-SELECT [name] FROM [plat5_edhr].[dbo].[row_tables] 
-	where sheet_id = (SELECT [id] FROM [plat5_edhr].[dbo].[row_sheets] 
-						          where file_id = (SELECT field_component_id FROM [plat5_edhr].[dbo].[teacher_datasets] 
-											                   WHERE title = '職員(工)資料表' AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_departments] 
-																							                                                 WHERE title = '", department_pre, "' AND  report_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_reports] 
-																												                                                            WHERE title = '", title_pre, "'))))", sep = "")
-) %>% as.character()
-
-#讀取職員(工)資料表
-staff_pre <- dbGetQuery(edhr, 
-                    paste("SELECT * FROM [rows].[dbo].[", staff_tablename_pre, "] WHERE deleted_at IS NULL", sep = "")
-) %>%
-  subset(select = -c(id, created_at, deleted_at, updated_by, created_by, deleted_by))
-#欄位名稱更改為設定的欄位代號
-for (i in 2 : dim(staff_pre)[2]) #從2開始是因為第一的欄位是update_at
-{
-  colnames(staff_pre)[i] <- col_names_pre$name[grep(paste(colnames(staff_pre)[i], "$", sep = ""), col_names_pre$id)]
-}
-
-#格式調整
-staff_pre$gender <- formatC(staff_pre$gender, dig = 0, wid = 1, format = "f", flag = "0")
-staff_pre$birthdate <- formatC(staff_pre$birthdate, dig = 0, wid = 7, format = "f", flag = "0")
-staff_pre$onbodat <- formatC(staff_pre$onbodat, dig = 0, wid = 7, format = "f", flag = "0")
-staff_pre$desedym <- formatC(staff_pre$desedym, dig = 0, wid = 4, format = "f", flag = "0")
-staff_pre$beobdym <- formatC(staff_pre$beobdym, dig = 0, wid = 4, format = "f", flag = "0")
-staff_pre$organization_id <- formatC(staff_pre$organization_id, dig = 0, wid = 6, format = "f", flag = "0")
-
-#只留下審核通過之名單
-staff_pre <- merge(x = staff_pre, y = list_agree_pre, by = "organization_id", all.x = TRUE) %>%
-  subset(agree == 1) %>%
-  subset(select = -c(updated_at, agree))
-
-staff_1101 <- staff_pre %>%
   mutate(dta_teacher = "職員(工)資料表")
 #####合併#####
-drev_person_pre <- bind_rows(teacher20_1101, staff20_1101, teacher_1101, staff_1101) %>%
+drev_person_pre <- bind_rows(teacher_pre, staff_pre) %>%
   rename(source = dta_teacher)
-
-#中壢家商資料修正
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "H121370425" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "J120744744" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "J221679800" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "C220687295" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "U221141104" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "Q222500292" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "H224770876" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
-drev_person_pre$sertype <- if_else(drev_person_pre$idnumber == "K221339311" & drev_person_pre$organization_id == "033408", "教師", drev_person_pre$sertype)
 
 #記錄時間
 time_now <- Sys.time()
@@ -424,14 +583,647 @@ drev_person$source  <- factor(drev_person$source, levels = c(1, 2), labels = c("
 #這行在更改source的1和2為教員資料表及職員工資料表，levels是排序依據.
 
 
+#讀取所有學校的人事資料表(不分管區)
 
+#讀取審核同意之學校名單
+list_agree <- dbGetQuery(edhr, 
+                         paste("
+SELECT DISTINCT b.id AS organization_id , 1 AS agree
+FROM [plat5_edhr].[dbo].[teacher_fillers] a 
+LEFT JOIN 
+(SELECT a.reporter_id, c.id
+FROM [plat5_edhr].[dbo].[teacher_fillers] a LEFT JOIN [plat5_edhr].[dbo].[teacher_reporters] b ON a.reporter_id = b.id
+LEFT JOIN [plat5_edhr].[dbo].[organization_details] c ON b.organization_id = c.organization_id
+) b ON a.reporter_id = b.reporter_id
+WHERE a.agree = 1 AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_departments]
+                                        WHERE report_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_reports]
+                                                            WHERE title = '", title, "'))", sep = "")
+) %>%
+  distinct(organization_id, .keep_all = TRUE)
+
+#讀取教員資料表名稱
+teacher_tablename <- dbGetQuery(edhr, 
+                                paste("
+SELECT [name] FROM [plat5_edhr].[dbo].[row_tables] 
+	where sheet_id = (SELECT [id] FROM [plat5_edhr].[dbo].[row_sheets] 
+						          where file_id = (SELECT field_component_id FROM [plat5_edhr].[dbo].[teacher_datasets] 
+											                  WHERE title = '教員資料表' AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_departments] 
+																						                                              WHERE title = '", department, "' AND  report_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_reports] 
+																												                                                                                      WHERE title = '", title, "'))))", sep = "")
+) %>% as.character()
+
+#讀取教員資料表
+teacher_all <- dbGetQuery(edhr, 
+                          paste("SELECT * FROM [rows].[dbo].[", teacher_tablename, "] WHERE deleted_at IS NULL", sep = "")
+) %>%
+  subset(select = -c(id, created_at, deleted_at, updated_by, created_by, deleted_by))
+
+#欄位名稱更改為設定的欄位代號
+col_names <- dbGetQuery(edhr, "SELECT id, name, title FROM [plat5_edhr].[dbo].[row_columns]")
+col_names$id <- paste("C", col_names$id, sep = "")
+for (i in 2 : dim(teacher_all)[2]) #從2開始是因為第一的欄位是update_at
+{
+  colnames(teacher_all)[i] <- col_names$name[grep(paste(colnames(teacher_all)[i], "$", sep = ""), col_names$id)]
+}
+#格式調整
+teacher_all$gender <- formatC(teacher_all$gender, dig = 0, wid = 1, format = "f", flag = "0")
+teacher_all$birthdate <- formatC(teacher_all$birthdate, dig = 0, wid = 7, format = "f", flag = "0")
+teacher_all$onbodat <- formatC(teacher_all$onbodat, dig = 0, wid = 7, format = "f", flag = "0")
+teacher_all$desedym <- formatC(teacher_all$desedym, dig = 0, wid = 4, format = "f", flag = "0")
+teacher_all$beobdym <- formatC(teacher_all$beobdym, dig = 0, wid = 4, format = "f", flag = "0")
+teacher_all$organization_id <- formatC(teacher_all$organization_id, dig = 0, wid = 6, format = "f", flag = "0")
+
+#只留下審核通過之名單
+teacher_all <- merge(x = teacher_all, y = list_agree, by = "organization_id", all.x = TRUE) %>%
+  subset(agree == 1) %>%
+  subset(select = -c(updated_at, agree))
+
+#讀取職員(工)資料表名稱
+staff_tablename <- dbGetQuery(edhr, 
+                              paste("
+SELECT [name] FROM [plat5_edhr].[dbo].[row_tables] 
+	where sheet_id = (SELECT [id] FROM [plat5_edhr].[dbo].[row_sheets] 
+						          where file_id = (SELECT field_component_id FROM [plat5_edhr].[dbo].[teacher_datasets] 
+											                   WHERE title = '職員(工)資料表' AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_departments] 
+																							                                                 WHERE title = '", department, "' AND  report_id = (SELECT id FROM [plat5_edhr].[dbo].[teacher_reports] 
+																												                                                            WHERE title = '", title, "'))))", sep = "")
+) %>% as.character()
+
+#讀取職員(工)資料表
+staff_all <- dbGetQuery(edhr, 
+                        paste("SELECT * FROM [rows].[dbo].[", staff_tablename, "] WHERE deleted_at IS NULL", sep = "")
+) %>%
+  subset(select = -c(id, created_at, deleted_at, updated_by, created_by, deleted_by))
+#欄位名稱更改為設定的欄位代號
+for (i in 2 : dim(staff_all)[2]) #從2開始是因為第一的欄位是update_at
+{
+  colnames(staff_all)[i] <- col_names$name[grep(paste(colnames(staff_all)[i], "$", sep = ""), col_names$id)]
+}
+
+#格式調整
+staff_all$gender <- formatC(staff_all$gender, dig = 0, wid = 1, format = "f", flag = "0")
+staff_all$birthdate <- formatC(staff_all$birthdate, dig = 0, wid = 7, format = "f", flag = "0")
+staff_all$onbodat <- formatC(staff_all$onbodat, dig = 0, wid = 7, format = "f", flag = "0")
+staff_all$desedym <- formatC(staff_all$desedym, dig = 0, wid = 4, format = "f", flag = "0")
+staff_all$beobdym <- formatC(staff_all$beobdym, dig = 0, wid = 4, format = "f", flag = "0")
+staff_all$organization_id <- formatC(staff_all$organization_id, dig = 0, wid = 6, format = "f", flag = "0")
+
+#只留下審核通過之名單
+staff_all <- merge(x = staff_all, y = list_agree, by = "organization_id", all.x = TRUE) %>%
+  subset(agree == 1) %>%
+  subset(select = -c(updated_at, agree))
+
+# 合併人事資料表 ----------------------------------------------------------------
+data_teacher_all <- teacher_all %>%
+  mutate(source = 1)
+
+data_staff_all <- staff_all %>%
+  mutate(source = 2)
+
+drev_person_all <- bind_rows(data_teacher_all, data_staff_all)
+
+drev_person_all$source  <- factor(drev_person_all$source, levels = c(1, 2), labels = c("教員資料表", "職員(工)資料表"))
+#這行在更改source的1和2為教員資料表及職員工資料表，levels是排序依據.
+
+drev_person_all$edu_name2 <- recode_factor(drev_person_all$organization_id,
+                                           "010301" = "國立華僑高級中等學校", 
+                                           "011301" = "私立淡江高中", 
+                                           "011302" = "私立康橋高中", 
+                                           "011306" = "私立金陵女中", 
+                                           "011307" = "新北市裕德高級中等學校", 
+                                           "011309" = "財團法人南山高中", 
+                                           "011310" = "財團法人恆毅高中", 
+                                           "011311" = "私立聖心女中", 
+                                           "011312" = "私立崇義高中", 
+                                           "011314" = "財團法人中華高中", 
+                                           "011315" = "私立東海高中", 
+                                           "011316" = "私立格致高中", 
+                                           "011317" = "私立醒吾高中", 
+                                           "011318" = "私立徐匯高中", 
+                                           "011322" = "新北市崇光高中", 
+                                           "011323" = "私立光仁高中", 
+                                           "011324" = "私立竹林高中", 
+                                           "011325" = "私立及人高中", 
+                                           "011329" = "財團法人辭修高中", 
+                                           "011330" = "新北市林口康橋國際高中", 
+                                           "011399" = "私立時雨高中", 
+                                           "011405" = "私立樹人家商", 
+                                           "011407" = "私立復興商工", 
+                                           "011408" = "私立南強工商", 
+                                           "011413" = "私立穀保家商", 
+                                           "011419" = "私立開明工商", 
+                                           "011420" = "私立智光商工", 
+                                           "011421" = "私立清傳高商", 
+                                           "011426" = "私立能仁家商", 
+                                           "011427" = "私立豫章工商", 
+                                           "011431" = "私立莊敬工家", 
+                                           "011432" = "私立中華商海", 
+                                           "013303" = "市立泰山高中", 
+                                           "013304" = "市立板橋高中", 
+                                           "013335" = "市立新店高中", 
+                                           "013336" = "市立中和高中", 
+                                           "013337" = "市立新莊高中", 
+                                           "013338" = "市立新北高中", 
+                                           "013339" = "市立林口高中", 
+                                           "013402" = "市立瑞芳高工", 
+                                           "013430" = "市立三重商工", 
+                                           "013433" = "市立新北高工", 
+                                           "013434" = "市立淡水商工", 
+                                           "014302" = "市立海山高中", 
+                                           "014311" = "市立三重高中", 
+                                           "014315" = "市立永平高中", 
+                                           "014322" = "市立樹林高中", 
+                                           "014326" = "市立明德高中", 
+                                           "014332" = "市立秀峰高中", 
+                                           "014338" = "市立金山高中", 
+                                           "014343" = "市立安康高中", 
+                                           "014347" = "市立雙溪高中", 
+                                           "014348" = "市立石碇高中", 
+                                           "014353" = "市立丹鳳高中", 
+                                           "014356" = "市立清水高中", 
+                                           "014357" = "市立三民高中", 
+                                           "014362" = "市立錦和高中", 
+                                           "014363" = "市立光復高中", 
+                                           "014364" = "市立竹圍高中", 
+                                           "014381" = "市立北大高級中學", 
+                                           "014399" = "市立豐珠中學", 
+                                           "014439" = "市立鶯歌工商", 
+                                           "014468" = "市立樟樹國際實中", 
+                                           "311401" = "臺北市育達高中", 
+                                           "313301" = "市立西松高中", 
+                                           "313302" = "市立中崙高中", 
+                                           "321399" = "臺北市私立協和祐德高級中學", 
+                                           "323301" = "市立松山高中", 
+                                           "323302" = "市立永春高中", 
+                                           "323401" = "市立松山家商", 
+                                           "323402" = "市立松山工農", 
+                                           "330301" = "國立師大附中", 
+                                           "331301" = "私立延平中學", 
+                                           "331302" = "私立金甌女中", 
+                                           "331304" = "私立復興實驗高中", 
+                                           "331402" = "私立東方工商", 
+                                           "331403" = "私立喬治工商", 
+                                           "331404" = "私立開平餐飲", 
+                                           "333301" = "市立和平高中", 
+                                           "333401" = "市立大安高工", 
+                                           "341302" = "私立大同高中", 
+                                           "341402" = "私立稻江護家", 
+                                           "343301" = "市立中山女中", 
+                                           "343302" = "市立大同高中", 
+                                           "343303" = "市立大直高中", 
+                                           "351301" = "私立強恕中學", 
+                                           "351402" = "臺北市開南高中", 
+                                           "353301" = "市立建國中學", 
+                                           "353302" = "市立成功中學", 
+                                           "353303" = "市立北一女中", 
+                                           "361301" = "臺北市靜修高中", 
+                                           "361401" = "私立稻江高商", 
+                                           "363301" = "市立明倫高中", 
+                                           "363302" = "市立成淵高中", 
+                                           "373301" = "市立華江高中", 
+                                           "373302" = "市立大理高中", 
+                                           "380301" = "國立政大附中", 
+                                           "381301" = "私立東山高中", 
+                                           "381302" = "私立滬江高中", 
+                                           "381303" = "私立大誠高中", 
+                                           "381304" = "私立再興中學", 
+                                           "381305" = "私立景文高中", 
+                                           "381306" = "臺北市靜心高中", 
+                                           "383301" = "市立景美女中", 
+                                           "383302" = "市立萬芳高中", 
+                                           "383401" = "市立木柵高工", 
+                                           "393301" = "市立南港高中", 
+                                           "393302" = "市立育成高中", 
+                                           "393401" = "市立南港高工", 
+                                           "401301" = "私立文德女中", 
+                                           "401302" = "私立方濟中學", 
+                                           "401303" = "私立達人女中", 
+                                           "403301" = "市立內湖高中", 
+                                           "403302" = "市立麗山高中", 
+                                           "403303" = "市立南湖高中", 
+                                           "403401" = "市立內湖高工", 
+                                           "411301" = "私立泰北高中", 
+                                           "411302" = "私立衛理女中", 
+                                           "411303" = "私立華興中學", 
+                                           "411401" = "私立華岡藝校", 
+                                           "413301" = "市立陽明高中", 
+                                           "413302" = "市立百齡高中", 
+                                           "413401" = "市立士林高商", 
+                                           "421301" = "私立薇閣高中", 
+                                           "421302" = "臺北市幼華高中", 
+                                           "421303" = "臺北市私立奎山實驗高級中學", 
+                                           "421404" = "私立惇敘工商", 
+                                           "423301" = "市立復興高中", 
+                                           "423302" = "市立中正高中", 
+                                           "030305" = "國立中央大學附屬中壢高中", 
+                                           "030403" = "國立北科大附屬桃園農工", 
+                                           "031301" = "私立漢英高中", 
+                                           "031309" = "桃園市育達高中", 
+                                           "031310" = "私立六和高中", 
+                                           "031311" = "桃園市復旦高中", 
+                                           "031312" = "桃園市治平高中", 
+                                           "031313" = "桃園市振聲高中", 
+                                           "031317" = "私立光啟高中", 
+                                           "031318" = "桃園市啟英高中", 
+                                           "031319" = "桃園市清華高中", 
+                                           "031320" = "桃園市新興高中", 
+                                           "031323" = "私立至善高中", 
+                                           "031324" = "桃園市大興高中", 
+                                           "031326" = "私立大華高中", 
+                                           "031414" = "私立成功工商", 
+                                           "031415" = "私立方曙商工", 
+                                           "031421" = "私立永平工商", 
+                                           "033302" = "市立龍潭高中", 
+                                           "033304" = "市立桃園高中", 
+                                           "033306" = "市立武陵高中", 
+                                           "033316" = "市立楊梅高中", 
+                                           "033325" = "市立陽明高中", 
+                                           "033327" = "市立內壢高中", 
+                                           "033407" = "市立中壢高商", 
+                                           "033408" = "市立中壢家商", 
+                                           "034306" = "市立南崁高中", 
+                                           "034312" = "市立大溪高中", 
+                                           "034314" = "市立壽山高中", 
+                                           "034319" = "市立平鎮高中", 
+                                           "034332" = "市立觀音高中", 
+                                           "034335" = "市立新屋高級中等學校", 
+                                           "034347" = "市立永豐高中", 
+                                           "034399" = "市立大園國際高中", 
+                                           "060322" = "國立興大附中", 
+                                           "060323" = "國立中科實驗高級中學", 
+                                           "061301" = "財團法人常春藤高中", 
+                                           "061306" = "私立明台高中", 
+                                           "061309" = "私立致用高中", 
+                                           "061310" = "私立大明高中", 
+                                           "061311" = "私立嘉陽高中", 
+                                           "061313" = "私立明道高中", 
+                                           "061314" = "私立僑泰高中", 
+                                           "061315" = "私立華盛頓高中", 
+                                           "061316" = "私立青年高中", 
+                                           "061317" = "私立弘文高中", 
+                                           "061318" = "私立立人高中", 
+                                           "061319" = "私立玉山高中", 
+                                           "061321" = "私立慈明高中", 
+                                           "061322" = "華德福大地實驗學校", 
+                                           "063303" = "市立大甲高中", 
+                                           "063305" = "市立清水高中", 
+                                           "063312" = "市立豐原高中", 
+                                           "063401" = "市立豐原高商", 
+                                           "063402" = "市立大甲高工", 
+                                           "063404" = "市立東勢高工", 
+                                           "063407" = "市立沙鹿高工", 
+                                           "063408" = "市立霧峰農工", 
+                                           "064308" = "市立后綜高中", 
+                                           "064324" = "市立大里高中", 
+                                           "064328" = "市立新社高中", 
+                                           "064336" = "市立長億高中", 
+                                           "064342" = "市立中港高中", 
+                                           "064350" = "市立龍津高中", 
+                                           "064406" = "市立神岡高工", 
+                                           "190406" = "國立興大附農", 
+                                           "191301" = "私立東大附中", 
+                                           "191302" = "私立葳格高中", 
+                                           "191305" = "私立新民高中", 
+                                           "191308" = "私立宜寧高中", 
+                                           "191309" = "私立明德高中", 
+                                           "191311" = "私立衛道高中", 
+                                           "191313" = "私立曉明女中", 
+                                           "191314" = "私立嶺東高中", 
+                                           "191315" = "私立磊川華德福實驗教育學校", 
+                                           "191412" = "財團法人光華高工", 
+                                           "193301" = "市立臺中女中", 
+                                           "193302" = "市立臺中一中", 
+                                           "193303" = "市立忠明高中", 
+                                           "193313" = "市立西苑高中", 
+                                           "193315" = "市立東山高中", 
+                                           "193316" = "市立惠文高中", 
+                                           "193404" = "市立臺中家商", 
+                                           "193407" = "市立臺中高工", 
+                                           "194303" = "市立臺中二中", 
+                                           "194315" = "市立文華高中", 
+                                           "110302" = "國立新豐高中", 
+                                           "110308" = "國立臺南大學附中", 
+                                           "110311" = "國立北門高中", 
+                                           "110312" = "國立新營高中", 
+                                           "110314" = "國立後壁高中", 
+                                           "110315" = "國立善化高中", 
+                                           "110317" = "國立新化高中", 
+                                           "110328" = "國立南科國際實驗高中", 
+                                           "110401" = "國立新化高工", 
+                                           "110403" = "國立白河商工", 
+                                           "110404" = "國立北門農工", 
+                                           "110405" = "國立曾文家商", 
+                                           "110406" = "國立新營高工", 
+                                           "110407" = "國立玉井工商", 
+                                           "110409" = "國立臺南高工", 
+                                           "110410" = "國立曾文農工", 
+                                           "111313" = "私立南光高中", 
+                                           "111320" = "私立港明高中", 
+                                           "111321" = "臺南市興國高中", 
+                                           "111322" = "私立明達高中", 
+                                           "111323" = "私立黎明高中", 
+                                           "111326" = "私立新榮高中", 
+                                           "111419" = "私立陽明工商", 
+                                           "111427" = "私立育德工家", 
+                                           "114306" = "市立大灣高中", 
+                                           "114307" = "市立永仁高中", 
+                                           "210303" = "國立臺南二中", 
+                                           "210305" = "國立臺南一中", 
+                                           "210306" = "國立臺南女中", 
+                                           "210309" = "國立家齊高中", 
+                                           "210408" = "國立臺南高商", 
+                                           "210416" = "國立臺南海事", 
+                                           "211301" = "私立長榮高中", 
+                                           "211302" = "私立長榮女中", 
+                                           "211304" = "財團法人聖功女中", 
+                                           "211310" = "臺南市光華高中", 
+                                           "211314" = "私立六信高中", 
+                                           "211315" = "私立瀛海高中", 
+                                           "211317" = "臺南市崑山高中", 
+                                           "211318" = "私立德光高中", 
+                                           "211320" = "財團法人慈濟高中", 
+                                           "211407" = "私立南英商工", 
+                                           "211412" = "私立亞洲餐旅", 
+                                           "211419" = "私立慈幼工商", 
+                                           "213303" = "市立南寧高中", 
+                                           "213316" = "市立土城高中", 
+                                           "120303" = "國立鳳山高中", 
+                                           "120304" = "國立岡山高中", 
+                                           "120311" = "國立旗美高中", 
+                                           "120319" = "國立鳳新高中", 
+                                           "120401" = "國立旗山農工", 
+                                           "120402" = "國立岡山農工", 
+                                           "120409" = "國立鳳山商工", 
+                                           "121306" = "財團法人新光高中", 
+                                           "121307" = "財團法人普門中學", 
+                                           "121318" = "私立正義高中", 
+                                           "121320" = "私立義大國際高中", 
+                                           "121405" = "私立中山工商", 
+                                           "121410" = "私立旗美商工", 
+                                           "121413" = "私立高英工商", 
+                                           "121415" = "私立華德工家", 
+                                           "121417" = "私立高苑工商", 
+                                           "124302" = "市立文山高中", 
+                                           "124311" = "市立林園高中", 
+                                           "124313" = "市立仁武高中", 
+                                           "124322" = "市立路竹高中", 
+                                           "124333" = "市立六龜高中", 
+                                           "124340" = "市立福誠高中", 
+                                           "521301" = "天主教明誠高中", 
+                                           "521303" = "私立大榮高中", 
+                                           "521401" = "私立中華藝校", 
+                                           "523301" = "市立鼓山高中", 
+                                           "533301" = "市立左營高中", 
+                                           "533302" = "市立新莊高中", 
+                                           "533401" = "市立海青工商", 
+                                           "533402" = "市立三民家商", 
+                                           "540301" = "國立中山大學附屬國光高中", 
+                                           "543301" = "市立中山高中", 
+                                           "543302" = "市立楠梓高中", 
+                                           "551301" = "私立立志高中", 
+                                           "551303" = "南海月光實驗學校", 
+                                           "551402" = "私立樹德家商", 
+                                           "553301" = "市立高雄中學", 
+                                           "553302" = "市立三民高中", 
+                                           "553401" = "市立高雄高工", 
+                                           "563301" = "市立新興高中", 
+                                           "563401" = "市立高雄高商", 
+                                           "573301" = "市立高雄女中", 
+                                           "580301" = "國立高師大附中", 
+                                           "581301" = "私立復華高中", 
+                                           "581302" = "天主教道明中學", 
+                                           "581401" = "私立國際商工", 
+                                           "581402" = "私立三信家商", 
+                                           "583301" = "市立中正高中", 
+                                           "593301" = "市立前鎮高中", 
+                                           "593302" = "市立瑞祥高中", 
+                                           "593401" = "市立中正高工", 
+                                           "610405" = "國立高餐大附屬餐旅中學", 
+                                           "613301" = "市立小港高中", 
+                                           "020301" = "國立蘭陽女中", 
+                                           "020302" = "國立宜蘭高中", 
+                                           "020308" = "國立羅東高中", 
+                                           "020403" = "國立宜蘭高商", 
+                                           "020404" = "國立羅東高商", 
+                                           "020405" = "國立蘇澳海事", 
+                                           "020407" = "國立羅東高工", 
+                                           "020409" = "國立頭城家商", 
+                                           "021301" = "私立慧燈高中", 
+                                           "021310" = "私立中道高中", 
+                                           "024322" = "縣立南澳高中", 
+                                           "024325" = "縣立慈心華德福實中", 
+                                           "040302" = "國立竹東高中", 
+                                           "040304" = "國立關西高中", 
+                                           "040308" = "國立竹北高中", 
+                                           "041303" = "私立義民高中", 
+                                           "041305" = "私立忠信高中", 
+                                           "041306" = "私立東泰高中", 
+                                           "041307" = "私立仰德高中", 
+                                           "041401" = "私立內思高工", 
+                                           "044311" = "縣立六家高級中學", 
+                                           "044320" = "縣立湖口高中", 
+                                           "050303" = "國立苗栗高中", 
+                                           "050310" = "國立竹南高中", 
+                                           "050314" = "國立卓蘭高中", 
+                                           "050315" = "國立苑裡高中", 
+                                           "050401" = "國立大湖農工", 
+                                           "050404" = "國立苗栗農工", 
+                                           "050407" = "國立苗栗高商", 
+                                           "051302" = "私立君毅高中", 
+                                           "051305" = "私立大成高中", 
+                                           "051306" = "私立建臺高中", 
+                                           "051307" = "私立全人實驗高中", 
+                                           "051408" = "私立中興商工", 
+                                           "051411" = "私立育民工家", 
+                                           "051412" = "私立賢德工商", 
+                                           "051413" = "私立龍德家商", 
+                                           "054308" = "縣立三義高中", 
+                                           "054309" = "縣立苑裡高中", 
+                                           "054317" = "縣立興華高中", 
+                                           "054333" = "縣立大同高中", 
+                                           "070301" = "國立彰化女中", 
+                                           "070304" = "國立員林高中", 
+                                           "070307" = "國立彰化高中", 
+                                           "070316" = "國立鹿港高中", 
+                                           "070319" = "國立溪湖高中", 
+                                           "070401" = "國立彰師附工", 
+                                           "070402" = "國立永靖高工", 
+                                           "070403" = "國立二林工商", 
+                                           "070405" = "國立秀水高工", 
+                                           "070406" = "國立彰化高商", 
+                                           "070408" = "國立員林農工", 
+                                           "070409" = "國立員林崇實高工", 
+                                           "070410" = "國立員林家商", 
+                                           "070415" = "國立北斗家商", 
+                                           "071311" = "私立精誠高中", 
+                                           "071317" = "私立文興高中", 
+                                           "071318" = "財團法人正德高中", 
+                                           "071413" = "私立大慶商工", 
+                                           "071414" = "私立達德商工", 
+                                           "074308" = "縣立彰化藝術高中", 
+                                           "074313" = "縣立二林高中", 
+                                           "074323" = "縣立和美高中", 
+                                           "074328" = "縣立田中高中", 
+                                           "074339" = "縣立成功高中", 
+                                           "080302" = "國立南投高中", 
+                                           "080305" = "國立中興高中", 
+                                           "080307" = "國立竹山高中", 
+                                           "080308" = "國立暨大附中", 
+                                           "080401" = "國立仁愛高農", 
+                                           "080403" = "國立埔里高工", 
+                                           "080404" = "國立南投高商", 
+                                           "080406" = "國立草屯商工", 
+                                           "080410" = "國立水里商工", 
+                                           "081311" = "私立五育高中", 
+                                           "081312" = "私立三育高中", 
+                                           "081313" = "私立弘明實驗高中", 
+                                           "081314" = "私立普台高中", 
+                                           "081409" = "南投縣同德高中", 
+                                           "084309" = "縣立旭光高中", 
+                                           "090305" = "國立斗六高中", 
+                                           "090306" = "國立北港高中", 
+                                           "090315" = "國立虎尾高中", 
+                                           "090401" = "國立虎尾農工", 
+                                           "090402" = "國立西螺農工", 
+                                           "090403" = "國立斗六家商", 
+                                           "090404" = "國立北港農工", 
+                                           "090413" = "國立土庫商工", 
+                                           "091307" = "私立永年高中", 
+                                           "091308" = "私立正心高中", 
+                                           "091311" = "私立文生高中", 
+                                           "091312" = "私立巨人高中", 
+                                           "091316" = "私立揚子高中", 
+                                           "091318" = "財團法人義峰高中", 
+                                           "091319" = "福智高中", 
+                                           "091320" = "雲林縣維多利亞實驗高中", 
+                                           "091410" = "私立大成商工", 
+                                           "091414" = "私立大德工商", 
+                                           "094301" = "縣立斗南高中", 
+                                           "094307" = "縣立麥寮高中", 
+                                           "094308" = "縣立古坑華德福實驗高級中學", 
+                                           "094326" = "縣立蔦松藝術高中", 
+                                           "100301" = "國立東石高中", 
+                                           "100302" = "國立新港藝術高中", 
+                                           "100402" = "國立民雄農工", 
+                                           "101303" = "私立同濟高中", 
+                                           "101304" = "私立協同高中", 
+                                           "101405" = "私立協志工商", 
+                                           "101406" = "私立萬能工商", 
+                                           "101407" = "私立弘德工商", 
+                                           "104319" = "縣立竹崎高中", 
+                                           "104326" = "縣立永慶高中", 
+                                           "130302" = "國立屏東女中", 
+                                           "130305" = "國立屏東高中", 
+                                           "130306" = "國立潮州高中", 
+                                           "130322" = "國立屏北高中", 
+                                           "130401" = "國立內埔農工", 
+                                           "130403" = "國立屏東高工", 
+                                           "130404" = "國立佳冬高農", 
+                                           "130410" = "國立東港海事", 
+                                           "130417" = "國立恆春工商", 
+                                           "131302" = "屏東縣崇華高中", 
+                                           "131307" = "財團法人屏榮高中", 
+                                           "131308" = "私立陸興高中", 
+                                           "131311" = "私立美和高中", 
+                                           "131409" = "私立民生家商", 
+                                           "131418" = "私立日新工商", 
+                                           "134304" = "縣立大同高中", 
+                                           "134321" = "縣立枋寮高中", 
+                                           "134324" = "縣立東港高中", 
+                                           "134334" = "縣立來義高中", 
+                                           "140301" = "國立臺東大學附屬體育高中", 
+                                           "140302" = "國立臺東女中", 
+                                           "140303" = "國立臺東高中", 
+                                           "140404" = "國立關山工商", 
+                                           "140405" = "國立臺東高商", 
+                                           "140408" = "國立成功商水", 
+                                           "141301" = "臺東縣均一高中", 
+                                           "141307" = "私立育仁高中", 
+                                           "141406" = "私立公東高工", 
+                                           "144322" = "縣立蘭嶼高中", 
+                                           "150302" = "國立花蓮女中", 
+                                           "150303" = "國立花蓮高中", 
+                                           "150309" = "國立玉里高中", 
+                                           "150401" = "國立花蓮高農", 
+                                           "150404" = "國立花蓮高工", 
+                                           "150405" = "國立花蓮高商", 
+                                           "150411" = "國立光復商工", 
+                                           "151306" = "私立海星高中", 
+                                           "151307" = "私立四維高中", 
+                                           "151312" = "財團法人慈濟大學附中", 
+                                           "151410" = "花蓮縣上騰工商", 
+                                           "154301" = "花蓮縣立體育高中", 
+                                           "154399" = "縣立南平中學", 
+                                           "160302" = "國立馬公高中", 
+                                           "160401" = "國立澎湖海事水產", 
+                                           "170301" = "國立基隆女中", 
+                                           "170302" = "國立基隆高中", 
+                                           "170403" = "國立海洋大學附屬基隆海事", 
+                                           "170404" = "國立基隆商工", 
+                                           "171306" = "私立二信高中", 
+                                           "171308" = "輔大聖心高中", 
+                                           "171405" = "私立光隆家商", 
+                                           "171407" = "私立培德工家", 
+                                           "173304" = "市立中山高中", 
+                                           "173306" = "市立安樂高中", 
+                                           "173307" = "市立暖暖高中", 
+                                           "173314" = "市立八斗高中", 
+                                           "180301" = "國立科學工業園區實驗高中", 
+                                           "180302" = "國立新竹女中", 
+                                           "180309" = "國立新竹高中", 
+                                           "180403" = "國立新竹高商", 
+                                           "180404" = "國立新竹高工", 
+                                           "181305" = "私立光復高中", 
+                                           "181306" = "私立曙光女中", 
+                                           "181307" = "私立磐石高中", 
+                                           "181308" = "私立世界高中", 
+                                           "183306" = "市立成德高中", 
+                                           "183307" = "市立香山高中", 
+                                           "183313" = "市立建功高中", 
+                                           "200302" = "國立嘉義女中", 
+                                           "200303" = "國立嘉義高中", 
+                                           "200401" = "國立華南高商", 
+                                           "200405" = "國立嘉義高工", 
+                                           "200406" = "國立嘉義高商", 
+                                           "200407" = "國立嘉義家職", 
+                                           "201304" = "私立興華高中", 
+                                           "201309" = "私立仁義高中", 
+                                           "201310" = "私立嘉華高中", 
+                                           "201312" = "私立輔仁高中", 
+                                           "201313" = "私立宏仁女中", 
+                                           "201314" = "私立立仁高中", 
+                                           "201408" = "私立東吳工家", 
+                                           "710301" = "國立金門高中", 
+                                           "710401" = "國立金門農工", 
+                                           "720301" = "國立馬祖高中", 
+                                           "011C71" = "私立光華高商進修學校", 
+                                           "351B09" = "私立南華高中進修學校", 
+                                           "361B09" = "私立志仁中學進修學校", 
+                                           "034348" = "桃園市立羅浮高級中等學校", 
+                                           "121302" = "私立光禾華德福實驗學校", 
+                                           "333304" = "臺北市芳和實驗中學", 
+                                           "383303" = "市立數位實驗高中")
 
 
 # 統計處高級中等學校科別資料 -----------------------------------------------------------
 # 統計處公布的「高級中等學校科別資料」
 # 網址：https://depart.moe.edu.tw/ED4500/News.aspx?n=5A930C32CC6C3818&sms=91B3AAE8C6388B96
-edu_path <- "C:\\edhr-111t1\\110_base2_revise.xls"
-data_schtype <- read_excel(edu_path)
+# 設定網址和檔名
+url <- "https://stats.moe.gov.tw/files/detail/111/111_base2.xlsx"
+filename <- "111_base2.xlsx"
+
+if (!file.exists(filename)) {
+  download.file(url, destfile = filename, mode = "wb")
+} else {
+  cat(paste(filename, "already exists.\n"))
+}
+
+# 讀取 Excel 檔案
+data_schtype <- read_excel(filename)
+
+colnames(data_schtype) <- data_schtype[2, ]
+data_schtype <- data_schtype[-c(1:2), ]
+
 data_schtype <- c("學校代碼", "學校名稱", "學程(等級)別", "學程(等級)名稱", "日夜別", "日夜別名稱", "群別代碼", "群別名稱", "科系代碼", "科系名稱", "班級數", "學生數") %>%
   data_schtype[, .]
 # 改變變項名稱與形態
@@ -455,8 +1247,77 @@ data_schtype$nstudent <- as.numeric(data_schtype$nstudent)
 data_schtype$organization_id <- recode_factor(data_schtype$organization_id,
                                        "140222" = "140401"
                                        , "400144" = "400419")
-# 參與學校名單
-try <- c("010301", "013303", "013304", "013335", "013336", "013337", "013338", "013339", "013402", "013430", "013433", "013434", "014302", "014311", "014315", "014322", "014326", "014332", "014338", "014343", "014347", "014348", "014353", "014356", "014357", "014362", "014363", "014364", "014381", "014439", "014468", "020301", "020302", "020308", "020403", "020404", "020405", "020407", "020409", "024322", "024325", "030305", "030403", "033302", "033304", "033306", "033316", "033325", "033327", "033407", "033408", "034306", "034312", "034314", "034319", "034332", "034335", "034347", "034348", "034399", "040302", "040304", "040308", "044311", "044320", "050303", "050310", "050314", "050315", "050401", "050404", "050407", "054308", "054309", "054317", "054333", "060322", "060323", "063303", "063305", "063312", "063401", "063402", "063404", "063407", "063408", "064308", "064324", "064328", "064336", "064342", "064350", "064406", "070301", "070304", "070307", "070316", "070319", "070401", "070402", "070403", "070405", "070406", "070408", "070409", "070410", "070415", "074308", "074313", "074323", "074328", "074339", "080302", "080305", "080307", "080308", "080401", "080403", "080404", "080406", "080410", "084309", "090305", "090306", "090315", "090401", "090402", "090403", "090404", "090413", "094301", "094307", "094308", "094326", "100301", "100302", "100402", "104319", "104326", "110302", "110308", "110311", "110312", "110314", "110315", "110317", "110328", "110401", "110403", "110404", "110405", "110406", "110407", "110409", "110410", "114306", "114307", "120303", "120304", "120311", "120319", "120401", "120402", "120409", "124302", "124311", "124313", "124322", "124333", "124340", "130302", "130305", "130306", "130322", "130401", "130403", "130404", "130410", "130417", "134304", "134321", "134324", "134334", "140301", "140302", "140303", "140404", "140405", "140408", "144322", "150302", "150303", "150309", "150401", "150404", "150405", "150411", "154301", "160302", "160401", "170301", "170302", "170403", "170404", "173304", "173306", "173307", "173314", "180301", "180302", "180309", "180403", "180404", "183306", "183307", "183313", "190406", "193301", "193302", "193303", "193313", "193315", "193316", "193404", "193407", "194303", "194315", "200302", "200303", "200401", "200405", "200406", "200407", "210303", "210305", "210306", "210309", "210408", "210416", "213303", "213316", "313301", "313302", "323301", "323302", "323401", "323402", "330301", "333301", "333304", "333401", "343301", "343302", "343303", "353301", "353302", "353303", "363301", "363302", "373301", "373302", "380301", "383301", "383302", "383401", "393301", "393302", "393401", "403301", "403302", "403303", "403401", "413301", "413302", "413401", "423301", "423302", "383303", "523301", "533301", "533302", "533401", "533402", "540301", "543301", "543302", "553301", "553302", "553401", "563301", "563401", "573301", "580301", "583301", "593301", "593302", "593401", "610405", "613301", "710301", "710401", "720301")
+# 參與學校名單(管區)
+try <- c("421302", 
+         "381302", 
+         "331404", 
+         "421303", 
+         "411301", 
+         "401302", 
+         "351402", 
+         "381305", 
+         "411401", 
+         "421301", 
+         "361B09", 
+         "331403", 
+         "331402", 
+         "341302", 
+         "411302", 
+         "401303", 
+         "411303", 
+         "401301", 
+         "381306", 
+         "381304", 
+         "381303", 
+         "331301", 
+         "341402", 
+         "361401", 
+         "311401", 
+         "331304", 
+         "351B09", 
+         "331302", 
+         "361301", 
+         "351301", 
+         "421404", 
+         "321399", 
+         "381301", 
+         "581301", 
+         "121318", 
+         "581401", 
+         "121417", 
+         "521303", 
+         "581302", 
+         "581402", 
+         "521301", 
+         "551303", 
+         "121307", 
+         "121410", 
+         "121302", 
+         "121415", 
+         "551402", 
+         "521401", 
+         "551301", 
+         "121413", 
+         "121405", 
+         "121320", 
+         "121306", 
+         "101303", 
+         "101304", 
+         "101406", 
+         "141406", 
+         "141307", 
+         "141301", 
+         "181305", 
+         "181307", 
+         "181308", 
+         "181306", 
+         "201314", 
+         "201313", 
+         "201304", 
+         "201408", 
+         "201309", 
+         "201312", 
+         "201310")
 
 data_schtype$try1 <- NA
 for (x in try){
@@ -658,7 +1519,7 @@ drev_person$edu_name <- recode_factor(drev_person$organization_id,
                                       "193315" = "臺北市私立東山高級中學", 
                                       "381301" = "臺北市私立東山高級中學", 
                                       "331301" = "臺北市私立延平高級中學", 
-                                      "311401" = "育達學校財團法人臺北市私立普林思頓高級中等學校", 
+                                      "311401" = "育達學校財團法人臺北市私立育達高級中等學校", 
                                       "361B09" = "臺北市私立志仁高級中學職業進修學校", 
                                       "381304" = "臺北市私立再興高級中學", 
                                       "371301" = "臺北市私立立人高級中學", 
@@ -1182,7 +2043,7 @@ drev_person$edu_name2 <- recode_factor(drev_person$organization_id,
                                        "014399" = "市立豐珠中學", 
                                        "014439" = "市立鶯歌工商", 
                                        "014468" = "市立樟樹國際實中", 
-                                       "311401" = "臺北市普林思頓高中", 
+                                       "311401" = "臺北市育達高中", 
                                        "313301" = "市立西松高中", 
                                        "313302" = "市立中崙高中", 
                                        "321399" = "臺北市私立協和祐德高級中學", 
@@ -1717,6 +2578,8 @@ drev_person_1[["bdegreeg1"]][grep("^?輛?程系$", drev_person_1[["bdegreeg1"]])] <
 drev_person_1[["bdegreeg1"]][grep("^?餐廚藝系$", drev_person_1[["bdegreeg1"]])] <- "西餐廚藝系"
 drev_person_1[["bdegreeg1"]][grep("^化妝品應?管理系$", drev_person_1[["bdegreeg1"]])] <- "化妝品應用管理系"
 
+
+
 #將gender由字串轉成數字
 drev_person_1 <- drev_person_1 %>% 
   transform(gender = as.numeric(gender))
@@ -2152,12 +3015,8 @@ view_flag6 <- distinct(flag_person, name, .keep_all = TRUE) %>%
   subset(nchar(name) != 3) %>%
   subset(select = c(organization_id, idnumber, name, edu_name2, source))
 
-#數字、特殊符號標記為1
-flag_person$err_flag <- case_when(
-  grepl("\\d", flag_person$name) ~ 1,
-  grepl("[[:punct:]]", flag_person$name) ~ 1,
-  TRUE ~ 0
-)
+#數字、特殊符號標記為1(不包含．)
+flag_person$err_flag <- grepl("\\d|[[:punct:]&&[^.]]", flag_person$name) %>% as.integer()
 
 if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
 #根據organization_id + source，展開成寬資料(wide)
@@ -2213,7 +3072,7 @@ if('flag6' %in% ls()){
 # flag7: 出生年月日換算成年齡後，過高或過低。 -------------------------------------------------------------------
 flag_person <- drev_person_1
 
-flag_person$survey_year <- 110
+flag_person$survey_year <- 112
 flag_person$birthy <- substr(flag_person$birthdate, 1, 3) %>% as.numeric()
 
 flag_person$age <- flag_person$survey_year- flag_person$birthy
@@ -2618,20 +3477,69 @@ flag_person$count_sertype2 <- if_else(flag_person$sertype == "校長", 1, 0)
 flag_person$count_skillteacher <- if_else(flag_person$skillteacher == "N", 1, 0)
 flag_person$count_counselor <- if_else(flag_person$counselor == "N", 1, 0)
 flag_person$count_speteacher <- if_else(flag_person$speteacher == "N", 1, 0)
-flag_person$count_joiteacher <- if_else(flag_person$joiteacher == "N", 1, 0)
+flag_person$count_joiteacher <- if_else(flag_person$joiteacher %in% c("1", "2"), 1, 0)
+flag_person$count_joiteacher2 <- if_else(flag_person$joiteacher %in% c("3", "4"), 1, 0)
+flag_person$count_joiteacher3 <- if_else(flag_person$joiteacher == "N", 1, 0)
 flag_person$count_expecter <- if_else(flag_person$expecter == "N", 1, 0)
 flag_person$count_workexp <- if_else(flag_person$workexp == "N", 1, 0)
 flag_person$count_study <- if_else(flag_person$study == "N", 1, 0)
 
+flag_person <- flag_person %>%
+  mutate(count_admin2 = 0, count_admin3 = 0, count_admin4 = 0, count_admin5 = 0, count_admin6 = 0, count_admin8 = 0, count_admin9 = 0)
+
+temp <- c("0", "1", "2", "3")
+for (x in temp){
+  flag_person$count_admin2 <- case_when(
+    grepl("教務", flag_person[[paste("adminunit", x, sep = "")]])                                                                                                                                     & (grepl("主任$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("主任1$", flag_person[[paste("admintitle", x, sep = "")]])) & !grepl("主任教官", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("科主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("學程主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("國中部主任", flag_person[[paste("admintitle", x, sep = "")]]) ~ 1,
+    TRUE ~ flag_person$count_admin2
+  )
+}     
+for (x in temp){
+  flag_person$count_admin3 <- case_when(
+    (grepl("學務", flag_person[[paste("adminunit", x, sep = "")]]) | grepl("學生事務", flag_person[[paste("adminunit", x, sep = "")]]))                                                                & (grepl("主任$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("主任1$", flag_person[[paste("admintitle", x, sep = "")]])) & !grepl("主任教官", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("科主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("學程主任", flag_person[[paste("admintitle", x, sep = "")]]) ~ 1,
+    TRUE ~ flag_person$count_admin3
+  )
+}                
+for (x in temp){
+  flag_person$count_admin4 <- case_when(
+    grepl("總務", flag_person[[paste("adminunit", x, sep = "")]])                                                                                                                                     & (grepl("主任$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("主任1$", flag_person[[paste("admintitle", x, sep = "")]])) & !grepl("主任教官", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("科主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("學程主任", flag_person[[paste("admintitle", x, sep = "")]]) ~ 1,
+    TRUE ~ flag_person$count_admin4
+  )
+}                
+for (x in temp){
+  flag_person$count_admin5 <- case_when(
+    grepl("輔導", flag_person[[paste("adminunit", x, sep = "")]])                                                                                                                                     & (grepl("主任$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("主任1$", flag_person[[paste("admintitle", x, sep = "")]])) & !grepl("主任輔導教師$", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("主任教官", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("科主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("學程主任", flag_person[[paste("admintitle", x, sep = "")]]) ~ 1,
+    TRUE ~ flag_person$count_admin5
+  )
+}                
+for (x in temp){
+  flag_person$count_admin6 <- case_when(
+    (grepl("圖書", flag_person[[paste("adminunit", x, sep = "")]]) | grepl("圖資", flag_person[[paste("adminunit", x, sep = "")]]) | grepl("圖書資訊", flag_person[[paste("adminunit", x, sep = "")]])) & ((grepl("主任$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("主任1$", flag_person[[paste("admintitle", x, sep = "")]])) & !grepl("主任教官", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("科主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("學程主任", flag_person[[paste("admintitle", x, sep = "")]])) | grepl("^館長$", flag_person[[paste("admintitle", x, sep = "")]]) ~ 1,
+    TRUE ~ flag_person$count_admin6
+  )
+}  
+for (x in temp){  
+  flag_person$count_admin8 <- case_when(
+    grepl("人事", flag_person[[paste("adminunit", x, sep = "")]])                                                                                                                                      & ((grepl("主任$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("主任1$", flag_person[[paste("admintitle", x, sep = "")]])) & !grepl("主任教官", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("科主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("學程主任", flag_person[[paste("admintitle", x, sep = "")]])) | grepl("^人事管理員$", flag_person[[paste("admintitle", x, sep = "")]]) ~ 1,
+    TRUE ~ flag_person$count_admin8
+  )
+}                
+for (x in temp){
+  flag_person$count_admin9 <- case_when(
+    (grepl("會計", flag_person[[paste("adminunit", x, sep = "")]]) | grepl("主計", flag_person[[paste("adminunit", x, sep = "")]]))                                                                    & ((grepl("主任$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("主任1$", flag_person[[paste("admintitle", x, sep = "")]])) & !grepl("主任教官", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("科主任", flag_person[[paste("admintitle", x, sep = "")]]) & !grepl("學程主任", flag_person[[paste("admintitle", x, sep = "")]])) | grepl("^主計員$", flag_person[[paste("admintitle", x, sep = "")]]) | grepl("^主計員$", flag_person[[paste("admintitle", x, sep = "")]]) ~ 1,
+    TRUE ~ flag_person$count_admin9
+  )
+}  
+
 #調整NA
-temp <- c("count_emptype", "count_empunit", "count_sertype", "count_sertype2", "count_skillteacher", "count_counselor", "count_speteacher", "count_counselor", "count_speteacher", "count_joiteacher", "count_expecter", "count_workexp", "count_study")
+temp <- c("count_emptype", "count_empunit", "count_sertype", "count_sertype2", "count_skillteacher", "count_counselor", "count_speteacher", "count_counselor", "count_speteacher", "count_joiteacher", "count_joiteacher2", "count_joiteacher3", "count_expecter", "count_workexp", "count_study", "count_admin2", "count_admin3", "count_admin4", "count_admin5", "count_admin6", "count_admin8", "count_admin9")
 for (x in temp){
   flag_person[[x]][is.na(flag_person[[x]])] <- 0
 }
 
 flag_person$jj <- 1
 
-flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_empunit, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_expecter, count_workexp, count_study, jj) ~ organization_id + source, flag_person, sum)
+flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_empunit, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_joiteacher2, count_joiteacher3, count_expecter, count_workexp, count_study, count_admin2, count_admin3, count_admin4, count_admin5, count_admin6, count_admin8, count_admin9, jj) ~ organization_id + source, flag_person, sum)
 
 flag_person_wide_flag18$flag_err <- 0
 flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emptype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教員資料表專任教學人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整教員名單資料。", "")
@@ -2639,16 +3547,60 @@ flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emp
 flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教員資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員工資料表", "職員(工)資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_sertype <- if_else(flag_person_wide_flag18$count_sertype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教師人數偏低，請再協助確認實際聘任情況。", "")
-flag_person_wide_flag18$err_sertype <- if_else(flag_person_wide_flag18$count_sertype2 > 1 & flag_person_wide_flag18$source == "教員資料表", "校長人數超過一位，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_sertype2 <- if_else(flag_person_wide_flag18$count_sertype2 > 1 & flag_person_wide_flag18$source == "教員資料表", "校長人數超過一位，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_skillteacher <- if_else(flag_person_wide_flag18$count_skillteacher / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "專業及技術教師人數偏多，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_counselor <- if_else(flag_person_wide_flag18$count_counselor / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "專任輔導教師人數偏多，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_speteacher <- if_else(flag_person_wide_flag18$count_speteacher / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "特教班專職教師人數偏多，請再協助確認實際聘任情況。", "")
-flag_person_wide_flag18$err_joiteacher <- if_else(flag_person_wide_flag18$count_joiteacher / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "合聘教師人數偏多。（請確認校內教師是否與他校合聘：如有與他校合聘者，本校又為『主聘學校』，再請於『是否為合聘教師』一欄填入『1』，若以本校為『從聘學校』請於『是否為合聘教師』一欄填入『2』；若沒有與他校合聘，則『是否為合聘教師』一欄請填『N』）", "")
+flag_person_wide_flag18$err_joiteacher <- if_else(flag_person_wide_flag18$count_joiteacher / flag_person_wide_flag18$jj > 0.1 & flag_person_wide_flag18$source == "教員資料表", "合聘教師人數偏多（請確認校內教師是否與他校合聘：如有與他校合聘者，本校又為『主聘學校』，再請於『是否為合聘教師』一欄填入『1』，若以本校為『從聘學校』請於『是否為合聘教師』一欄填入『2』；若沒有與他校合聘，則『是否為合聘教師』一欄請填『N』）", "")
+flag_person_wide_flag18$err_joiteacher2 <- if_else(flag_person_wide_flag18$count_joiteacher2 / flag_person_wide_flag18$jj > 0.2 & flag_person_wide_flag18$source == "教員資料表", "巡迴教師人數偏多（請確認校內巡迴教師人數：如有巡迴教師，以本校又為『中心學校』，再請於『是否為合聘教師』一欄填入『3』，若以本校為『從屬學校』請於『是否為合聘教師』一欄填入『4』；若沒有巡迴教師，則『是否為合聘教師』一欄請填『N』）", "")
+flag_person_wide_flag18$err_joiteacher3 <- if_else(flag_person_wide_flag18$count_joiteacher3 / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "合聘教師與巡迴教師人數偏多（請確認校內合聘教師、巡迴教師情形）", "")
 flag_person_wide_flag18$err_expecter <- if_else(flag_person_wide_flag18$count_expecter / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "業界專家人數偏多，請再協助確認實際聘任情況，或請確認是否將專業及技術教師誤填為業界專家。", "")
 flag_person_wide_flag18$err_workexp <- if_else(flag_person_wide_flag18$count_workexp / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "一年以上與任教領域相關之業界實務工作經驗人數偏多。（請再協助確認，『是否具備一年以上與任教領域相關之業界實務工作經驗』填寫『Y』之教員，是否確依欄位說明具備此經驗）", "")
 flag_person_wide_flag18$err_study <- if_else(flag_person_wide_flag18$count_study / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "近六年內進行與專業或技術有關之研習或研究的人數偏多，請再協助確認實際聘任情況。", "")
 
-flag_person_wide_flag18$err_flag_txt <- paste(flag_person_wide_flag18$err_emptype, flag_person_wide_flag18$err_empunit, flag_person_wide_flag18$err_sertype, flag_person_wide_flag18$err_skillteacher, flag_person_wide_flag18$err_counselor, flag_person_wide_flag18$err_speteacher, flag_person_wide_flag18$err_joiteacher, flag_person_wide_flag18$err_expecter, flag_person_wide_flag18$err_workexp, flag_person_wide_flag18$err_study, sep = " ")
+#如果err_joiteacher、err_joiteacher2、err_joiteacher3同時皆被抓出的調整
+idx <- which(flag_person_wide_flag18$err_joiteacher != "" & flag_person_wide_flag18$err_joiteacher2 != "" & flag_person_wide_flag18$err_joiteacher3 != "")
+flag_person_wide_flag18[idx, c("err_joiteacher", "err_joiteacher2")] <- ""
+
+idx <- which(flag_person_wide_flag18$err_joiteacher != "" & flag_person_wide_flag18$err_joiteacher2 != "" & flag_person_wide_flag18$err_joiteacher3 == "")
+flag_person_wide_flag18[idx, c("err_joiteacher", "err_joiteacher2")] <- ""
+flag_person_wide_flag18[idx, c("err_joiteacher3")] <- "合聘教師與巡迴教師人數偏多（請確認校內合聘教師、巡迴教師情形）"
+
+idx <- which(flag_person_wide_flag18$err_joiteacher != "" & flag_person_wide_flag18$err_joiteacher2 == "" & flag_person_wide_flag18$err_joiteacher3 != "")
+flag_person_wide_flag18[idx, c("err_joiteacher")] <- ""
+
+idx <- which(flag_person_wide_flag18$err_joiteacher == "" & flag_person_wide_flag18$err_joiteacher2 != "" & flag_person_wide_flag18$err_joiteacher3 != "")
+flag_person_wide_flag18[idx, c("err_joiteacher2")] <- ""
+
+flag_person_wide_flag18$err_admin2 <- if_else(flag_person_wide_flag18$count_admin2 > 1, "教務處主管人數超過一位，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_admin3 <- if_else(flag_person_wide_flag18$count_admin3 > 1, "學務處主管人數超過一位，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_admin4 <- if_else(flag_person_wide_flag18$count_admin4 > 1, "總務處主管人數超過一位，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_admin5 <- if_else(flag_person_wide_flag18$count_admin5 > 1, "輔導室主管人數超過一位，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_admin6 <- if_else(flag_person_wide_flag18$count_admin6 > 1, "圖書館主管人數超過一位，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_admin8 <- if_else(flag_person_wide_flag18$count_admin8 > 1, "人事室主管人數超過一位，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_admin9 <- if_else(flag_person_wide_flag18$count_admin9 > 1, "主（會）計室主管人數超過一位，請再協助確認實際聘任情況。", "")
+
+
+flag_person_wide_flag18$err_flag_txt <- paste(flag_person_wide_flag18$err_emptype, 
+                                              flag_person_wide_flag18$err_empunit, 
+                                              flag_person_wide_flag18$err_sertype, 
+                                              flag_person_wide_flag18$err_sertype2, 
+                                              flag_person_wide_flag18$err_admin2, 
+                                              flag_person_wide_flag18$err_admin3, 
+                                              flag_person_wide_flag18$err_admin4, 
+                                              flag_person_wide_flag18$err_admin5, 
+                                              flag_person_wide_flag18$err_admin6, 
+                                              flag_person_wide_flag18$err_admin8, 
+                                              flag_person_wide_flag18$err_admin9, 
+                                              flag_person_wide_flag18$err_skillteacher, 
+                                              flag_person_wide_flag18$err_counselor, 
+                                              flag_person_wide_flag18$err_speteacher, 
+                                              flag_person_wide_flag18$err_joiteacher, 
+                                              flag_person_wide_flag18$err_joiteacher2, 
+                                              flag_person_wide_flag18$err_joiteacher3, 
+                                              flag_person_wide_flag18$err_expecter, 
+                                              flag_person_wide_flag18$err_workexp, 
+                                              flag_person_wide_flag18$err_study, sep = " ")
 
 # #產生檢誤報告文字
 # flag18_temp <- flag_person_wide_flag18 %>%
@@ -2699,12 +3651,7 @@ flag_person <- drev_person_1
 
 #外來人口統一證號：第二碼為A B C D 8 9
 flag_person$err_flag <- 0
-flag_person$err_flag <- if_else(substr(flag_person$idnumber, 2, 2) == "A" & (flag_person$nation == "本國籍" | flag_person$nation == "本國"), 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(substr(flag_person$idnumber, 2, 2) == "B" & (flag_person$nation == "本國籍" | flag_person$nation == "本國"), 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(substr(flag_person$idnumber, 2, 2) == "C" & (flag_person$nation == "本國籍" | flag_person$nation == "本國"), 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(substr(flag_person$idnumber, 2, 2) == "D" & (flag_person$nation == "本國籍" | flag_person$nation == "本國"), 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(substr(flag_person$idnumber, 2, 2) == "8" & (flag_person$nation == "本國籍" | flag_person$nation == "本國"), 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(substr(flag_person$idnumber, 2, 2) == "9" & (flag_person$nation == "本國籍" | flag_person$nation == "本國"), 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(grepl("^[^\s][ABCD89][^\s]+$", flag_person$idnumber) & (flag_person$nation %in% c("本國籍", "本國", "臺灣")), 1, flag_person$err_flag)
 
 #呈現姓名
 flag_person$err_flag_txt <- ""
@@ -2869,8 +3816,8 @@ if('flag20' %in% ls()){
 # flag24: 本校到職日期與填報基準日的差距，不應小於本校任職需扣除年資。 -------------------------------------------------------------------
 flag_person <- drev_person_1
 
-flag_person$survey_year <- 2022
-flag_person$survey_mon <- 9
+flag_person$survey_year <- 2023
+flag_person$survey_mon <- 3
 flag_person$onbodaty <- ""
 flag_person$onbodatm <- ""
 flag_person$onbodatd <- ""
@@ -2888,8 +3835,8 @@ flag_person$onbodatd <- as.numeric(flag_person$onbodatd)
 
 #本校服務年資
 flag_person$tser <- 0
-flag_person$tser <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 9/12 + 30/365) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/365)), flag_person$tser)
-flag_person$tser <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 9/12 + 30/366) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/366)), flag_person$tser)
+flag_person$tser <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 3/12 + 31/365) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/365)), flag_person$tser)
+flag_person$tser <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 3/12 + 31/366) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/366)), flag_person$tser)
 
 #本次本校任職需扣除之年資
 flag_person$desey <- substr(flag_person$desedym, 1, 2) %>% as.numeric()
@@ -3017,12 +3964,12 @@ flag_person$birthy <- as.numeric(flag_person$birthy)
 flag_person$birthm <- as.numeric(flag_person$birthm)
 flag_person$birthd <- as.numeric(flag_person$birthd)
 
-flag_person$survey_year <- 2022
+flag_person$survey_year <- 2023
 
 #創設變項年齡（以年為單位）：age
 flag_person$age <- 0
-flag_person$age <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 9/12 + 30/365) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/365)), flag_person$age)
-flag_person$age <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 9/12 + 30/366) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/366)), flag_person$age)
+flag_person$age <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 3/12 + 31/365) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/365)), flag_person$age)
+flag_person$age <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 3/12 + 31/366) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/366)), flag_person$age)
 
 flag_person$survey_year <- 2022
 flag_person$onbodaty <- ""
@@ -3043,8 +3990,8 @@ flag_person$onbodatd <- as.numeric(flag_person$onbodatd)
 
 #本校服務年資
 flag_person$tser <- 0
-flag_person$tser <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 9/12 + 30/365) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/365)), flag_person$tser)
-flag_person$tser <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 9/12 + 30/366) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/366)), flag_person$tser)
+flag_person$tser <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 3/12 + 31/365) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/365)), flag_person$tser)
+flag_person$tser <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 3/12 + 31/366) - (flag_person$onbodaty + (flag_person$onbodatm/12) + (flag_person$onbodatd/366)), flag_person$tser)
 
 #本次本校任職需扣除之年資
 flag_person$desey <- substr(flag_person$desedym, 1, 2) %>% as.numeric()
@@ -3534,20 +4481,21 @@ flag_person$brtype <- if_else(flag_person$brtype == "NA", "N", flag_person$brtyp
 
 #留職停薪原因不合理處
 flag_person$err_lev <- 0
-flag_person$err_lev <- if_else(flag_person$levpay == "應徵入伍留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "奉派協助友邦留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "育嬰留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "侍親留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "依親留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "出國進修或研究留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "易服勞役留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "延長留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "易服勞役留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "照護配偶或子女留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "國內外進修期滿延長留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "延長病假期滿留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "留職停薪/停聘" & flag_person$brtype != "N", 1, flag_person$err_lev)
-flag_person$err_lev <- if_else(flag_person$levpay == "其他情事留職停薪" & flag_person$brtype != "N", 1, flag_person$err_lev)
+flag_person$err_lev <- if_else(flag_person$levpay %in% c("應徵入伍留職停薪", 
+                                                         "奉派協助友邦留職停薪", 
+                                                         "育嬰留職停薪", 
+                                                         "侍親留職停薪", 
+                                                         "依親留職停薪", 
+                                                         "出國進修或研究留職停薪", 
+                                                         "易服勞役留職停薪", 
+                                                         "延長留職停薪", 
+                                                         "易服勞役留職停薪", 
+                                                         "照護配偶或子女留職停薪", 
+                                                         "國內外進修期滿延長留職停薪", 
+                                                         "延長病假期滿留職停薪", 
+                                                         "留職停薪/停聘", 
+                                                         "其他情事留職停薪") 
+                               & flag_person$brtype != "N", 1, flag_person$err_lev)
 
 #呈現姓名
 flag_person$err_flag_txt <- ""
@@ -4569,14 +5517,14 @@ flag_person$err_adminunit3 <- if_else(grepl("^高中部日間部$", flag_person$adminu
 #磐石高中才有"高中部"
 flag_person$err_adminunit3 <- if_else(grepl("^高中部$", flag_person$adminunit3) & flag_person$organization_id == "181307", 0, flag_person$err_adminunit3)
 
-#教員資料表之各兼任行政職資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，學生事務處生活輔導組。
-#教員資料表之兼任行政職資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，學生事務處生活輔導組。
-#職員(工)資料表之各服務單位資料不完整或不正確：請依欄位說明確認並正確填列服務單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如總務處出納組，學生事務處生活輔導組。
-#教員資料表及職員(工)資料表之(兼任)職稱或服務單位資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，總務處出納組。
-#上述職員(工)資料表中人員，若未再兼任或代理行政職務者，僅須填寫「職務名稱」與「服務單位」，且二級單位名稱請於「服務單位」所填一級單位名稱後面加註。
-#請確認*員之職稱或服務身分別，若確為教師，請將資料填至教員資料表。
-
-#（職員(工)資料表之服務單位資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位，請敘明一級與二級單位名稱，如學務處體育組，總務處出納組。另請再確認資源班是否為行政單位名稱。）
+#以下為參考文字
+  #教員資料表之各兼任行政職資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，學生事務處生活輔導組。
+  #教員資料表之兼任行政職資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，學生事務處生活輔導組。
+  #職員(工)資料表之各服務單位資料不完整或不正確：請依欄位說明確認並正確填列服務單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如總務處出納組，學生事務處生活輔導組。
+  #教員資料表及職員(工)資料表之(兼任)職稱或服務單位資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，總務處出納組。
+  #上述職員(工)資料表中人員，若未再兼任或代理行政職務者，僅須填寫「職務名稱」與「服務單位」，且二級單位名稱請於「服務單位」所填一級單位名稱後面加註。
+  #請確認*員之職稱或服務身分別，若確為教師，請將資料填至教員資料表。
+  #（職員(工)資料表之服務單位資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位，請敘明一級與二級單位名稱，如學務處體育組，總務處出納組。另請再確認資源班是否為行政單位名稱。）
 
 err_title0 <- data.frame(admintitle0 = flag_person$admintitle0, 
                          adminunit0 = flag_person$adminunit0, 
@@ -4602,6 +5550,41 @@ flag_person$err_flag_62 <- flag_person$err_admintitle0 + flag_person$err_adminun
 
 flag_person$err_flag <- if_else(flag_person$err_flag_62 != 0, 1, 0)
 
+
+#備註文字用
+  #err_flag_1: 職稱或服務單位不合理
+flag_person$err_flag_1 <- if_else(flag_person$err_admintitle0 != 0 | 
+  flag_person$err_adminunit0 != 0 | 
+  flag_person$err_admintitle1 != 0 | 
+  flag_person$err_adminunit1 != 0 | 
+  flag_person$err_admintitle2 != 0 | 
+  flag_person$err_adminunit2 != 0 | 
+  flag_person$err_admintitle3 != 0 | 
+  flag_person$err_adminunit3 != 0, 1, 0)
+  #err_flag_2: 職稱為組長，且未填二級單位
+flag_person$err_flag_2 <- if_else(flag_person$err_title0 != 0 | 
+                                   flag_person$err_title1 != 0 | 
+                                   flag_person$err_title2 != 0 | 
+                                   flag_person$err_title3 != 0, 1, 0)
+    #err_flag_2_1: 職員工資料表出現err_flag_2
+flag_person$err_flag2_1 <- if_else((flag_person$err_title0 != 0 | 
+                                    flag_person$err_title1 != 0 | 
+                                    flag_person$err_title2 != 0 | 
+                                    flag_person$err_title3 != 0 ) & 
+                                    flag_person$source == "職員(工)資料表", 1, 0)
+    #err_flag_2_2: 教員資料表出現err_flag_2
+flag_person$err_flag2_2 <- if_else((flag_person$err_title1 != 0 | 
+                                    flag_person$err_title2 != 0 | 
+                                    flag_person$err_title3 != 0) & 
+                                    flag_person$source == "教員資料表", 1, 0)
+
+#aggregate該校err_flag2_1及err_flag2_2 -> 該校err_flag_2(職稱為組長，且未填二級單位)出現在教員or職員(工)資料表
+flag_person_err_flag_detect <- aggregate(cbind(err_flag2_1, err_flag2_2) ~ organization_id, flag_person, sum) %>%
+  rename(err_flag2_1_detect = err_flag2_1, err_flag2_2_detect = err_flag2_2)
+
+flag_person <- flag_person %>%
+  left_join(flag_person_err_flag_detect, by = "organization_id")
+  
 #加註
 flag_person$name <- paste(flag_person$name, "（", sep = "")
 flag_person$name <- if_else(flag_person$err_admintitle0 != 0, paste(flag_person$name, "職務名稱：", flag_person$admintitle0, "；", sep = ""), flag_person$name)
@@ -4620,7 +5603,6 @@ flag_person$name <- paste(flag_person$name, "）", sep = "")
 flag_person$name <- gsub("；）", replacement = "）", flag_person$name)
 flag_person$name <- gsub("（）", replacement = "", flag_person$name)
 
-
 flag_person$err_flag_txt <- ""
 flag_person$err_flag_txt <- case_when(
   flag_person$err_flag == 1 ~ flag_person$name,
@@ -4629,22 +5611,173 @@ flag_person$err_flag_txt <- case_when(
 
 if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
 #根據organization_id + source，展開成寬資料(wide)
-flag_person_wide_flag62 <- flag_person %>%
-  subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag)) %>%
-  subset(err_flag == 1) %>%
-  dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+  flag_person_wide_flag62_1 <- tryCatch({
+    flag_person %>%
+      subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag, err_flag_1, err_flag2_1, err_flag2_2, err_flag2_1_detect, err_flag2_2_detect)) %>%
+      subset(err_flag_1 == 1) %>%
+      dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+  }, error = function(e) {
+    NULL
+  })
 
+if(!is.null(flag_person_wide_flag62_1)){
 #合併所有name
-temp <- colnames(flag_person_wide_flag62)[3 : length(colnames(flag_person_wide_flag62))]
-flag_person_wide_flag62$flag62_r <- NA
+temp <- colnames(flag_person_wide_flag62_1)[3 : length(colnames(flag_person_wide_flag62_1))]
+flag_person_wide_flag62_1$flag62_1_r <- NA
 for (i in temp){
-  flag_person_wide_flag62$flag62_r <- paste(flag_person_wide_flag62$flag62_r, flag_person_wide_flag62[[i]], sep = " ")
+  flag_person_wide_flag62_1$flag62_1_r <- paste(flag_person_wide_flag62_1$flag62_1_r, flag_person_wide_flag62_1[[i]], sep = " ")
 }
-flag_person_wide_flag62$flag62_r <- gsub("NA ", replacement="", flag_person_wide_flag62$flag62_r)
-flag_person_wide_flag62$flag62_r <- gsub(" NA", replacement="", flag_person_wide_flag62$flag62_r)
+flag_person_wide_flag62_1$flag62_1_r <- gsub("NA ", replacement="", flag_person_wide_flag62_1$flag62_1_r)
+flag_person_wide_flag62_1$flag62_1_r <- gsub(" NA", replacement="", flag_person_wide_flag62_1$flag62_1_r)
+flag_person_wide_flag62_1$flag62_1_r <- paste0(flag_person_wide_flag62_1$flag62_1_r, "\n（請再確認該員職務正確名稱）") #若#err_flag_1: 職稱或服務單位不合理，則加註
+}else{
+  print("flag_person_wide_flag62_1 not exists.")
+  rm(flag_person_wide_flag62_1)
+}
+
+#根據organization_id + source，展開成寬資料(wide)
+flag_person_wide_flag62_2_1 <- tryCatch({
+  flag_person %>%
+    subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag, err_flag_1, err_flag2_1, err_flag2_2, err_flag2_1_detect, err_flag2_2_detect)) %>%
+    subset(err_flag2_1 == 1 & err_flag2_2_detect == 0) %>%
+    dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+}, error = function(e) {
+  NULL
+})
+
+if(!is.null(flag_person_wide_flag62_2_1)){
+#合併所有name
+temp <- colnames(flag_person_wide_flag62_2_1)[3 : length(colnames(flag_person_wide_flag62_2_1))]
+flag_person_wide_flag62_2_1$flag62_2_1_r <- NA
+for (i in temp){
+  flag_person_wide_flag62_2_1$flag62_2_1_r <- paste(flag_person_wide_flag62_2_1$flag62_2_1_r, flag_person_wide_flag62_2_1[[i]], sep = " ")
+}
+flag_person_wide_flag62_2_1$flag62_2_1_r <- gsub("NA ", replacement="", flag_person_wide_flag62_2_1$flag62_2_1_r)
+flag_person_wide_flag62_2_1$flag62_2_1_r <- gsub(" NA", replacement="", flag_person_wide_flag62_2_1$flag62_2_1_r)
+flag_person_wide_flag62_2_1$flag62_2_1_r <- paste0(flag_person_wide_flag62_2_1$flag62_2_1_r, "\n（職員(工)資料表之各服務單位資料不完整或不正確：請依欄位說明確認並正確填列服務單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如總務處出納組，學生事務處生活輔導組。）") #若#err_flag_2_1: 職員工資料表出現err_flag_2，則加註
+}else{
+  print("flag_person_wide_flag62_2_1 not exists.")
+  rm(flag_person_wide_flag62_2_1)
+}
+
+#根據organization_id + source，展開成寬資料(wide)
+flag_person_wide_flag62_2_2 <- tryCatch({
+  flag_person %>%
+    subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag, err_flag_1, err_flag2_1, err_flag2_2, err_flag2_1_detect, err_flag2_2_detect)) %>%
+    subset(err_flag2_2 == 1 & err_flag2_1_detect == 0) %>%
+    dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+}, error = function(e) {
+  NULL
+})
+
+if(!is.null(flag_person_wide_flag62_2_2)){
+#合併所有name
+temp <- colnames(flag_person_wide_flag62_2_2)[3 : length(colnames(flag_person_wide_flag62_2_2))]
+flag_person_wide_flag62_2_2$flag62_2_2_r <- NA
+for (i in temp){
+  flag_person_wide_flag62_2_2$flag62_2_2_r <- paste(flag_person_wide_flag62_2_2$flag62_2_2_r, flag_person_wide_flag62_2_2[[i]], sep = " ")
+}
+flag_person_wide_flag62_2_2$flag62_2_2_r <- gsub("NA ", replacement="", flag_person_wide_flag62_2_2$flag62_2_2_r)
+flag_person_wide_flag62_2_2$flag62_2_2_r <- gsub(" NA", replacement="", flag_person_wide_flag62_2_2$flag62_2_2_r)
+flag_person_wide_flag62_2_2$flag62_2_2_r <- paste0(flag_person_wide_flag62_2_2$flag62_2_2_r, "\n（教員資料表之各兼任行政職資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，學生事務處生活輔導組。）") #若err_flag_2_2: 教員資料表出現err_flag_2，則加註
+}else{
+  print("flag_person_wide_flag62_2_2 not exists.")
+  rm(flag_person_wide_flag62_2_2)
+}
+
+#根據organization_id + source，展開成寬資料(wide)
+flag_person_wide_flag62_2_3 <- tryCatch({
+  flag_person %>%
+    subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag, err_flag_1, err_flag2_1, err_flag2_2, err_flag2_1_detect, err_flag2_2_detect)) %>%
+    subset((err_flag2_1 == 1 & err_flag2_2_detect != 0) | (err_flag2_1_detect != 0 & err_flag2_2 == 1)) %>%
+    dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+}, error = function(e) {
+  NULL
+})
+
+if(!is.null(flag_person_wide_flag62_2_3)){
+#合併所有name
+temp <- colnames(flag_person_wide_flag62_2_3)[3 : length(colnames(flag_person_wide_flag62_2_3))]
+flag_person_wide_flag62_2_3$flag62_2_3_r <- NA
+for (i in temp){
+  flag_person_wide_flag62_2_3$flag62_2_3_r <- paste(flag_person_wide_flag62_2_3$flag62_2_3_r, flag_person_wide_flag62_2_3[[i]], sep = " ")
+}
+flag_person_wide_flag62_2_3$flag62_2_3_r <- gsub("NA ", replacement="", flag_person_wide_flag62_2_3$flag62_2_3_r)
+flag_person_wide_flag62_2_3$flag62_2_3_r <- gsub(" NA", replacement="", flag_person_wide_flag62_2_3$flag62_2_3_r)
+flag_person_wide_flag62_2_3$flag62_2_3_r <- if_else(flag_person_wide_flag62_2_3$source == "職員(工)資料表", 
+  paste0(flag_person_wide_flag62_2_3$flag62_2_3_r, "\n（教員資料表及職員(工)資料表之(兼任)職稱或服務單位資料不完整或不正確：請依欄位說明確認並正確填列行政單位名稱，如為二級單位主管，請敘明一級與二級單位名稱。如教務處教學組，總務處出納組。）"),  #若err_flag_2_3: 教員及職員工資料表同時出現err_flag_2，則加註
+  flag_person_wide_flag62_2_3$flag62_2_3_r)
+}else{
+  print("flag_person_wide_flag62_2_3 not exists.")
+  rm(flag_person_wide_flag62_2_3)
+}
+
+if('flag_person_wide_flag62_1' %in% ls()){ #如果flag_person_wide_flag62_1有建立成功
+  print("flag_person_wide_flag62_1 exists.")
+}else{ #如果未建立成功，建立空白物件
+  flag_person_wide_flag62_1 <- drev_person_1 %>%
+      distinct(organization_id, .keep_all = TRUE) %>%
+      subset(select = c(organization_id))
+  data_source <- c("教員資料表", "職員(工)資料表")
+  
+  flag_person_wide_flag62_1 <- expand.grid(organization_id = flag_person_wide_flag62_1$organization_id %>% as.character(), 
+                                           source = data_source)
+  flag_person_wide_flag62_1$flag62_1_r <-  ""
+}
+
+if('flag_person_wide_flag62_2_1' %in% ls()){ #如果flag_person_wide_flag62_2_1有建立成功
+  print("flag_person_wide_flag62_2_1 exists.")
+}else{ #如果未建立成功，建立空白物件
+  flag_person_wide_flag62_2_1 <- drev_person_1 %>%
+    distinct(organization_id, .keep_all = TRUE) %>%
+    subset(select = c(organization_id))
+  data_source <- c("教員資料表", "職員(工)資料表")
+  
+  flag_person_wide_flag62_2_1 <- expand.grid(organization_id = flag_person_wide_flag62_2_1$organization_id %>% as.character(), 
+                                           source = data_source)
+  flag_person_wide_flag62_2_1$flag62_2_1_r <-  ""
+}
+
+if('flag_person_wide_flag62_2_2' %in% ls()){ #如果flag_person_wide_flag62_2_2有建立成功
+  print("flag_person_wide_flag62_2_2 exists.")
+}else{ #如果未建立成功，建立空白物件
+  flag_person_wide_flag62_2_2 <- drev_person_1 %>%
+    distinct(organization_id, .keep_all = TRUE) %>%
+    subset(select = c(organization_id))
+  data_source <- c("教員資料表", "職員(工)資料表")
+  
+  flag_person_wide_flag62_2_2 <- expand.grid(organization_id = flag_person_wide_flag62_2_2$organization_id %>% as.character(), 
+                                             source = data_source)
+  flag_person_wide_flag62_2_2$flag62_2_2_r <-  ""
+}
+
+if('flag_person_wide_flag62_2_3' %in% ls()){ #如果flag_person_wide_flag62_2_3有建立成功
+  print("flag_person_wide_flag62_2_3 exists.")
+}else{ #如果未建立成功，建立空白物件
+  flag_person_wide_flag62_2_3 <- drev_person_1 %>%
+    distinct(organization_id, .keep_all = TRUE) %>%
+    subset(select = c(organization_id))
+  data_source <- c("教員資料表", "職員(工)資料表")
+  
+  flag_person_wide_flag62_2_3 <- expand.grid(organization_id = flag_person_wide_flag62_2_3$organization_id %>% as.character(), 
+                                             source = data_source)
+  flag_person_wide_flag62_2_3$flag62_2_3_r <-  ""
+}
+
+flag_person_wide_flag62 <- flag_person_wide_flag62_1 %>%
+  full_join(flag_person_wide_flag62_2_1, by = c("organization_id", "source")) %>%
+  full_join(flag_person_wide_flag62_2_2, by = c("organization_id", "source")) %>%
+  full_join(flag_person_wide_flag62_2_3, by = c("organization_id", "source")) %>%
+  select(c("organization_id", "source", "flag62_1_r", "flag62_2_1_r", "flag62_2_2_r", "flag62_2_3_r")) %>%
+  mutate(flag62_r = paste(flag62_1_r, flag62_2_1_r, flag62_2_2_r, flag62_2_3_r, sep = "\n"))
+flag_person_wide_flag62$flag62_r <- gsub("NA\n+", replacement="", flag_person_wide_flag62$flag62_r)
+flag_person_wide_flag62$flag62_r <- gsub("\nNA+", replacement="", flag_person_wide_flag62$flag62_r)
+
+
 
 #產生檢誤報告文字
 flag62_temp <- flag_person_wide_flag62 %>%
+  subset(flag62_r != "") %>% 
   group_by(organization_id) %>%
   mutate(flag62_txt = paste(source, "之行政職資料不完整或不正確：", flag62_r, sep = ""), "") %>%
   subset(select = c(organization_id, flag62_txt)) %>%
@@ -4667,7 +5800,7 @@ flag62$flag62 <- gsub("； NA", replacement="", flag62$flag62)
 flag62 <- flag62 %>%
   subset(select = c(organization_id, flag62)) %>%
   distinct(organization_id, flag62) %>%
-  mutate(flag62 = paste(flag62, "（請再確認該員職務正確名稱）", sep = ""))
+  mutate(flag62 = paste(flag62, "", sep = ""))
 }else{
 #偵測flag62是否存在。若不存在，則產生NA行
 if('flag62' %in% ls()){
@@ -4730,15 +5863,25 @@ flag_person <- drev_person_1
 
 #兼任教師、長期代課教師、鐘點教師、約聘僱教師、約用教師到職日應為上一個學期開學日(每學期(年)需修改emp_year、emp_mon的時間)
 flag_person$emp_year1 <- 111
-flag_person$emp_mon1 <- 2
+flag_person$emp_mon1 <- 8
 
 flag_person$arvy1 <- substr(flag_person$onbodat, 1, 3) %>% as.numeric()
 flag_person$arvm1 <- substr(flag_person$onbodat, 4, 5) %>% as.numeric()
 
-flag_person$err_emp1 <- if_else(((flag_person$emptype == "兼任" | flag_person$emptype == "長期代課" | flag_person$emptype == "鐘點教師" | flag_person$emptype == "約聘僱" | flag_person$emptype == "約用") & flag_person$sertype == "教師") & (flag_person$arvy1 * 12 + flag_person$arvm1) < (flag_person$emp_year1 * 12 + flag_person$emp_mon1), 1, 0)
+flag_person$err_emp1 <- if_else((flag_person$emptype %in% c("兼任", 
+                                                            "長期代課", 
+                                                            "鐘點教師", 
+                                                            "約聘僱", 
+                                                            "約用") 
+                                  & flag_person$sertype == "教師") 
+                                 & (flag_person$arvy1 * 12 + flag_person$arvm1) < (flag_person$emp_year1 * 12 + flag_person$emp_mon1), 1, 0)
 
 #代理教師到職日應為上一個學期開學日-2年，依法規代理教師得續聘2次(每學期(年)需修改emp_year、emp_mon的時間)
-flag_person$emp_year2 <- flag_person$emp_year1 - 2
+
+#代理教師到職日應為上一個學期開學日-2年以上，聘任類別卻填"代理"，要請學校改為"代理(連)"
+#若聘任類別直接填了"代理(連)"，視為學校已確認，不檢查
+#仲賢：可能要改為上一個學期開學日-1年以上，因為法定可以連續聘任也算連續聘任
+flag_person$emp_year2 <- flag_person$emp_year1 - 1
 flag_person$emp_mon2 <- flag_person$emp_mon1
 
 flag_person$arvy2 <- substr(flag_person$onbodat, 1, 3) %>% as.numeric()
@@ -4750,6 +5893,16 @@ flag_person$emptypesertype <- paste(flag_person$emptype, flag_person$sertype, se
 flag_person$emptypesertype <- if_else(flag_person$emptypesertype == "鐘點教師教師", "鐘點教師", flag_person$emptypesertype)
 
 flag_person$err_flag <- if_else(flag_person$err_emp1 == 1 | flag_person$err_emp2 == 1, 1, 0)
+
+#備註文字用
+  #err_emp1: 兼任教師、長期代課教師、鐘點教師、約聘僱教師、約用教師到職日過早
+  #err_emp2: 代理教師到職日過早
+  #aggregate該校err_emp1及err_emp2 -> 該校err_emp出現在err_emp1 or err_emp2
+flag_person_err_emp_detect <- aggregate(cbind(err_emp1, err_emp2) ~ organization_id, flag_person, sum) %>%
+  rename(err_emp1_detect = err_emp1, err_emp2_detect = err_emp2)
+
+flag_person <- flag_person %>%
+  left_join(flag_person_err_emp_detect, by = "organization_id")
 
 #加註
 flag_person$name <- paste(flag_person$name, "（", flag_person$emptypesertype, " 到職日:", flag_person$onbodat, "）", sep = "")
@@ -4764,46 +5917,91 @@ flag_person$err_flag_txt <- case_when(
 )
 
 if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
-#根據organization_id + source，展開成寬資料(wide)
-flag_person_wide_flag80 <- flag_person %>%
-  subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag)) %>%
-  subset(err_flag == 1) %>%
-  dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+#根據organization_id，展開成寬資料(wide)
+flag_person_wide_flag80_1 <- tryCatch({
+  flag_person %>%
+    subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, err_flag, err_emp1, err_emp2, err_emp1_detect, err_emp2_detect)) %>%
+    subset(err_emp1 == 1) %>%
+    dcast(organization_id ~ err_flag_txt, value.var = "err_flag_txt")
+}, error = function(e) {
+  NULL
+})
 
-#合併所有name
-temp <- colnames(flag_person_wide_flag80)[3 : length(colnames(flag_person_wide_flag80))]
-flag_person_wide_flag80$flag80_r <- NA
-for (i in temp){
-  flag_person_wide_flag80$flag80_r <- paste(flag_person_wide_flag80$flag80_r, flag_person_wide_flag80[[i]], sep = " ")
+if(!is.null(flag_person_wide_flag80_1)){
+  #合併所有name
+  temp <- colnames(flag_person_wide_flag80_1)[2 : length(colnames(flag_person_wide_flag80_1))]
+  flag_person_wide_flag80_1$flag80_1_r <- NA
+  for (i in temp){
+    flag_person_wide_flag80_1$flag80_1_r <- paste(flag_person_wide_flag80_1$flag80_1_r, flag_person_wide_flag80_1[[i]], sep = " ")
+  }
+  flag_person_wide_flag80_1$flag80_1_r <- gsub("NA ", replacement="", flag_person_wide_flag80_1$flag80_1_r)
+  flag_person_wide_flag80_1$flag80_1_r <- gsub(" NA", replacement="", flag_person_wide_flag80_1$flag80_1_r)
+  flag_person_wide_flag80_1$flag80_1_r <- paste0(flag_person_wide_flag80_1$flag80_1_r, "\n（請依欄位說明，再協助確認是否為本次任職聘書/聘約之到職日期。）") #若#err_flag_1: 職稱或服務單位不合理，則加註
+}else{
+  print("flag_person_wide_flag80_1 not exists.")
+  rm(flag_person_wide_flag80_1)
 }
-flag_person_wide_flag80$flag80_r <- gsub("NA ", replacement="", flag_person_wide_flag80$flag80_r)
-flag_person_wide_flag80$flag80_r <- gsub(" NA", replacement="", flag_person_wide_flag80$flag80_r)
-
-#產生檢誤報告文字
-flag80_temp <- flag_person_wide_flag80 %>%
-  group_by(organization_id) %>%
-  mutate(flag80_txt = paste(source, "需核對「本校到職日期」：",flag80_r, sep = ""), "") %>%
-  subset(select = c(organization_id, flag80_txt)) %>%
-  distinct(organization_id, flag80_txt)
 
 #根據organization_id，展開成寬資料(wide)
-flag80 <- flag80_temp %>%
-  dcast(organization_id ~ flag80_txt, value.var = "flag80_txt")
+flag_person_wide_flag80_2 <- tryCatch({
+  flag_person %>%
+    subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, err_flag, err_emp1, err_emp2, err_emp1_detect, err_emp2_detect)) %>%
+    subset(err_emp2 == 1) %>%
+    dcast(organization_id ~ err_flag_txt, value.var = "err_flag_txt")
+}, error = function(e) {
+  NULL
+})
 
-#合併教員資料表及職員(工)資料表報告文字
-temp <- colnames(flag80)[2 : length(colnames(flag80))]
-flag80$flag80 <- NA
-for (i in temp){
-  flag80$flag80 <- paste(flag80$flag80, flag80[[i]], sep = "； ")
+if(!is.null(flag_person_wide_flag80_2)){
+  #合併所有name
+  temp <- colnames(flag_person_wide_flag80_2)[2 : length(colnames(flag_person_wide_flag80_2))]
+  flag_person_wide_flag80_2$flag80_2_r <- NA
+  for (i in temp){
+    flag_person_wide_flag80_2$flag80_2_r <- paste(flag_person_wide_flag80_2$flag80_2_r, flag_person_wide_flag80_2[[i]], sep = " ")
+  }
+  flag_person_wide_flag80_2$flag80_2_r <- gsub("NA ", replacement="", flag_person_wide_flag80_2$flag80_2_r)
+  flag_person_wide_flag80_2$flag80_2_r <- gsub(" NA", replacement="", flag_person_wide_flag80_2$flag80_2_r)
+  flag_person_wide_flag80_2$flag80_2_r <- paste0(flag_person_wide_flag80_2$flag80_2_r, "\n（請依欄位說明及簡報，再協助確認各學年(學期)聘任期間是否中斷超過一個月以上，若否，則認定為聘任未中斷（即『連續聘任』），該代理教師之「聘任類別」請填寫「代理(連)」。）") #若#err_flag_1: 職稱或服務單位不合理，則加註
+}else{
+  print("flag_person_wide_flag80_2 not exists.")
+  rm(flag_person_wide_flag80_2)
 }
-flag80$flag80 <- gsub("NA； ", replacement="", flag80$flag80)
-flag80$flag80 <- gsub("； NA", replacement="", flag80$flag80)
+
+if('flag_person_wide_flag80_1' %in% ls()){ #如果flag_person_wide_flag80_1有建立成功
+  print("flag_person_wide_flag80_1 exists.")
+}else{ #如果未建立成功，建立空白物件
+  flag_person_wide_flag80_1 <- drev_person_1 %>%
+    distinct(organization_id, .keep_all = TRUE) %>%
+    subset(select = c(organization_id))
+  
+  flag_person_wide_flag80_1$flag80_1_r <-  ""
+}
+
+if('flag_person_wide_flag80_2' %in% ls()){ #如果flag_person_wide_flag80_2有建立成功
+  print("flag_person_wide_flag80_2 exists.")
+}else{ #如果未建立成功，建立空白物件
+  flag_person_wide_flag80_2 <- drev_person_1 %>%
+    distinct(organization_id, .keep_all = TRUE) %>%
+    subset(select = c(organization_id))
+  
+  flag_person_wide_flag80_2$flag80_2_r <-  ""
+}
+
+flag_person_wide_flag80 <- flag_person_wide_flag80_1 %>%
+  full_join(flag_person_wide_flag80_2, by = c("organization_id")) %>%
+  select(c("organization_id", "flag80_1_r", "flag80_2_r")) %>%
+  mutate(flag80_r = paste(flag80_1_r, flag80_2_r, sep = "\n"))
+flag_person_wide_flag80$flag80_r <- gsub("NA\n+", replacement="", flag_person_wide_flag80$flag80_r)
+flag_person_wide_flag80$flag80_r <- gsub("\nNA+", replacement="", flag_person_wide_flag80$flag80_r)
+
 
 #產生檢誤報告文字
-flag80 <- flag80 %>%
+flag80 <- flag_person_wide_flag80 %>%
+  subset(flag80_r != "") %>% 
+  group_by(organization_id) %>%
+  mutate(flag80 = paste("教員資料表需核對「本校到職日期」：",flag80_r, sep = ""), "") %>%
   subset(select = c(organization_id, flag80)) %>%
-  distinct(organization_id, flag80) %>%
-  mutate(flag80 = paste(flag80, "", sep = ""))
+  distinct(organization_id, flag80)
 }else{
 #偵測flag80是否存在。若不存在，則產生NA行
 if('flag80' %in% ls()){
@@ -4894,8 +6092,9 @@ flag_person <- drev_person_1
 
 #專任、代理教師最高學歷是否為大專以上不應為N
 flag_person$err_flag <- 0
-flag_person$err_flag <- if_else(flag_person$degree == "N" & flag_person$emptype == "專任" & flag_person$sertype == "教師", 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(flag_person$degree == "N" & flag_person$emptype == "代理" & flag_person$sertype == "教師", 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(flag_person$degree == "N" 
+                                & flag_person$emptype %in% c("專任", "代理", "代理(連)") 
+                                & flag_person$sertype == "教師", 1, flag_person$err_flag)
 
 #呈現姓名
 flag_person$err_flag_txt <- ""
@@ -4961,12 +6160,14 @@ flag_person <- drev_person_1
 
 #兼任、長期代課、專職族語老師、鐘點教師、約聘僱、約用教師，不應有兼任行政職務，也不可擔任導師
 flag_person$err_flag <- 0
-flag_person$err_flag <- if_else(flag_person$emptype == "兼任" & flag_person$sertype == "教師" & flag_person$admintitle1 != "N" , 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(flag_person$emptype == "長期代課" & flag_person$sertype == "教師" & flag_person$admintitle1 != "N" , 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(flag_person$emptype == "專職族語老師" & flag_person$sertype == "教師" & flag_person$admintitle1 != "N" , 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(flag_person$emptype == "鐘點教師" & flag_person$sertype == "教師" & flag_person$admintitle1 != "N" , 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(flag_person$emptype == "約聘僱" & flag_person$sertype == "教師" & flag_person$admintitle1 != "N" , 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(flag_person$emptype == "約用" & flag_person$sertype == "教師" & flag_person$admintitle1 != "N" , 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(flag_person$emptype %in% c("兼任", 
+                                                           "長期代課", 
+                                                           "專職族語老師", 
+                                                           "鐘點教師", 
+                                                           "約聘僱", 
+                                                           "約用")
+                                & flag_person$sertype == "教師" 
+                                & flag_person$admintitle1 != "N" , 1, flag_person$err_flag)
 
 #加註
 flag_person$name <- paste(flag_person$name, "（", flag_person$emptype, "）", "（人事資料顯示該教師兼任行政職務；）", sep = "")
@@ -5036,6 +6237,7 @@ if('flag90' %in% ls()){
 flag_person <- drev_person_1
 
 #職員工若為專任，職務名稱不可出現"約僱"、"約聘雇"、"約雇"、"約聘雇"、"約聘"之關鍵字
+#私立學校flag94還是檢查，但屬於確認項目
 flag_person$err_flag <- 0
 flag_person$err_flag <- if_else(grepl("約僱", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員工資料表", 1, flag_person$err_flag)
 flag_person$err_flag <- if_else(grepl("約聘僱", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員工資料表", 1, flag_person$err_flag)
@@ -5171,7 +6373,7 @@ spe3$spe3 <- gsub("； NA", replacement="", spe3$spe3)
 spe3 <- spe3 %>%
   subset(select = c(organization_id, spe3)) %>%
   distinct(organization_id, spe3) %>%
-  mutate(spe3 = paste(spe3, "（請確認到職日期，並請以資料基準日111年9月30日當時情況為準）", sep = ""))
+  mutate(spe3 = paste(spe3, "（請確認到職日期，並請以資料基準日112年3月31日當時情況為準）", sep = ""))
 }else{
 #偵測spe3是否存在。若不存在，則產生NA行
 if('spe3' %in% ls()){
@@ -7274,7 +8476,8 @@ flag_person <- drev_P_retire %>%
 #離退教職員(工)資料表所列人員，不應填列為本次教員資料表或職員（工）資料表之專任或代理人員。(與本期資料比對)
 #抓出:離退人員有出現在教員資料表、職員工資料表，且為專任或代理
 flag_person$err_flag <- 0
-flag_person$err_flag <- if_else(!is.na(flag_person$name_retire) & (flag_person$emptype == "專任" | flag_person$emptype == "代理"), 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(!is.na(flag_person$name_retire) 
+                                & flag_person$emptype %in% c("專任", "代理", "代理(連)"), 1, flag_person$err_flag)
 
 #呈現姓名
 flag_person$err_flag_txt <- ""
@@ -7498,12 +8701,12 @@ flag_person$birthy <- as.numeric(flag_person$birthy)
 flag_person$birthm <- as.numeric(flag_person$birthm)
 flag_person$birthd <- as.numeric(flag_person$birthd)
 
-flag_person$survey_year <- 2022
+flag_person$survey_year <- 2023
 
 #創設變項年齡（以年為單位）：age
 flag_person$age <- 0
-flag_person$age <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 9/12 + 30/365) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/365)), flag_person$age)
-flag_person$age <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 9/12 + 30/366) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/366)), flag_person$age)
+flag_person$age <- if_else(flag_person$survey_year %% 4 != 0, ((flag_person$survey_year-1911) + 3/12 + 31/365) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/365)), flag_person$age)
+flag_person$age <- if_else(flag_person$survey_year %% 4 == 0, ((flag_person$survey_year-1911) + 3/12 + 31/366) - (flag_person$birthy + (flag_person$birthm/12) + (flag_person$birthd/366)), flag_person$age)
 
 
 flag_person$err_flag <- 0
@@ -7654,14 +8857,14 @@ flag_person$err_flag_txt <- case_when(
 )
 
 if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
-#根據organization_id + source，展開成寬資料(wide)
+#根據organization_id，展開成寬資料(wide)
 flag_person_wide_flag86 <- flag_person %>%
   subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, err_flag)) %>%
   subset(err_flag == 1) %>%
   dcast(organization_id ~ err_flag_txt, value.var = "err_flag_txt")
 
 #合併所有name
-temp <- colnames(flag_person_wide_flag86)[3 : length(colnames(flag_person_wide_flag86))]
+temp <- colnames(flag_person_wide_flag86)[2 : length(colnames(flag_person_wide_flag86))]
 flag_person_wide_flag86$flag86_r <- NA
 for (i in temp){
   flag_person_wide_flag86$flag86_r <- paste(flag_person_wide_flag86$flag86_r, flag_person_wide_flag86[[i]], sep = " ")
@@ -7693,7 +8896,7 @@ flag86$flag86 <- gsub("； NA", replacement="", flag86$flag86)
 flag86 <- flag86 %>%
   subset(select = c(organization_id, flag86)) %>%
   distinct(organization_id, flag86) %>%
-  mutate(flag86 = paste(flag86, "（經比對貴校上一學年所填資料，上述人員並未出現於本學期的教員資料表或職員(工)資料表，請確認渠等是否於本學期(111年8月1日至9月30日)退休或因故離職，若於本學期退休或因故離職，應於離退教職員(工)資料表填寫資料。如非於本學期退休或因故離職，或已介聘、調至他校，請來電告知。）", sep = ""))
+  mutate(flag86 = paste(flag86, "（經比對貴校上一學年所填資料，上述人員並未出現於本學期的教員資料表或職員(工)資料表，請確認渠等是否於111學年度第一學期（111年8月1日-112年1月31日）退休或因故離職，若於本學期退休或因故離職，應於離退教職員(工)資料表填寫資料。如非於本學期退休或因故離職，或已介聘、調至他校，請來電告知。）", sep = ""))
 }else{
 #偵測flag86是否存在。若不存在，則產生NA行
 if('flag86' %in% ls()){
@@ -7726,14 +8929,14 @@ flag_person$err_flag_txt <- case_when(
 )
 
 if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
-#根據organization_id + source，展開成寬資料(wide)
+#根據organization_id，展開成寬資料(wide)
 flag_person_wide_flag91 <- flag_person %>%
   subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, err_flag)) %>%
   subset(err_flag == 1) %>%
   dcast(organization_id ~ err_flag_txt, value.var = "err_flag_txt")
 
 #合併所有name
-temp <- colnames(flag_person_wide_flag91)[3 : length(colnames(flag_person_wide_flag91))]
+temp <- colnames(flag_person_wide_flag91)[2 : length(colnames(flag_person_wide_flag91))]
 flag_person_wide_flag91$flag91_r <- NA
 for (i in temp){
   flag_person_wide_flag91$flag91_r <- paste(flag_person_wide_flag91$flag91_r, flag_person_wide_flag91[[i]], sep = " ")
@@ -7777,8 +8980,317 @@ if('flag91' %in% ls()){
   flag91$flag91 <- ""
 }
 }
+
+# flag95: 請確認專任教師名單是否完整。 (內參)-------------------------------------------------------------------
+flag_person <- drev_person_1
+
+#教育部統計處公布專任教師/兼任教師/職員人數
+#https://depart.moe.edu.tw/ed4500/News_Content.aspx?n=5A930C32CC6C3818&sms=91B3AAE8C6388B96&s=8AF80DB14ADF7370
+#跟統計處比較的分析，先內部參閱，暫不納入檢核，但我認為也許可以看不同波次學校填的人數比較，尤其是專任，應該不會差太多，若像跟統計處比較一樣差異太大，就是有問題
+
+# 設定網址和檔名
+url <- "https://stats.moe.gov.tw/files/detail/111/111_base0.xlsx"
+filename <- "111_base0.xlsx"
+
+if (!file.exists(filename)) {
+  download.file(url, destfile = filename, mode = "wb")
+} else {
+  cat(paste(filename, "already exists.\n"))
+}
+
+# 讀取 Excel 檔案
+moe_111_base0 <- read_excel(filename)
+  
+colnames(moe_111_base0) <- moe_111_base0[3, ]
+moe_111_base0 <- moe_111_base0[-c(1:4), ] %>%
+  select(c("學校代碼", "學校名稱", "專任教師數", "兼任教師數", "職員數")) %>%
+  rename(organization_id = 學校代碼, 
+         edu_name2 = 學校名稱, 
+         count_emptype1_1 = 專任教師數, 
+         count_emptype2_1 = 兼任教師數, 
+         count_staff_1 = 職員數)
+
+#統計處"專任教師"定義：以實際現有(編制內)人數計算，包括校長(大專附設除外)、超額分發教師、專任輔導教師、長期代理教師、特教班專任教師、原住民專任教師及教官，不含運動教練。服兵役及留職停薪教師，以占實缺之長期代理教師資料計列。
+flag_person$count_emptype1 <- if_else(
+  flag_person$sertype == "教師" & (flag_person$emptype == "專任" | flag_person$emptype == "代理") | 
+  flag_person$sertype == "校長" | 
+  flag_person$sertype == "教官" | 
+  flag_person$sertype == "主任教官"
+    , 1, 0)
+
+#統計處"兼任教師"定義：係指以部分時間擔任學校編制內教師依規定排課後尚餘之課務或特殊類科之課務者，已計列本表專任教師者除外。
+flag_person$count_emptype2 <- if_else(flag_person$sertype == "教師" & flag_person$emptype == "兼任", 1, 0)
+
+#統計處"職員"定義：依據「高級中等學校組織設置及員額編制標準」第8條，以實際現職(編制內)人數計算，包括辦理行政工作及一般技術工作之專任人員(含技士、技佐、營養師、護理師(或護士)、專任運動教練、救生員或運動傷害防護員、管理員及實習指導員等)。
+flag_person$count_staff <- if_else(flag_person$source == "職員(工)資料表" & flag_person$emptype == "專任", 1, 0)
+
+flag_person$count_emptype1 <- if_else(is.na(flag_person$count_emptype1), 0, flag_person$count_emptype1)
+flag_person$count_emptype2 <- if_else(is.na(flag_person$count_emptype2), 0, flag_person$count_emptype2)
+
+flag_person_wide_flag95 <- aggregate(cbind(count_emptype1, count_emptype2, count_staff) ~ organization_id, flag_person, sum) %>%
+  left_join(moe_111_base0, by = "organization_id")
+
+flag_person_wide_flag95$count_emptype1_1 <- as.numeric(flag_person_wide_flag95$count_emptype1_1)
+flag_person_wide_flag95$count_emptype2_1 <- as.numeric(flag_person_wide_flag95$count_emptype2_1)
+flag_person_wide_flag95$count_staff_1 <- as.numeric(flag_person_wide_flag95$count_staff_1)
+
+
+flag_person_wide_flag95$flag_err <- 0
+flag_person_wide_flag95$err_emptype1 <- (flag_person_wide_flag95$count_emptype1 - flag_person_wide_flag95$count_emptype1_1) / flag_person_wide_flag95$count_emptype1
+flag_person_wide_flag95$err_emptype2 <- (flag_person_wide_flag95$count_emptype2 - flag_person_wide_flag95$count_emptype2_1) / flag_person_wide_flag95$count_emptype2
+flag_person_wide_flag95$err_staff <- (flag_person_wide_flag95$count_staff - flag_person_wide_flag95$count_staff_1) / flag_person_wide_flag95$count_staff
+
+flag_person_wide_flag95$err_emptype1 <- scales::percent(flag_person_wide_flag95$err_emptype1, accuracy = 0.1)
+flag_person_wide_flag95$err_emptype2 <- scales::percent(flag_person_wide_flag95$err_emptype2, accuracy = 0.1)
+flag_person_wide_flag95$err_staff <- scales::percent(flag_person_wide_flag95$err_staff, accuracy = 0.1)
+
+
+flag_person_wide_flag95$err_flag_txt <- paste0("統計處專任教師人數：", 
+                                               flag_person_wide_flag95$count_emptype1_1, 
+                                               "人；", 
+                                               "本資料庫專任教師、代理教師、校長、教官、主任教官人數：", 
+                                               flag_person_wide_flag95$count_emptype1, 
+                                               "；差異百分比", 
+                                               flag_person_wide_flag95$err_emptype1)
+
+#產生檢誤報告文字
+flag95 <- flag_person_wide_flag95 %>%
+  subset(select = c(organization_id, err_flag_txt)) %>%
+  rename(flag95 = err_flag_txt) %>%
+  distinct(organization_id, flag95)
+
+# flag96: 校內一級主管（主任）原則由專任教職員擔（兼）任。 -------------------------------------------------------------------
+flag_person <- drev_person_1
+
+#職稱為"主任"且聘任類別不為專任或代理(私校暫允許代理教師當主任，公校再評估)
+flag_person$err_flag <- 0
+flag_person$err_flag <- if_else((grepl("主任$", flag_person$admintitle0) | 
+                                 grepl("主任$", flag_person$admintitle1) | 
+                                 grepl("主任$", flag_person$admintitle2) | 
+                                 grepl("主任$", flag_person$admintitle3)) 
+                                & (!flag_person$emptype %in% c("專任", "代理", "代理(連)")) , 1, flag_person$err_flag)
+
+#加註
+flag_person$name <- paste(flag_person$name, "（", flag_person$emptype, "）", sep = "")
+flag_person$name <- gsub("；）", replacement = "）", flag_person$name)
+flag_person$name <- gsub("（）", replacement = "", flag_person$name)
+
+#呈現姓名
+flag_person$err_flag_txt <- ""
+flag_person$err_flag_txt <- case_when(
+  flag_person$err_flag == 1 ~ flag_person$name,
+  TRUE ~ flag_person$err_flag_txt
+)
+
+if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
+  #根據organization_id + source，展開成寬資料(wide)
+  flag_person_wide_flag96 <- flag_person %>%
+    subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag)) %>%
+    subset(err_flag == 1) %>%
+    dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+  
+  #合併所有name
+  temp <- colnames(flag_person_wide_flag96)[3 : length(colnames(flag_person_wide_flag96))]
+  flag_person_wide_flag96$flag96_r <- NA
+  for (i in temp){
+    flag_person_wide_flag96$flag96_r <- paste(flag_person_wide_flag96$flag96_r, flag_person_wide_flag96[[i]], sep = " ")
+  }
+  flag_person_wide_flag96$flag96_r <- gsub("NA ", replacement="", flag_person_wide_flag96$flag96_r)
+  flag_person_wide_flag96$flag96_r <- gsub(" NA", replacement="", flag_person_wide_flag96$flag96_r)
+  
+  #產生檢誤報告文字
+  flag96_temp <- flag_person_wide_flag96 %>%
+    group_by(organization_id) %>%
+    mutate(flag96_txt = paste("姓名：", flag96_r, sep = ""), "") %>%
+    subset(select = c(organization_id, flag96_txt)) %>%
+    distinct(organization_id, flag96_txt)
+  
+  #根據organization_id，展開成寬資料(wide)
+  flag96 <- flag96_temp %>%
+    dcast(organization_id ~ flag96_txt, value.var = "flag96_txt")
+  
+  #合併教員資料表及職員(工)資料表報告文字
+  temp <- colnames(flag96)[2 : length(colnames(flag96))]
+  flag96$flag96 <- NA
+  for (i in temp){
+    flag96$flag96 <- paste(flag96$flag96, flag96[[i]], sep = "； ")
+  }
+  flag96$flag96 <- gsub("NA； ", replacement="", flag96$flag96)
+  flag96$flag96 <- gsub("； NA", replacement="", flag96$flag96)
+  
+  #產生檢誤報告文字
+  flag96 <- flag96 %>%
+    subset(select = c(organization_id, flag96)) %>%
+    distinct(organization_id, flag96) %>%
+    mutate(flag96 = paste(flag96, "（校內一級主管（主任）原則由專任教職員擔（兼）任，請協助再確認上述教職員是否擔（兼）任校內一級主管（主任），或協助再確認上述教職員之聘任類別）", sep = ""))
+}else{
+  #偵測flag96是否存在。若不存在，則產生NA行
+  if('flag96' %in% ls()){
+    print("flag96")
+  }else{
+    flag96 <- drev_person_1 %>%
+      distinct(organization_id, .keep_all = TRUE) %>%
+      subset(select = c(organization_id))
+    flag96$flag96 <- ""
+  }
+}
+
+# flag97: 專任和代理是否同時存在兩校以上。 -------------------------------------------------------------------
+#這裡是撈所有學校(drev_person_all)的資料來比對
+flag_person <- drev_person_all %>%
+  select(c("organization_id", "edu_name2", "idnumber", "name", "sertype", "emptype", "emsub", "source")) %>%
+  subset(emptype %in% c("專任", "代理", "代理(連)")) %>%
+  group_by(idnumber) %>%
+  mutate(index = n()) %>%
+  filter(index > 1) %>%
+  ungroup() %>%
+  mutate(err_flag = 1)
+
+#只退自己的管區
+flag_person <- flag_person %>%
+  subset(organization_id %in% c(
+    "421302", 
+    "381302", 
+    "331404", 
+    "421303", 
+    "411301", 
+    "401302", 
+    "351402", 
+    "381305", 
+    "411401", 
+    "421301", 
+    "361B09", 
+    "331403", 
+    "331402", 
+    "341302", 
+    "411302", 
+    "401303", 
+    "411303", 
+    "401301", 
+    "381306", 
+    "381304", 
+    "381303", 
+    "331301", 
+    "341402", 
+    "361401", 
+    "311401", 
+    "331304", 
+    "351B09", 
+    "331302", 
+    "361301", 
+    "351301", 
+    "421404", 
+    "321399", 
+    "381301", 
+    "581301", 
+    "121318", 
+    "581401", 
+    "121417", 
+    "521303", 
+    "581302", 
+    "581402", 
+    "521301", 
+    "551303", 
+    "121307", 
+    "121410", 
+    "121302", 
+    "121415", 
+    "551402", 
+    "521401", 
+    "551301", 
+    "121413", 
+    "121405", 
+    "121320", 
+    "121306", 
+    "101303", 
+    "101304", 
+    "101406", 
+    "141406", 
+    "141307", 
+    "141301", 
+    "181305", 
+    "181307", 
+    "181308", 
+    "181306", 
+    "201314", 
+    "201313", 
+    "201304", 
+    "201408", 
+    "201309", 
+    "201312", 
+    "201310"
+  ))
+
+flag_person$sertype <- if_else(is.na(flag_person$sertype), "職員(工)", flag_person$sertype)
+
+#加註
+flag_person$name <- paste(flag_person$name, "（", flag_person$emptype, flag_person$sertype, "）", sep = "")
+flag_person$name <- gsub("；）", replacement = "）", flag_person$name)
+flag_person$name <- gsub("（）", replacement = "", flag_person$name)
+
+#呈現姓名
+flag_person$err_flag_txt <- ""
+flag_person$err_flag_txt <- case_when(
+  flag_person$err_flag == 1 ~ flag_person$name,
+  TRUE ~ flag_person$err_flag_txt
+)
+
+if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
+  #根據organization_id + source，展開成寬資料(wide)
+  flag_person_wide_flag97 <- flag_person %>%
+    subset(select = c(organization_id, idnumber, err_flag_txt, edu_name2, source, err_flag)) %>%
+    subset(err_flag == 1) %>%
+    dcast(organization_id + source ~ err_flag_txt, value.var = "err_flag_txt")
+  
+  #合併所有name
+  temp <- colnames(flag_person_wide_flag97)[3 : length(colnames(flag_person_wide_flag97))]
+  flag_person_wide_flag97$flag97_r <- NA
+  for (i in temp){
+    flag_person_wide_flag97$flag97_r <- paste(flag_person_wide_flag97$flag97_r, flag_person_wide_flag97[[i]], sep = " ")
+  }
+  flag_person_wide_flag97$flag97_r <- gsub("NA ", replacement="", flag_person_wide_flag97$flag97_r)
+  flag_person_wide_flag97$flag97_r <- gsub(" NA", replacement="", flag_person_wide_flag97$flag97_r)
+  
+  #產生檢誤報告文字
+  flag97_temp <- flag_person_wide_flag97 %>%
+    group_by(organization_id) %>%
+    mutate(flag97_txt = paste(source, "：請確認該員本學期是否在職：", flag97_r, sep = ""), "") %>%
+    subset(select = c(organization_id, flag97_txt)) %>%
+    distinct(organization_id, flag97_txt)
+  
+  #根據organization_id，展開成寬資料(wide)
+  flag97 <- flag97_temp %>%
+    dcast(organization_id ~ flag97_txt, value.var = "flag97_txt")
+  
+  #合併教員資料表及職員(工)資料表報告文字
+  temp <- colnames(flag97)[2 : length(colnames(flag97))]
+  flag97$flag97 <- NA
+  for (i in temp){
+    flag97$flag97 <- paste(flag97$flag97, flag97[[i]], sep = "； ")
+  }
+  flag97$flag97 <- gsub("NA； ", replacement="", flag97$flag97)
+  flag97$flag97 <- gsub("； NA", replacement="", flag97$flag97)
+  
+  #產生檢誤報告文字
+  flag97 <- flag97 %>%
+    subset(select = c(organization_id, flag97)) %>%
+    distinct(organization_id, flag97) %>%
+    mutate(flag97 = paste(flag97, "", sep = ""))
+}else{
+  #偵測flag97是否存在。若不存在，則產生NA行
+  if('flag97' %in% ls()){
+    print("flag97")
+  }else{
+    flag97 <- drev_person_1 %>%
+      distinct(organization_id, .keep_all = TRUE) %>%
+      subset(select = c(organization_id))
+    flag97$flag97 <- ""
+  }
+}
+
+
 # 建立合併列印檔 -------------------------------------------------------------------
-temp <- c("flag2", "flag3", "flag6", "flag7", "flag8", "flag9", "flag15", "flag16", "flag18", "flag19", "flag20", "flag24", "flag39", "flag45", "flag47", "flag48", "flag49", "flag50", "flag51", "flag52", "flag57", "flag59", "flag62", "flag64", "flag80", "flag82", "flag83", "flag84", "flag85", "flag86", "flag89", "flag90", "flag91", "flag92", "flag93", "flag94", "sp3", "sp5", "sp6")
+temp <- c("flag2", "flag3", "flag6", "flag7", "flag8", "flag9", "flag15", "flag16", "flag18", "flag19", "flag20", "flag24", "flag39", "flag45", "flag47", "flag48", "flag49", "flag50", "flag51", "flag52", "flag57", "flag59", "flag62", "flag64", "flag80", "flag82", "flag83", "flag84", "flag85", "flag86", "flag89", "flag90", "flag91", "flag92", "flag93", "flag94", "flag95", "flag96", "flag97", "sp3", "sp5", "sp6")
 check02 <- merge(x = edu_name2, y = flag1, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 check02 <- merge(x = check02, y = flag2, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 check02 <- merge(x = check02, y = flag3, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
@@ -7816,451 +9328,19 @@ check02 <- merge(x = check02, y = flag91, by = c("organization_id"), all.x = TRU
 check02 <- merge(x = check02, y = flag92, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 check02 <- merge(x = check02, y = flag93, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 check02 <- merge(x = check02, y = flag94, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
+check02 <- merge(x = check02, y = flag95, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
+check02 <- merge(x = check02, y = flag96, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
+check02 <- merge(x = check02, y = flag97, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 check02 <- merge(x = check02, y = spe3, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 check02 <- merge(x = check02, y = spe5, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 check02 <- merge(x = check02, y = spe6, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 
-#autochecking_personnel 第168行改成 dim(teacher)[1] == 0 & dim(staff)[1] == 0
-#autochecking_personnel 第182, 257行改成 C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事.xlsx
-
 # 計畫端個案處理 -------------------------------------------------------------------
-#國立中央大學附屬中壢高中(030305)
-  #謝窘木 陳觀柏 曾庭芝 景泰秀 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "030305", "", check02$flag86)
-
-#國立北科大附屬桃園農工(030403)
-  #同等學力
-  check02$spe6 <- if_else(check02$spe6 == "職員(工)資料表之大學（學士）以上各教育階段學歷資料不完整或不正確：歐奕廷（副學士或專科畢業學校（一）：同等學歷）" & check02$organization_id == "030403", "", check02$spe6)
-  #林美豪 李後翰 蔡宗奮 郭金山 翁菁穗 林殷兆 許日進 呂竺昇 吳聖傑 李國釗 呂阿祝 黃華彩 蘇佳恩 房增財 黃婉婷 陳坤松  皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "030403", "", check02$flag86)
-
-#市立龍潭高中(033302)
-  #邱憶茹 吳瑞芬 黃秀娟 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "033302", "", check02$flag86)
-
-#市立武陵高中(033306)
-  #黃政揚 林雅惠 康金花 李志成 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "033306", "", check02$flag86)
-
-#市立楊梅高中(033316)
-  #陳建旺 楊孝媛 楊凱婷 王慧真 陳宏宗 張瑋秦 江美珠 黃鈴芳 黃建堉 陳逸帆 張藝馨 陳素修 羅筱恩 袁素卿 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "033316", "", check02$flag86)
-
-#市立陽明高中(033325)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "033325", "", check02$flag80)
-  #黎玉蘭 CABRERA MARLOWE CAALAMA 郭育華 朱秀容 顏中山 黃淑敏 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "033325", "", check02$flag86)
-
-#市立中壢家商(033408)
-  #陳楙開 李昱旼 黃麗芬 邱玥紜 許美倫 何淑貞 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "033408", "", check02$flag86)
-
-#市立南崁高中(034306)
-  #吳素玉 彭冠學 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "034306", "", check02$flag86)
-
-#市立壽山高中(034314)
-  #原住民姓名無誤
-  check02$flag6 <- if_else(check02$flag6 == "職員(工)資料表需修改姓名處：纚固.妮卡兒" & check02$organization_id == "034314", "", check02$flag6)
-  #確實沒有主（會）計室主管
-  check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "034314", "", check02$flag1)
-    #徐宗盛 苗天霞 簡瑞葶 李惠珍 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "034314", "", check02$flag86)
-
-#市立觀音高中(034332)
-  #曾麗文 劉禎芸 莊竣翔 黃順斌 張鳳玲 林玉瓊 吳宜珍 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "034332", "", check02$flag86)
-
-#市立新屋高級中等學校(034335)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "034335", "", check02$flag80)
-  #黃國峰 賀春暉 陳癸月 黃嬿瑄 蔡慧茵 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "034335", "", check02$flag86)
-
-#市立永豐高中(034347)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "034347", "", check02$flag80)
-  #曾子綾 杜冠毅 林美秋 陳麗婷 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "034347", "", check02$flag86)
-
-#市立大園國際高中(034399)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "034399", "", check02$flag80)
-  #蕭辰桓 莊孟淳 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "034399", "", check02$flag86)
-
-#國立彰化女中(070301)
-  #楊明祥 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070301", "", check02$flag86)
-
-#國立員林高中(070304)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "070304", "", check02$flag80)
-
-#國立彰化高中(070307)
-  #呂健嘉 呂興忠 林沛玲 林胤國 邱建凱 陳冠佑 陳品妤 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070307", "", check02$flag86)
-
-#國立鹿港高中(070316)
-  #職員(工)資料表：蔡奉育54歲，但學校工作總年資有38年（約16歲開始工作）這是正確的
-  check02$flag39 <- if_else(check02$flag39 == "請確認該員之「本校到職日期」、「本校任職需扣除之年資」、「本校到職前學校服務總年資」，職員(工)資料表：蔡奉育54歲，但學校工作總年資有38年（約16歲開始工作）" & check02$organization_id == "070316", "", check02$flag39)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "070316", "", check02$flag80)
-  #廖逵宸 林政興 李蕙菁 許笠 張雅如 陳佳麟 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070316", "", check02$flag86)
-
-#國立溪湖高中(070319)
-  #沒有設置學程主任
-  check02$flag3 <- if_else(check02$flag3 == "請學校確認是否設置學程主任" & check02$organization_id == "070319", "", check02$flag3)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "070319", "", check02$flag80)
-  #林意珊 卓宏祺 洪維謙 吳旭薇 劉珮如 楊家因 林宗賢 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070319", "", check02$flag86)
-
-#國立彰師附工(070401)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "070401", "", check02$flag80)
-  #蘇俊榮 周照棠 柯姿羽 陳凱勛 梁文? 洪武詮 林益瑋 吳武峰 施雄敏 林浚彬 林侑辰 梁祐祥 柯東佑 高駿雲 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070401", "", check02$flag86)
-
-#國立永靖高工(070402)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "070402", "", check02$flag80)
-  #林欣慧 廖惠娜 李秋蘭 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070402", "", check02$flag86)
-
-#國立二林工商(070403)
-  #無設置學程主任
-  check02$flag3 <- if_else(check02$flag3 == "請學校確認是否設置學程主任" & check02$organization_id == "070403", "", check02$flag3)
-  #林恒毅 黃舜牧 王子殷 黃梓彥 張玲菁 黃焜地 葉紋彬 鄭伊均 陳映軒 廖如茵 徐文振 呂宛儒 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070403", "", check02$flag86)
-
-#國立秀水高工(070405)
-  #梁奕魁 陳淵源 施忠良 陳文瑋 林黃莉雯 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070405", "", check02$flag86)
-
-#國立彰化高商(070406)
-  #盧諝程 黃碧雲 吳志信 何政衛 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070406", "", check02$flag86)
-
-#國立員林農工(070408)
-  #同等學力
-  check02$spe6 <- if_else(check02$spe6 == "職員(工)資料表之大學（學士）以上各教育階段學歷資料不完整或不正確：王如亮（副學士或專科畢業學校（一）：同等學力）" & check02$organization_id == "070408", "", check02$spe6)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "070408", "", check02$flag80)
-  #燕美黎 蘇盈嘉 葉俊賢 梁煌坤 王怡詠 宋崇銘 黃俊偉 游麗珍 賴宥如 黃小屏 許振維 張永承 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070408", "", check02$flag86)
-
-#國立員林崇實高工(070409)
-  #職員(工)資料表：王麗粧55歲，但學校工作總年資有40年（約15歲開始工作）這是正確的
-  check02$flag39 <- if_else(check02$flag39 == "請確認該員之「本校到職日期」、「本校任職需扣除之年資」、「本校到職前學校服務總年資」，職員(工)資料表：王麗粧55歲，但學校工作總年資有40年（約15歲開始工作）" & check02$organization_id == "070409", "", check02$flag39)
-  #魏延斌 許意山 洪俊林 蘇忠祥 陳玥彤 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070409", "", check02$flag86)
-
-#國立員林家商(070410)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "070410", "", check02$flag80)
-  #黃竫茵 許庭瑜 張淑芳 蓋琪君 黃美鳳 陳定宏 孫雅玲 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070410", "", check02$flag86)
-
-#國立北斗家商(070415)
-  #張耕濃 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "070415", "", check02$flag86)
-
-#縣立彰化藝術高中(074308)
-  #職員(工)資料表：賈慶貞57歲，但學校工作總年資有41年（約16歲開始工作）這是正確的
-  check02$flag39 <- if_else(check02$flag39 == "請確認該員之「本校到職日期」、「本校任職需扣除之年資」、「本校到職前學校服務總年資」，職員(工)資料表：賈慶貞57歲，但學校工作總年資有41年（約16歲開始工作）" & check02$organization_id == "074308", "", check02$flag39)
-  #李宥婕 李東祐 歐陽沐靈 鄭綜聖 陳清彬 尤建勝 蕭麗娜 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "074308", "", check02$flag86)
-
-#縣立田中高中(074328)
-  #江祥場 代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "074328", "", check02$flag80)
-  #廖采頻 程惠珍 方效國 禤建國 鄭凱元 李柏萱 蕭慧儀 洪村展 艾翹楚 楊子鐳 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "074328", "", check02$flag86)
-
-#縣立成功高中(074339)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "074339", "", check02$flag80)
-  #李孟珍 林俊樂 張明仁 沈麗琴 鄭純琪 方美滿 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "074339", "", check02$flag86)
-
-#國立中興高中(080305)
-  #職員(工)資料表：李美紅58歲，但學校工作總年資有41年（約17歲開始工作） 黃鳳微64歲，但學校工作總年資有48年（約16歲開始工作）這是正確的
-  check02$flag39 <- if_else(check02$flag39 == "請確認該員之「本校到職日期」、「本校任職需扣除之年資」、「本校到職前學校服務總年資」，職員(工)資料表：李美紅58歲，但學校工作總年資有41年（約17歲開始工作） 黃鳳微64歲，但學校工作總年資有48年（約16歲開始工作）" & check02$organization_id == "080305", "", check02$flag39)
-  #翁廷豪 任以真 黃碧霞 紀松佐 鍾昊宏 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "080305", "", check02$flag86)
-
-#國立竹山高中(080307)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "080307", "", check02$flag80)
-
-#國立暨大附中(080308)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "080308", "", check02$flag80)
-  #張正彥 吳毓蕙 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "080308", "", check02$flag86)
-
-#國立埔里高工(080403)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "080403", "", check02$flag80)
-  #安蘭台 陳郁文 孫兆霞 王淑珊 林秀賢 江雅如 魏廷卉 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "080403", "", check02$flag86)
-
-#國立南投高商(080404)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "080404", "", check02$flag80)
-  #陳志修 余玉鳳 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "080404", "", check02$flag86)
-
-#國立草屯商工(080406)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "080406", "", check02$flag80)
-  #姚美慧 廖大銓 黃國軒 劉沛劼 黃方伯 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "080406", "", check02$flag86)
-
-#國立水里商工(080410)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "080410", "", check02$flag80)
-  #古欣卉 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "080410", "", check02$flag86)
-
-#縣立旭光高中(084309)
-  #張玲莉 蔣計芬 黃素珍 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "084309", "", check02$flag86)
-
-#國立臺東女中(140302)
-  #李兆起 羅忠雄 陳淑惠 吳佳純 黃淑芳 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "140302", "", check02$flag86)
-
-#國立臺東高中(140303)
-  #廖珠伶 黃玲娜 宗明珊 蔡文貴 張勝發 羅青松 吳麗香 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "140303", "", check02$flag86)
-
-#國立關山工商(140404)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "140404", "", check02$flag80)
-  #黃延泰 張仁輔 莊佩璋 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "140404", "", check02$flag86)
-
-#國立臺東高商(140405)
-  #丁英桔 楊芷筠 林弘毅 曾振華 古梅花 李立方 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "140405", "", check02$flag86)
-
-#縣立蘭嶼高中(144322)
-  #確實沒有圖書館主管
-  check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "144322", "", check02$flag1)
-  #劉俞伶 傅桂 劉康文 鍾蘭芬 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "144322", "", check02$flag86)
-
-#國立基隆女中(170301)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "170301", "", check02$flag80)
-  #田派霖 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "170301", "", check02$flag86)
-
-#市立安樂高中(173306)
-  #高麗玲 游文毅 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "173306", "", check02$flag86)
-
-#市立八斗高中(173314)
-  #陳璿文 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "173314", "", check02$flag86)
-
-#國立海洋大學附屬基隆海事(170403)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "170403", "", check02$flag80)
-  #華志德 徐秀珠 蘇世昌 劉俊妤 劉姵妏 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "170403", "", check02$flag86)
-
-#國立基隆商工(170404)
-  #陳景堅 宋元傑 盧韻如 余沂家 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "170404", "", check02$flag86)
-
-#市立中崙高中(313302)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "313302", "", check02$flag80)
-  #陳瓊珍 陳清吉 呂育娟 上學年聘任類別填錯 應為"兼任"人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "313302", "", check02$flag86)
-
-#市立松山高中(323301)
-  #江心瑜 朱玉華 羅世焜 莊明煌 黃金雄 陶韻如 李鎂英 王筱惠 陳惠華 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "323301", "", check02$flag86)
-
-#市立永春高中(323302)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "323302", "", check02$flag80)
-  #許詠智 易台玉 上學年聘任類別填錯 應為"兼任"人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "323302", "", check02$flag86)
-
-#市立松山家商(323401)
-  #劉勇成 劉安妮 呂家銘 姚智翊 李玟頤 林麗華 楊世昌 潘廷敏 葉芝鱗 蕭雅馨 趙忠明 邱雅萍 陳彥傑 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "323401", "", check02$flag86)
-
-#市立松山工農(323402)
-  #吳兆芳 尤筱潔 林怡君 陳盈如 莊昀鑫 林安琪 陳忠裕 曾家盈 江玉珍 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "323402", "", check02$flag86)
-
-#國立師大附中(330301)
-  #陳采妍 朱佩瑾 莊錦毓 林秀芬 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "330301", "", check02$flag86)
-
-#市立和平高中(333301)
-  #職員(工)資料表：潘麗卿54歲，但學校工作總年資有37年（約17歲開始工作）這是正確的
-  check02$flag39 <- if_else(check02$flag39 == "請確認該員之「本校到職日期」、「本校任職需扣除之年資」、「本校到職前學校服務總年資」，職員(工)資料表：潘麗卿54歲，但學校工作總年資有37年（約17歲開始工作）" & check02$organization_id == "333301", "", check02$flag39)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "333301", "", check02$flag80)
-  #林炤美 李財友 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "333301", "", check02$flag86)
-
-#臺北市芳和實驗中學(333304)
-  #該校行政單位較特別 原則上有填列各處室主管
-  check02$flag1 <- if_else(check02$flag1 != "" & check02$organization_id == "333304", "", check02$flag1)
-  #馮思妤 張顥瀚 宋湘媛 黃正宗 黎慧欣 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "333304", "", check02$flag86)
-
-#市立大安高工(333401)
-  #趙?海 高添貴 孔祥璿 陳揚翔 潘虹竹 田育台 陳亮君 林俊岳 何元皓 黃柏文 楊運祥 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "333401", "", check02$flag86)
-
-#市立中山女中(343301)
-  #吳季勳 廖登山 徐志豪 陳秀鳳 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "343301", "", check02$flag86)
-
-#市立大同高中(343302)
-  #談得聖 莊靜怡 曾如玉 劉育伶 趙彥凱 莊智鈞 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "343302", "", check02$flag86)
-
-#市立大直高中(343303)
-  #張藝馨 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "343303", "", check02$flag86)
-
-#市立建國中學(353301)
-  #賴啟林 林素華 林純妙 朱軒樑 黃儷慧 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "353301", "", check02$flag86)
-
-#市立北一女中(353303)
-  #廖珈琪 上一學年聘任類別應為"約聘雇"
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "353303", "", check02$flag86)
-
-#市立明倫高中(363301)
-  #吳蕙惠 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "363301", "", check02$flag86)
-
-#市立成淵高中(363302)
-  #沈碧麗16歲開始工作無誤
-  check02$flag39 <- if_else(check02$flag39 == "請確認該員之「本校到職日期」、「本校任職需扣除之年資」、「本校到職前學校服務總年資」，職員(工)資料表：沈碧麗61歲，但學校工作總年資有45年（約16歲開始工作）" & check02$organization_id == "363302", "", check02$flag39)
-  #連詠順 林佳音 陳婉萍 吳淑絹 游璧僑 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "363302", "", check02$flag86)
-
-#市立華江高中(373301)
-  #林怡君 黃佳茵 羅媛馨 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "373301", "", check02$flag86)
-
-#國立政大附中(380301)
-  #盧碧英 謝欣恬 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "380301", "", check02$flag86)
-
-#市立景美女中(383301)
-  #確實沒有主（會）計室主管
-  check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "383301", "", check02$flag1)
-  #扣除年資不為零的人數確實偏高
-  check02$flag64 <- if_else(check02$flag64 == "扣除年資不為零的人數偏高，請再依欄位說明確認。" & check02$organization_id == "383301", "", check02$flag64)
-  #楊永祿 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "383301", "", check02$flag86)
-
-#市立萬芳高中(383302)
-  #教官 拿到退伍令 故退休
-  check02$flag85 <- if_else(check02$flag85 == "教員資料表：周建賢（該員年齡似低於最低法定退休年齡，敬請再協助確認）" & check02$organization_id == "383302", "", check02$flag85)
-  #陳裕隆 黃一庭 劉貞利 劉佳怡 許雅筑 陳淑伶 蘇苑瑜 陳怡廷 錢欽嫄 吳金蘭 施富祥 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "383302", "", check02$flag86)
-
-#市立數位實驗高中(383303)
-  #校長 教務處主管 學輔處主管 總務處主管 人事室主管 主（會）計室主管 皆為外校借調入 人事室沒有這些人員的人事資料 暫先讓學校通過
-  check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：校長 教務處主管 學務處主管 總務處主管 輔導室主管 圖書館主管 實習處主管 人事室主管 主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "383303", "", check02$flag1)
-  #3位職員皆為約聘僱 暫先讓學校通過
-  check02$flag18 <- if_else(check02$flag18 == "職員(工)資料表專任人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整職員(工)名單資料。" & check02$organization_id == "383303", "", check02$flag18)
-
-#市立木柵高工(383401)
-  #陳憲章 陳秀娥 黃奕榤 鄭芷昀 蔡美季 王秀琪 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "383401", "", check02$flag86)
-
-#市立南港高中(393301)
-  #原住民姓名無誤
-  check02$flag6 <- if_else(check02$flag6 == "教員資料表需修改姓名處：以柏．亞告" & check02$organization_id == "393301", "", check02$flag6)
-  #林柏祥 林德明 黃苓毓 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "393301", "", check02$flag86)
-
-#市立育成高中(393302)
-  #確實沒有主（會）計室主管
-  check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "393302", "", check02$flag1)
-  #陳昱蓁 李展源 曹念儒 張政豪 張芳瑜 蔣漢旗 洪清好 林姿綿 鍾一良 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "393302", "", check02$flag86)
-
-#市立南港高工(393401)
-  #揭朝平 王上林 王錦輝 江長遠 謝荺琪 陳宗暘 何岳珈 柯炳州 吳素惠 陳泰羽 李瑄 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "393401", "", check02$flag86)
-
-#市立內湖高中(403301)
-  #原住民姓名無誤
-  check02$flag6 <- if_else(check02$flag6 == "教員資料表需修改姓名處：古拉斯‧達那哈 烏巴赫‧尤紀" & check02$organization_id == "403301", "", check02$flag6)
-
-#市立麗山高中(403302)
-  #陳逸弘 邱曉淇 柯明樹 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "403302", "", check02$flag86)
-
-#市立南湖高中(403303)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "403303", "", check02$flag80)
-  #王翊軒 董家莒 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "403303", "", check02$flag86)
-
-#市立內湖高工(403401)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "403401", "", check02$flag80)
-  #錢柄匡 丁宇沛 楊秀鳳 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "403401", "", check02$flag86)
-
-#市立陽明高中(413301)
-  #林柏佑 邱嘉芳 王文玲 陳至義 羅聖涵 吳蓓欣 饒秀娟 簡淑玲 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "413301", "", check02$flag86)
-
-#市立百齡高中(413302)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "413302", "", check02$flag80)
-  #王廉今 陳依君 李宜蓁 蔡麗惠 段建強 陳玟瑾 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "413302", "", check02$flag86)
-
-#市立士林高商(413401)
-  #黃玉婷16歲開始工作無誤
-  check02$flag39 <- if_else(check02$flag39 == "請確認該員之「本校到職日期」、「本校任職需扣除之年資」、「本校到職前學校服務總年資」，職員(工)資料表：黃玉婷46歲，但學校工作總年資有30年（約16歲開始工作）" & check02$organization_id == "413401", "", check02$flag39)
-  #彭柏鈞 俞相榕 范筠軒 曾薇潔 黃佳淦 蔣明峰 蔣德馨 涂嘉妤 詹孟菁 施乃華 孫振華 陳美芳 姜金桂 非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "413401", "", check02$flag86)
-
-#市立復興高中(423301)
-  #閔懿 張黎明 蔡莉莉 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "423301", "", check02$flag86)
-
-#市立中正高中(423302)
-  #林憶君 王傳忠 林家豪 陳梵煦 林于雅 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "423302", "", check02$flag86)
-
-#國立馬祖高中(720301)
-  #沒有設置學程主任
-  check02$flag3 <- if_else(check02$flag3 == "請學校確認是否設置學程主任" & check02$organization_id == "720301", "", check02$flag3)
-  #原住民姓名無誤
-  check02$flag6 <- if_else(check02$flag6 != "" & check02$organization_id == "720301", "", check02$flag6)
-  #代理教師連續聘任沒有中斷
-  check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "720301", "", check02$flag80)
-  #陳怡文 陳宜道 皆非本學期退休或因故離職人員
-  check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "720301", "", check02$flag86)
-
 
 
 check02$err_flag <- 0
 
-temp <- c("flag1", "flag2", "flag3", "flag6", "flag7", "flag8", "flag9", "flag15", "flag16", "flag18", "flag19", "flag20", "flag24", "flag39", "flag45", "flag47", "flag48", "flag49", "flag50", "flag51", "flag52", "flag57", "flag59", "flag62", "flag64", "flag80", "flag82", "flag83", "flag84", "flag85", "flag86", "flag89", "flag90", "flag91", "flag92", "flag93", "flag94", "spe3", "spe5", "spe6")
+temp <- c("flag1", "flag2", "flag3", "flag6", "flag7", "flag8", "flag9", "flag15", "flag16", "flag18", "flag19", "flag20", "flag24", "flag39", "flag45", "flag47", "flag48", "flag49", "flag50", "flag51", "flag52", "flag57", "flag59", "flag62", "flag64", "flag80", "flag82", "flag83", "flag84", "flag85", "flag86", "flag89", "flag90", "flag91", "flag92", "flag93", "flag94", "flag95", "flag96", "flag97", "spe3", "spe5", "spe6")
 for (i in temp){
   check02[[i]] <- if_else(is.na(check02[[i]]), "", check02[[i]])
   check02$err_flag <- if_else(nchar(check02[[i]]) != 0, 1, check02$err_flag)
@@ -8294,9 +9374,9 @@ for (i in temp){
 
 check02 <- check02 %>%
   subset(select = -c(err_flag, err_flag_P, err_flag_Ps))
-openxlsx :: write.xlsx(check02, file = "C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事.xlsx", rowNames = FALSE, overwrite = TRUE)
+openxlsx :: write.xlsx(check02, file = "C:\\edhr-111t2\\work\\edhr-111t2-check_print-人事.xlsx", rowNames = FALSE, overwrite = TRUE)
 }else{
-openxlsx :: write.xlsx(check02, file = "C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事.xlsx", rowNames = FALSE, overwrite = TRUE)
+openxlsx :: write.xlsx(check02, file = "C:\\edhr-111t2\\work\\edhr-111t2-check_print-人事.xlsx", rowNames = FALSE, overwrite = TRUE)
 }
 
 #####自動化檢誤#####
@@ -8309,13 +9389,13 @@ if(dim(teacher)[1] == 0 & dim(staff)[1] == 0)
   #####自動化信件通知 - 每小時通知<本次上傳學校名單、需補正學校名單、三階檢通過學校名單>#####
   #初次執行需建立pre_list_agree和pre_correct_list兩個xlsx檔，用if else來做
   #若xlsx檔不存在，建立檔案
-  if(!file.exists("C:/edhr-111t1/dta/edhr_111t1-202210/pre_list_agree_人事.xlsx"))
+  if(!file.exists("C:/edhr-111t2/dta/edhr_111t2-202303/pre_list_agree_人事.xlsx"))
   {
     #建立pre_list_agree.xlsx
     pre_list_agree <- list_agree
-    openxlsx :: write.xlsx(pre_list_agree, file = "C:/edhr-111t1/dta/edhr_111t1-202210/pre_list_agree_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
+    openxlsx :: write.xlsx(pre_list_agree, file = "C:/edhr-111t2/dta/edhr_111t2-202303/pre_list_agree_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
     #建立pre_correct_list.xlsx
-    correct_list <- readxl :: read_excel("C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事.xlsx") %>% #本次需補正學校
+    correct_list <- readxl :: read_excel("C:\\edhr-111t2\\work\\edhr-111t2-check_print-人事.xlsx") %>% #本次需補正學校
       subset(select = c(organization_id, edu_name2))
     correct_list$edu_name2 <- paste(correct_list$edu_name2, "(", correct_list$organization_id, ")", sep = "")
     correct_list <- correct_list %>%
@@ -8329,19 +9409,19 @@ if(dim(teacher)[1] == 0 & dim(staff)[1] == 0)
     {
       correct_list = correct_list
     }
-    openxlsx :: write.xlsx(correct_list, file = "C:/edhr-111t1/dta/edhr_111t1-202210/pre_correct_list_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
+    openxlsx :: write.xlsx(correct_list, file = "C:/edhr-111t2/dta/edhr_111t2-202303/pre_correct_list_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
   }else
   {
     print("pre_list_agree和pre_correct_list兩個xlsx檔存在，繼續執行")
   }
   
   #若xlsx檔存在，執行
-  if(file.exists("C:/edhr-111t1/dta/edhr_111t1-202210/pre_list_agree_人事.xlsx"))
+  if(file.exists("C:/edhr-111t2/dta/edhr_111t2-202303/pre_list_agree_人事.xlsx"))
   {
     #讀取上次名單
-    pre_list_agree <- readxl :: read_excel("C:/edhr-111t1/dta/edhr_111t1-202210/pre_list_agree_人事.xlsx")
+    pre_list_agree <- readxl :: read_excel("C:/edhr-111t2/dta/edhr_111t2-202303/pre_list_agree_人事.xlsx")
     pre_list_agree$organization_id <- as.character(pre_list_agree$organization_id)
-    pre_correct_list <- readxl :: read_excel("C:/edhr-111t1/dta/edhr_111t1-202210/pre_correct_list_人事.xlsx")
+    pre_correct_list <- readxl :: read_excel("C:/edhr-111t2/dta/edhr_111t2-202303/pre_correct_list_人事.xlsx")
     pre_correct_list <- mutate(pre_correct_list, pre_correct = 1)
     #以下是為了解決pre_list_agree無法合併的問題(若出現此問題只會發生在list_agree為空 且 pre_list_agree為空)
     if(dim(pre_list_agree)[1] == 0 & dim(list_agree)[1] == 0)
@@ -8388,9 +9468,9 @@ if(dim(teacher)[1] == 0 & dim(staff)[1] == 0)
     #compare_correct_list$edu_name2 <- paste(compare_correct_list$edu_name2, "(", compare_correct_list$organization_id, ")", sep = "")
     #另存'本次已上傳名單"，以便於與下次名單比對
     pre_list_agree <- list_agree
-    openxlsx :: write.xlsx(pre_list_agree, file = "C:/edhr-111t1/dta/edhr_111t1-202210/pre_list_agree_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
+    openxlsx :: write.xlsx(pre_list_agree, file = "C:/edhr-111t2/dta/edhr_111t2-202303/pre_list_agree_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
     
-    correct_list <- readxl :: read_excel("C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事.xlsx") %>% #本次需補正學校
+    correct_list <- readxl :: read_excel("C:\\edhr-111t2\\work\\edhr-111t2-check_print-人事.xlsx") %>% #本次需補正學校
       subset(select = c(organization_id, edu_name2))
     correct_list_c <- correct_list %>%
       subset(select = c(organization_id))
@@ -8546,7 +9626,7 @@ if(dim(teacher)[1] == 0 & dim(staff)[1] == 0)
     }
     
     #另存'本次需修正名單"，以便於與下次名單比對
-    openxlsx :: write.xlsx(correct_list, file = "C:/edhr-111t1/dta/edhr_111t1-202210/pre_correct_list_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
+    openxlsx :: write.xlsx(correct_list, file = "C:/edhr-111t2/dta/edhr_111t2-202303/pre_correct_list_人事.xlsx", rowNames = FALSE, overwrite = TRUE)
     
     clear_list <- left_join(compare_list, correct_list, by = c("organization_id")) %>% #本次三階檢通過學校
       subset(select = c(organization_id, edu_name2, name)) %>%
@@ -8636,7 +9716,7 @@ if(dim(teacher)[1] == 0 & dim(staff)[1] == 0)
     
     #寄信
     #先判斷check_print檔案是否使用中(以"是否可更改檔案名稱"來判斷 若可更改 代表未使用中)
-    checkprint_filename <- "C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事.xlsx"
+    checkprint_filename <- "C:\\edhr-111t2\\work\\edhr-111t2-check_print-人事.xlsx"
     checkprint_filename_2 <- substr(checkprint_filename, start = 1, stop = str_locate(checkprint_filename, ".xlsx")[ ,1] - 1)  
     
     if(file.rename(from = checkprint_filename, to = paste(checkprint_filename_2, "2.xlsx", sep = "")) == TRUE)
@@ -8772,7 +9852,7 @@ if(dim(teacher)[1] == 0 & dim(staff)[1] == 0)
           
           shell.exec("C:\\autochecking\\fileclose.bat")
           
-          file.rename(from = "C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事2.xlsx", to = "C:\\edhr-111t1\\work\\edhr-111t1-check_print-人事.xlsx")
+          file.rename(from = "C:\\edhr-111t2\\work\\edhr-111t2-check_print-人事2.xlsx", to = "C:\\edhr-111t2\\work\\edhr-111t2-check_print-人事.xlsx")
         }
       }
     }else
