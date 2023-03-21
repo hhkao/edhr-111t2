@@ -586,7 +586,7 @@ drev_person$source  <- factor(drev_person$source, levels = c(1, 2), labels = c("
 #讀取所有學校的人事資料表(不分管區)
 
 #讀取審核同意之學校名單
-list_agree <- dbGetQuery(edhr, 
+list_agree_all <- dbGetQuery(edhr, 
                          paste("
 SELECT DISTINCT b.id AS organization_id , 1 AS agree
 FROM [plat5_edhr].[dbo].[teacher_fillers] a 
@@ -634,7 +634,7 @@ teacher_all$beobdym <- formatC(teacher_all$beobdym, dig = 0, wid = 4, format = "
 teacher_all$organization_id <- formatC(teacher_all$organization_id, dig = 0, wid = 6, format = "f", flag = "0")
 
 #只留下審核通過之名單
-teacher_all <- merge(x = teacher_all, y = list_agree, by = "organization_id", all.x = TRUE) %>%
+teacher_all <- merge(x = teacher_all, y = list_agree_all, by = "organization_id", all.x = TRUE) %>%
   subset(agree == 1) %>%
   subset(select = -c(updated_at, agree))
 
@@ -669,7 +669,7 @@ staff_all$beobdym <- formatC(staff_all$beobdym, dig = 0, wid = 4, format = "f", 
 staff_all$organization_id <- formatC(staff_all$organization_id, dig = 0, wid = 6, format = "f", flag = "0")
 
 #只留下審核通過之名單
-staff_all <- merge(x = staff_all, y = list_agree, by = "organization_id", all.x = TRUE) %>%
+staff_all <- merge(x = staff_all, y = list_agree_all, by = "organization_id", all.x = TRUE) %>%
   subset(agree == 1) %>%
   subset(select = -c(updated_at, agree))
 
