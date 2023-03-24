@@ -8846,7 +8846,7 @@ flag93$flag93 <- gsub("； NA", replacement="", flag93$flag93)
 flag93 <- flag93 %>%
   subset(select = c(organization_id, flag93)) %>%
   distinct(organization_id, flag93) %>%
-  mutate(flag93 = paste(flag93, "（查貴校上一學年所填資料，上述人員聘任類別非屬『專任』。依欄位說明，非專任教職員(工)之退休或離職者，不須填列離退教職員(工)資料表，請務必再確認。）", sep = ""))
+  mutate(flag93 = paste(flag93, "（查貴校上一學年所填資料，上述人員未在貴校教職員(工)資料中，請確認上述人員是否於111年8月1日至9月30日有退休或因故離職之情形，或是否屬於貴校教職員(工)，併請確認貴校教職員工名單是否完整正確。）", sep = ""))
 }else{
 #偵測flag93是否存在。若不存在，則產生NA行
 if('flag93' %in% ls()){
@@ -9354,6 +9354,18 @@ check02 <- merge(x = check02, y = spe5, by = c("organization_id"), all.x = TRUE,
 check02 <- merge(x = check02, y = spe6, by = c("organization_id"), all.x = TRUE, all.y = TRUE)
 
 # 計畫端個案處理 -------------------------------------------------------------------
+
+#私立曙光女中(181306)
+  #確實沒有設置實習處主管
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：實習處主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "181306", "", check02$flag1)
+  #沒有設置學程主任
+check02$flag3 <- if_else(check02$flag3 == "請學校確認是否設置科主任或學程主任" & check02$organization_id == "181306", "", check02$flag3)
+
+#私立文德女中(401301)
+  #確實沒有設置學務處主管 圖書館主管 人事室主管 主（會）計室主管(僅有組長)
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：學務處主管 圖書館主管 人事室主管 主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "401301", "", check02$flag1)
+  #兼任教師連續聘任不中斷無誤
+check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "401301", "", check02$flag80)
 
 
 check02$err_flag <- 0
