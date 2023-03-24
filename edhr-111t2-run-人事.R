@@ -6313,8 +6313,8 @@ if('flag94' %in% ls()){
 flag_person <- drev_person_1
 
 #本校到職日期晚於填報基準日。
-flag_person$survey_year <- 111
-flag_person$survey_mon <- 9
+flag_person$survey_year <- 112
+flag_person$survey_mon <- 3
 
 flag_person$arvy <- substr(flag_person$onbodat, 1, 3) %>% as.numeric()
 flag_person$arvm <- substr(flag_person$onbodat, 4, 5) %>% as.numeric()
