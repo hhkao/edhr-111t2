@@ -8846,7 +8846,7 @@ flag93$flag93 <- gsub("； NA", replacement="", flag93$flag93)
 flag93 <- flag93 %>%
   subset(select = c(organization_id, flag93)) %>%
   distinct(organization_id, flag93) %>%
-  mutate(flag93 = paste(flag93, "（查貴校上一學年所填資料，上述人員未在貴校教職員(工)資料中，請確認上述人員是否於111年8月1日至9月30日有退休或因故離職之情形，或是否屬於貴校教職員(工)，併請確認貴校教職員工名單是否完整正確。）", sep = ""))
+  mutate(flag93 = paste(flag93, "（查貴校上一學年所填資料，上述人員未在貴校教職員(工)資料中，請確認上述人員是否於111年8月1日-112年1月31日有退休或因故離職之情形，或是否屬於貴校教職員(工)，併請確認貴校教職員工名單是否完整正確。）", sep = ""))
 }else{
 #偵測flag93是否存在。若不存在，則產生NA行
 if('flag93' %in% ls()){
