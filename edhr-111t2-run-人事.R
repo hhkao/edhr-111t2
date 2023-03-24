@@ -3651,7 +3651,7 @@ flag_person <- drev_person_1
 
 #外來人口統一證號：第二碼為A B C D 8 9
 flag_person$err_flag <- 0
-flag_person$err_flag <- if_else(grepl("^[^\s][ABCD89][^\s]+$", flag_person$idnumber) & (flag_person$nation %in% c("本國籍", "本國", "臺灣")), 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(grepl("^[^\\s][ABCD89][^\\s]+$", flag_person$idnumber) & (flag_person$nation %in% c("本國籍", "本國", "臺灣")), 1, flag_person$err_flag)
 
 #呈現姓名
 flag_person$err_flag_txt <- ""
@@ -8473,6 +8473,15 @@ if('spe6' %in% ls()){
 flag_person <- drev_P_retire %>%
   rename(name = name.x, name_retire = name.y)
 
+#若drev_P_retire無資料，建立物件
+if (dim(drev_P_retire)[1] == 0) {
+  temp <- matrix("", nrow = 1, ncol = ncol(flag_person)) %>% data.frame()
+  names(temp) <- names(flag_person)
+  flag_person <- temp
+} else{
+  print("flag83: drev_P_retire is already exists.")
+}
+
 #離退教職員(工)資料表所列人員，不應填列為本次教員資料表或職員（工）資料表之專任或代理人員。(與本期資料比對)
 #抓出:離退人員有出現在教員資料表、職員工資料表，且為專任或代理
 flag_person$err_flag <- 0
@@ -8541,6 +8550,15 @@ if('flag83' %in% ls()){
 # flag92: 教員/職員（工）資料表及離退教職員(工)資料表，同一身分識別碼所對應的姓名不一致，請確認各該身分識別碼所屬正確人員。 -------------------------------------------------------------------
 flag_person <- drev_P_retire %>%
   rename(name = name.x, name_retire = name.y)
+
+#若drev_P_retire無資料，建立物件
+if (dim(drev_P_retire)[1] == 0) {
+  temp <- matrix("", nrow = 1, ncol = ncol(flag_person)) %>% data.frame()
+  names(temp) <- names(flag_person)
+  flag_person <- temp
+} else{
+  print("flag92: drev_P_retire is already exists.")
+}
 
 #本次離退教職員(工)資料表所列人員，若有出現本次教員資料表或職員（工）資料表(已存在錯誤情形)，姓名不一致
 flag_person$err_flag <- 0
