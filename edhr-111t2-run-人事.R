@@ -4,17 +4,24 @@
 
 rm(list=ls())
 
-#套件名稱
-packages <- c("DBI", "odbc", "magrittr", "dplyr", "rJava", "xlsx", "readxl", "stringr", "haven", "openxlsx", "tidyr", "maditr")
-
-# 安裝尚未安裝的套件
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
-
 # 載入所需套件
-lapply(packages, require, character.only = TRUE)
+  #隱藏警告訊息
+suppressWarnings({
+  suppressPackageStartupMessages({
+  library(DBI)
+  library(odbc)
+  library(magrittr)
+  library(dplyr)
+  library(rJava)
+  library(xlsx)
+  library(readxl)
+  library(stringr)
+  library(haven)
+  library(openxlsx)
+  library(tidyr)
+  library(maditr)
+  })
+})
 
 # 匯入學校資料檔 -------------------------------------------------------------------
 # input data
@@ -116,7 +123,11 @@ WHERE a.agree = 1 AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teache
     "201310"
   ))
 
-
+#尚無任何學校上傳資料的log訊息
+if (dim(list_agree)[1] == 0) {
+  print(paste0(format(Sys.time(), format = "%Y/%m/%d %H:%M"), " 尚無任何學校上傳資料"))
+} else {
+  
 #讀取教員資料表名稱
 teacher_tablename <- dbGetQuery(edhr, 
                                 paste("
@@ -9935,4 +9946,6 @@ if(dim(teacher)[1] == 0 & dim(staff)[1] == 0)
   {
     print("pre_list_agree和pre_correct_list兩個xlsx檔不存在")
   }
+}
+
 }
