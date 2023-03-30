@@ -8644,9 +8644,18 @@ flag_person <- drev_P_retire_pre_inner %>%
   rename(name = name.x, name_retire = name.y) %>%
   left_join(edu_name2, by = c("organization_id"))
 
+#若drev_P_retire_pre_inner無資料，建立物件
+if (dim(drev_P_retire_pre_inner)[1] == 0) {
+  temp <- matrix("", nrow = 1, ncol = ncol(flag_person)) %>% data.frame()
+  names(temp) <- names(flag_person)
+  flag_person <- temp
+} else{
+  print("flag84: drev_P_retire_pre_inner is already exists.")
+}
+
 #填寫在「離退教職員(工)資料表」之人員，聘任類別需為「專任」。(與上一期資料比對)
 flag_person$err_flag <- 0
-flag_person$err_flag <- if_else(flag_person$emptype != "專任", 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(flag_person$emptype != "專任" & flag_person$emptype != "", 1, flag_person$err_flag)
 
 #呈現姓名
 flag_person$err_flag_txt <- ""
@@ -8711,6 +8720,15 @@ if('flag84' %in% ls()){
 flag_person <- drev_P_retire_pre_inner %>%
   rename(name = name.x, name_retire = name.y) %>%
   left_join(edu_name2, by = c("organization_id"))
+
+#若drev_P_retire_pre_inner無資料，建立物件
+if (dim(drev_P_retire_pre_inner)[1] == 0) {
+  temp <- matrix("", nrow = 1, ncol = ncol(flag_person)) %>% data.frame()
+  names(temp) <- names(flag_person)
+  flag_person <- temp
+} else{
+  print("flag85: drev_P_retire_pre_inner is already exists.")
+}
 
 #離職退休情況為「退休」之人員年齡低於42歲。(與上一期資料比對)
 #年齡
@@ -8804,6 +8822,15 @@ if('flag85' %in% ls()){
 flag_person <- drev_P_retire_pre_right %>%
   rename(name = name.x, name_retire = name.y) %>%
   left_join(edu_name2, by = c("organization_id"))
+
+#若drev_P_retire_pre_inner無資料，建立物件
+if (dim(drev_P_retire_pre_inner)[1] == 0) {
+  temp <- matrix("", nrow = 1, ncol = ncol(flag_person)) %>% data.frame()
+  names(temp) <- names(flag_person)
+  flag_person <- temp
+} else{
+  print("flag93: drev_P_retire_pre_inner is already exists.")
+}
 
 #填寫在「離退教職員(工)資料表」之人員，聘任類別需為「專任」。(與上一期資料比對)
 #抓出:離退人員在上一期聘任類別非專任(專任的人員才能填到離退表)
