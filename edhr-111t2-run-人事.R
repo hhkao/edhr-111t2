@@ -126,6 +126,19 @@ WHERE a.agree = 1 AND department_id = (SELECT id FROM [plat5_edhr].[dbo].[teache
 #尚無任何學校上傳資料的log訊息
 if (dim(list_agree)[1] == 0) {
   print(paste0(format(Sys.time(), format = "%Y/%m/%d %H:%M"), " 尚無任何學校上傳資料"))
+  #且需刪除pre_list_agree.xlsx和pre_correct_list.xlsx兩個檔案
+  if (file.exists("C:/edhr-111t2/dta/edhr_111t2-202303/pre_list_agree_人事.xlsx")) {
+    file.remove("C:/edhr-111t2/dta/edhr_111t2-202303/pre_list_agree_人事.xlsx")
+  } else {
+    list_agree <- list_agree
+  }
+  
+  if (file.exists("C:/edhr-111t2/dta/edhr_111t2-202303/pre_correct_list_人事.xlsx")) {
+    file.remove("C:/edhr-111t2/dta/edhr_111t2-202303/pre_correct_list_人事.xlsx")
+  } else {
+    list_agree <- list_agree
+  }
+  
 } else {
   
 #讀取教員資料表名稱
@@ -9393,6 +9406,10 @@ check02 <- merge(x = check02, y = spe6, by = c("organization_id"), all.x = TRUE,
 
 # 計畫端個案處理 -------------------------------------------------------------------
 
+#私立正義高中(121318)
+  #確實沒有圖書館主管，實際上於教務處會有人去管理圖書館
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "121318", "", check02$flag1)
+
 #私立曙光女中(181306)
   #確實沒有設置實習處主管
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：實習處主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "181306", "", check02$flag1)
@@ -9404,6 +9421,12 @@ check02$flag3 <- if_else(check02$flag3 == "請學校確認是否設置科主任或學程主任" &
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：學務處主管 圖書館主管 人事室主管 主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "401301", "", check02$flag1)
   #兼任教師連續聘任不中斷無誤
 check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "401301", "", check02$flag80)
+
+#臺北市幼華高中(421302)
+  #確實沒有設置實習處主管
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：實習處主管 主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "421302", "", check02$flag1)
+  #兼任教師、鐘點教師連續聘任不中斷無誤
+#check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "421302", "", check02$flag80)
 
 
 check02$err_flag <- 0
