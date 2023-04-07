@@ -1,6 +1,0 @@
-選擇變項(例如性別、聘任類別等等)
-選擇交叉變項(學校類型、主管機關、所在縣市等等)
-
-劃出堆疊長條圖Bar Chart
-
-https://shiny.rstudio.com/gallery/explore-panel-data.html
