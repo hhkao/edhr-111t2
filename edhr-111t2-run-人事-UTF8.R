@@ -5553,22 +5553,22 @@ flag_person$err_adminunit3 <- if_else(grepl("^高中部$", flag_person$adminunit
 err_title0 <- data.frame(admintitle0 = flag_person$admintitle0, 
                          adminunit0 = flag_person$adminunit0, 
                          organization_id = flag_person$organization_id)
-flag_person$err_title0 <- if_else(duplicated(err_title0) & !err_title0$admintitle0 %in% "N" & err_title0$admintitle0 %in% "組長", 1, 0)
+flag_person$err_title0 <- if_else(!err_title0$admintitle0 %in% "N" & err_title0$admintitle0 %in% "組長" & ((!grepl("組$", err_title0$adminunit0) & !grepl("^N$", err_title0$adminunit0)) | (grepl("組$", err_title0$adminunit0) & nchar(err_title0$adminunit0) <= 5)), 1, 0)
 
 err_title1 <- data.frame(admintitle1 = flag_person$admintitle1, 
                          adminunit1 = flag_person$adminunit1, 
                          organization_id = flag_person$organization_id)
-flag_person$err_title1 <- if_else(duplicated(err_title1) & !err_title1$admintitle1 %in% "N" & err_title1$admintitle1 %in% "組長", 1, 0)
+flag_person$err_title1 <- if_else(!err_title1$admintitle1 %in% "N" & err_title1$admintitle1 %in% "組長" & ((!grepl("組$", err_title1$adminunit1) & !grepl("^N$", err_title1$adminunit1)) | (grepl("組$", err_title1$adminunit1) & nchar(err_title1$adminunit1) <= 5)), 1, 0)
 
 err_title2 <- data.frame(admintitle2 = flag_person$admintitle2, 
                          adminunit2 = flag_person$adminunit2, 
                          organization_id = flag_person$organization_id)
-flag_person$err_title2 <- if_else(duplicated(err_title2) & !err_title2$admintitle2 %in% "N" & err_title2$admintitle2 %in% "組長", 1, 0)
+flag_person$err_title2 <- if_else(!err_title2$admintitle2 %in% "N" & err_title2$admintitle2 %in% "組長" & ((!grepl("組$", err_title2$adminunit2) & !grepl("^N$", err_title2$adminunit2)) | (grepl("組$", err_title2$adminunit2) & nchar(err_title2$adminunit2) <= 5)), 1, 0)
 
 err_title3 <- data.frame(admintitle3 = flag_person$admintitle3, 
                          adminunit3 = flag_person$adminunit3, 
                          organization_id = flag_person$organization_id)
-flag_person$err_title3 <- if_else(duplicated(err_title3) & !err_title3$admintitle3 %in% "N" & err_title3$admintitle3 %in% "組長", 1, 0)
+flag_person$err_title3 <- if_else(!err_title3$admintitle3 %in% "N" & err_title3$admintitle3 %in% "組長" & ((!grepl("組$", err_title3$adminunit3) & !grepl("^N$", err_title3$adminunit3)) | (grepl("組$", err_title3$adminunit3) & nchar(err_title3$adminunit3) <= 5)), 1, 0)
 
 flag_person$err_flag_62 <- flag_person$err_admintitle0 + flag_person$err_adminunit0 + flag_person$err_admintitle1 + flag_person$err_adminunit1 + flag_person$err_admintitle2 + flag_person$err_adminunit2 + flag_person$err_admintitle3 + flag_person$err_adminunit3 + flag_person$err_title0 + flag_person$err_title1 + flag_person$err_title2 + flag_person$err_title3
 
