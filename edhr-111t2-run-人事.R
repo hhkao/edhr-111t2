@@ -2928,7 +2928,7 @@ flag1 <- flag_person %>%
          admin9_txt = if_else(admin9 == 0, "主（會）計室主管", "")) %>%
   mutate(flag1 = paste("尚待增補之學校主管：", admin1_txt, admin2_txt, admin3_txt, admin4_txt, admin5_txt, admin6_txt, admin7_txt, admin8_txt, admin9_txt, sep = " ")) %>%
   mutate(flag1 = recode(gsub("\\s+", " ", flag1), `尚待增補之學校主管： ` = "")) %>%
-  mutate(flag1 = if_else(flag1 != "", paste(flag1, "（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）", sep = ""), flag1)) %>%
+  mutate(flag1 = if_else(flag1 != "", paste(flag1, "（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）", sep = ""), flag1)) %>%
   subset(select = c(organization_id, flag1)) %>%
   distinct(organization_id, flag1)
 
@@ -5653,7 +5653,7 @@ for (i in temp){
 }
 flag_person_wide_flag62_1$flag62_1_r <- gsub("NA ", replacement="", flag_person_wide_flag62_1$flag62_1_r)
 flag_person_wide_flag62_1$flag62_1_r <- gsub(" NA", replacement="", flag_person_wide_flag62_1$flag62_1_r)
-flag_person_wide_flag62_1$flag62_1_r <- paste0(flag_person_wide_flag62_1$flag62_1_r, "\n（請再確認該員職務正確名稱）") #若#err_flag_1: 職稱或服務單位不合理，則加註
+flag_person_wide_flag62_1$flag62_1_r <- paste0(flag_person_wide_flag62_1$flag62_1_r, "\n（請再確認該員職務正確完整名稱）") #若#err_flag_1: 職稱或服務單位不合理，則加註
 }else{
   print("flag_person_wide_flag62_1 not exists.")
   rm(flag_person_wide_flag62_1)
@@ -6245,7 +6245,7 @@ flag90$flag90 <- gsub("； NA", replacement="", flag90$flag90)
 flag90 <- flag90 %>%
   subset(select = c(organization_id, flag90)) %>%
   distinct(organization_id, flag90) %>%
-  mutate(flag90 = paste(flag90, "（校內行政職務原則由專任或代理教師兼任，請協助再確認上述教師是否兼任行政職，或協助再確認上述教師之聘任類別）", sep = ""))
+  mutate(flag90 = paste(flag90, "（校內行政職務原則由專任教師兼任，請協助再確認上述教師是否兼任行政職，或協助再確認上述教師之聘任類別）", sep = ""))
 }else{
 #偵測flag90是否存在。若不存在，則產生NA行
 if('flag90' %in% ls()){
@@ -8965,7 +8965,7 @@ flag86$flag86 <- gsub("； NA", replacement="", flag86$flag86)
 flag86 <- flag86 %>%
   subset(select = c(organization_id, flag86)) %>%
   distinct(organization_id, flag86) %>%
-  mutate(flag86 = paste(flag86, "（經比對貴校上一學年所填資料，上述人員並未出現於本學期的教員資料表或職員(工)資料表，請確認渠等是否於111學年度第一學期（111年8月1日-112年1月31日）退休或因故離職，若於本學期退休或因故離職，應於離退教職員(工)資料表填寫資料。如非於本學期退休或因故離職，或已介聘、調至他校，請來電告知。）", sep = ""))
+  mutate(flag86 = paste(flag86, "（經比對貴校上一學年所填資料，上述人員並未出現於本學期的教員資料表或職員(工)資料表，請確認渠等是否於111學年度第一學期（111年8月1日-112年1月31日）退休或因故離職，若於該學期退休或因故離職，應於離退教職員(工)資料表填寫資料。如非於該學期退休或因故離職，或已介聘、調至他校，請來電告知。）", sep = ""))
 }else{
 #偵測flag86是否存在。若不存在，則產生NA行
 if('flag86' %in% ls()){
@@ -9408,25 +9408,39 @@ check02 <- merge(x = check02, y = spe6, by = c("organization_id"), all.x = TRUE,
 
 #私立正義高中(121318)
   #確實沒有圖書館主管，實際上於教務處會有人去管理圖書館
-check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "121318", "", check02$flag1)
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "121318", "", check02$flag1)
+  #本項目不需請學校修正
+check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：23人；本資料庫專任教師、代理教師、校長、教官、主任教官人數：22；差異百分比-4.5%" & check02$organization_id == "121318", "", check02$flag95)
+  #約聘僱可算全職，可暫不請學校修正
+check02$flag96 <- if_else(check02$flag96 == "姓名：呂時傑（約聘僱） 蔡永融（約聘僱）（校內一級主管（主任）原則由專任教職員擔（兼）任，請協助再確認上述教職員是否擔（兼）任校內一級主管（主任），或協助再確認上述教職員之聘任類別）" & check02$organization_id == "121318", "", check02$flag96)
 
 #私立曙光女中(181306)
   #確實沒有設置實習處主管
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：實習處主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "181306", "", check02$flag1)
   #沒有設置學程主任
 check02$flag3 <- if_else(check02$flag3 == "請學校確認是否設置科主任或學程主任" & check02$organization_id == "181306", "", check02$flag3)
+  #國立政治大學 教育學院學校行政
+check02$flag3 <- if_else(check02$flag3 == "教員資料表之大學（學士）以上各教育階段學歷資料不完整或不正確：魯和鳳（碩士學位畢業系所（一）：教育學院學校行政）" & check02$organization_id == "181306", "", check02$flag3)
+
+#私立志仁中學進修學校(361B09)
+  #圖書館主任編制在總務處下
+#check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管（貴校如未設置上開處室或人員，請來電告知）" & check02$organization_id == "361B09", "", check02$flag1)
+  #兼任教師連續聘任不中斷無誤
+#check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "361B09", "", check02$flag80)
 
 #私立文德女中(401301)
   #確實沒有設置學務處主管 圖書館主管 人事室主管 主（會）計室主管(僅有組長)
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：學務處主管 圖書館主管 人事室主管 主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "401301", "", check02$flag1)
   #兼任教師連續聘任不中斷無誤
-check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "401301", "", check02$flag80)
+#check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "401301", "", check02$flag80)
 
 #臺北市幼華高中(421302)
-  #確實沒有設置實習處主管
-check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：實習處主管 主（會）計室主管（請確認是否填報完整名單，倘貴校###主任尚未到職，請來電告知）" & check02$organization_id == "421302", "", check02$flag1)
+  #確實沒有設置圖書館主管 實習處主管 主（會）計室主管
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管 實習處主管 主（會）計室主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "421302", "", check02$flag1)
   #兼任教師、鐘點教師連續聘任不中斷無誤
-#check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "421302", "", check02$flag80)
+check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "421302", "", check02$flag80)
+  #本項目不需請學校修正
+check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：48人；本資料庫專任教師、代理教師、校長、教官、主任教官人數：47；差異百分比-2.1%" & check02$organization_id == "421302", "", check02$flag95)
 
 
 check02$err_flag <- 0
