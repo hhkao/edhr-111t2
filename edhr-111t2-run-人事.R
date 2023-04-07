@@ -9429,8 +9429,8 @@ check02$flag3 <- if_else(check02$flag3 == "±Ð­û¸ê®Æªí¤§¤j¾Ç¡]¾Ç¤h¡^¥H¤W¦U±Ð¨|¶¥¬
 #check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "361B09", "", check02$flag80)
 
 #¨p¥ß¤å¼w¤k¤¤(401301)
-  #½T¹ê¨S¦³³]¸m¾Ç°È³B¥DºÞ ¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ(¶È¦³²Õªø)
-check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¾Ç°È³B¥DºÞ ¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ###¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "401301", "", check02$flag1)
+  #½T¹ê¨S¦³³]¸m¾Ç°È³B¥DºÞ ¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ(¶È¦³²Õªø)¡A¨S¦³±Ð°È³B¥DºÞ Á`°È³B¥DºÞ »²¾É«Ç¥DºÞ(±N°±©Û)
+#check02$flag1 <- if_else(check02$flag1 != "" & check02$organization_id == "401301", "", check02$flag1)
   #­Ý¥ô±Ð®v³sÄò¸u¥ô¤£¤¤Â_µL»~
 #check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "401301", "", check02$flag80)
 
