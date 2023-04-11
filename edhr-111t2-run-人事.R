@@ -5801,7 +5801,7 @@ flag_person_wide_flag62$flag62_r <- gsub("\nNA+", replacement="", flag_person_wi
 
 #²£¥ÍÀË»~³ø§i¤å¦r
 flag62_temp <- flag_person_wide_flag62 %>%
-  subset(flag62_r != "" & flag62_r != "\n") %>% 
+  subset(flag62_r != "") %>% 
   group_by(organization_id) %>%
   mutate(flag62_txt = paste(source, "¤§¦æ¬FÂ¾¸ê®Æ¤£§¹¾ã©Î¤£¥¿½T¡G", flag62_r, sep = ""), "") %>%
   subset(select = c(organization_id, flag62_txt)) %>%
@@ -9479,9 +9479,10 @@ check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G48¤H¡F¥»¸ê®Æ®w±
   #¥D¡]·|¡^­p«Ç¥DºÞ¼È¯Ê
 check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¥D¡]·|¡^­p«Ç¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "581402", "", check02$flag1)
   #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
-check02$flag90 <- if_else(check02$flag90 == "©m¦W¡G®}¤å¬Â¡]¬ù¸u¹µ¡^¡]¤H¨Æ¸ê®ÆÅã¥Ü¸Ó±Ð®v­Ý¥ô¦æ¬FÂ¾°È¡^¡]®Õ¤º¦æ¬FÂ¾°È­ì«h¥Ñ±M¥ô±Ð®v­Ý¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±Ð®v¬O§_­Ý¥ô¦æ¬FÂ¾¡A©Î¨ó§U¦A½T»{¤W­z±Ð®v¤§¸u¥ôÃþ§O¡^
-" & check02$organization_id == "581402", "", check02$flag90)
-  #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
+check02$flag90 <- if_else(check02$flag90 == "©m¦W¡G®}¤å¬Â¡]¬ù¸u¹µ¡^¡]¤H¨Æ¸ê®ÆÅã¥Ü¸Ó±Ð®v­Ý¥ô¦æ¬FÂ¾°È¡^¡]®Õ¤º¦æ¬FÂ¾°È­ì«h¥Ñ±M¥ô±Ð®v­Ý¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±Ð®v¬O§_­Ý¥ô¦æ¬FÂ¾¡A©Î¨ó§U¦A½T»{¤W­z±Ð®v¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "581402", "", check02$flag90)
+  #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G64¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G60¡F®t²§¦Ê¤À¤ñ-6.7%" & check02$organization_id == "581402", "", check02$flag95)
+#¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
 check02$flag96 <- if_else(check02$flag96 == "±Ð­û¸ê®Æªí¡G®}¤å¬Â¡]¬ù¸u¹µ ¹ê²ß³B¬ì¥D¥ô¡^¡F Â¾­û(¤u)¸ê®Æªí¡G¼B§Ó¤å¡]¬ù¸u¹µ ¤H¨Æ«Ç¥D¥ô¡^ ÁÂ¬F¹F¡]¬ù¸u¹µ ¾Ç°È³B¥D¥ô¡^ ªô¤h½å¡]¬ù¸u¹µ ©Û¥Í¤¤¤ß¥D¥ô¡^¡]®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^­ì«h¥Ñ±M¥ô±ÐÂ¾­û¾á¡]­Ý¡^¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¬O§_¾á¡]­Ý¡^¥ô®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^¡A©Î¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "581402", "", check02$flag96)
 
 
