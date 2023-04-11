@@ -5801,7 +5801,7 @@ flag_person_wide_flag62$flag62_r <- gsub("\nNA+", replacement="", flag_person_wi
 
 #²£¥ÍÀË»~³ø§i¤å¦r
 flag62_temp <- flag_person_wide_flag62 %>%
-  subset(flag62_r != "") %>% 
+  subset(flag62_r != "" & flag62_r != "\n") %>% 
   group_by(organization_id) %>%
   mutate(flag62_txt = paste(source, "¤§¦æ¬FÂ¾¸ê®Æ¤£§¹¾ã©Î¤£¥¿½T¡G", flag62_r, sep = ""), "") %>%
   subset(select = c(organization_id, flag62_txt)) %>%
@@ -9140,7 +9140,10 @@ flag_person$err_flag <- if_else((grepl("¥D¥ô$", flag_person$admintitle0) |
                                 & (!flag_person$emptype %in% c("±M¥ô", "¥N²z", "¥N²z(³s)")) , 1, flag_person$err_flag)
 
 #¥[µù
-flag_person$name <- paste(flag_person$name, "¡]", flag_person$emptype, "¡^", sep = "")
+flag_person$name <- if_else(grepl("¥D¥ô$", flag_person$admintitle0) & !flag_person$emptype %in% c("±M¥ô", "¥N²z", "¥N²z(³s)"), paste(flag_person$name, "¡]", flag_person$emptype, " ", flag_person$adminunit0, flag_person$admintitle0, "¡^", sep = ""), flag_person$name)
+flag_person$name <- if_else(grepl("¥D¥ô$", flag_person$admintitle1) & !flag_person$emptype %in% c("±M¥ô", "¥N²z", "¥N²z(³s)"), paste(flag_person$name, "¡]", flag_person$emptype, " ", flag_person$adminunit1, flag_person$admintitle1, "¡^", sep = ""), flag_person$name)
+flag_person$name <- if_else(grepl("¥D¥ô$", flag_person$admintitle2) & !flag_person$emptype %in% c("±M¥ô", "¥N²z", "¥N²z(³s)"), paste(flag_person$name, "¡]", flag_person$emptype, " ", flag_person$adminunit2, flag_person$admintitle2, "¡^", sep = ""), flag_person$name)
+flag_person$name <- if_else(grepl("¥D¥ô$", flag_person$admintitle3) & !flag_person$emptype %in% c("±M¥ô", "¥N²z", "¥N²z(³s)"), paste(flag_person$name, "¡]", flag_person$emptype, " ", flag_person$adminunit3, flag_person$admintitle3, "¡^", sep = ""), flag_person$name)
 flag_person$name <- gsub("¡F¡^", replacement = "¡^", flag_person$name)
 flag_person$name <- gsub("¡]¡^", replacement = "", flag_person$name)
 
@@ -9170,7 +9173,7 @@ if (dim(flag_person %>% subset(err_flag == 1))[1] != 0){
   #²£¥ÍÀË»~³ø§i¤å¦r
   flag96_temp <- flag_person_wide_flag96 %>%
     group_by(organization_id) %>%
-    mutate(flag96_txt = paste("©m¦W¡G", flag96_r, sep = ""), "") %>%
+    mutate(flag96_txt = paste(source, "¡G", flag96_r, sep = ""), "") %>%
     subset(select = c(organization_id, flag96_txt)) %>%
     distinct(organization_id, flag96_txt)
   
@@ -9412,27 +9415,57 @@ check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ¡]½Ð½T»
   #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
 check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G23¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G22¡F®t²§¦Ê¤À¤ñ-4.5%" & check02$organization_id == "121318", "", check02$flag95)
   #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
-check02$flag96 <- if_else(check02$flag96 == "©m¦W¡G§f®É³Ç¡]¬ù¸u¹µ¡^ ½²¥Ã¿Ä¡]¬ù¸u¹µ¡^¡]®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^­ì«h¥Ñ±M¥ô±ÐÂ¾­û¾á¡]­Ý¡^¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¬O§_¾á¡]­Ý¡^¥ô®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^¡A©Î¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "121318", "", check02$flag96)
+check02$flag96 <- if_else(check02$flag96 == "Â¾­û(¤u)¸ê®Æªí¡G§f®É³Ç¡]¬ù¸u¹µ ¾Ç°È³B¥D¥ô¡^ ½²¥Ã¿Ä¡]¬ù¸u¹µ Á`°È³B¥D¥ô¡^¡]®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^­ì«h¥Ñ±M¥ô±ÐÂ¾­û¾á¡]­Ý¡^¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¬O§_¾á¡]­Ý¡^¥ô®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^¡A©Î¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "121318", "", check02$flag96)
 
 #¨p¥ßÀÆ¥ú¤k¤¤(181306)
   #½T¹ê¨S¦³³]¸m¹ê²ß³B¥DºÞ
-check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹ê²ß³B¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ###¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "181306", "", check02$flag1)
+check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹ê²ß³B¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "181306", "", check02$flag1)
+  #¨S¦³³]¸m¬ì¥D¥ô
+check02$flag2 <- if_else(check02$flag2 == "½Ð¾Ç®Õ½T»{¬O§_³]¸m¬ì¥D¥ô©Î¾Çµ{¥D¥ô" & check02$organization_id == "181306", "", check02$flag2)
   #¨S¦³³]¸m¾Çµ{¥D¥ô
 check02$flag3 <- if_else(check02$flag3 == "½Ð¾Ç®Õ½T»{¬O§_³]¸m¬ì¥D¥ô©Î¾Çµ{¥D¥ô" & check02$organization_id == "181306", "", check02$flag3)
-  #°ê¥ß¬Fªv¤j¾Ç ±Ð¨|¾Ç°|¾Ç®Õ¦æ¬F
-check02$flag3 <- if_else(check02$flag3 == "±Ð­û¸ê®Æªí¤§¤j¾Ç¡]¾Ç¤h¡^¥H¤W¦U±Ð¨|¶¥¬q¾Ç¾ú¸ê®Æ¤£§¹¾ã©Î¤£¥¿½T¡G¾|©M»ñ¡]ºÓ¤h¾Ç¦ì²¦·~¨t©Ò¡]¤@¡^¡G±Ð¨|¾Ç°|¾Ç®Õ¦æ¬F¡^" & check02$organization_id == "181306", "", check02$flag3)
+  #°ª¤¤³¡±Ð°È¥D¥ô¡B°ê¤¤³¡±Ð°È¥D¥ô
+check02$flag18 <- if_else(check02$flag18 == "±Ð°È³B¥DºÞ¤H¼Æ¶W¹L¤@¦ì¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C" & check02$organization_id == "181306", "", check02$flag18)
+  #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G98¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G99¡F®t²§¦Ê¤À¤ñ1.0%" & check02$organization_id == "181306", "", check02$flag95)
+  #·¨©ø®p¡AºÓ¤h40¾Ç¤À¯Z¡A½T¹ê¨ú±o¾Ç¦ì¡F¾|©M»ñ¡A°ê¥ß¬Fªv¤j¾Ç ±Ð¨|¾Ç°|¾Ç®Õ¦æ¬F
+check02$spe6 <- if_else(check02$spe6 == "±Ð­û¸ê®Æªí¤§¤j¾Ç¡]¾Ç¤h¡^¥H¤W¦U±Ð¨|¶¥¬q¾Ç¾ú¸ê®Æ¤£§¹¾ã©Î¤£¥¿½T¡G·¨©ø®p¡]ºÓ¤h¾Ç¦ì²¦·~¨t©Ò¡]¤@¡^¡G±Ð®v¦bÂ¾¶i­×ºÓ¤h40¾Ç¤À¯Z¡^ ¾|©M»ñ¡]ºÓ¤h¾Ç¦ì²¦·~¨t©Ò¡]¤@¡^¡G±Ð¨|¾Ç°|¾Ç®Õ¦æ¬F¡^" & check02$organization_id == "181306", "", check02$spe6)
+
+#¨p¥ß¿³µØ°ª¤¤(201304)
+  #½T¹ê¨S¦³³]¸m¥D¡]·|¡^­p«Ç
+check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¥D¡]·|¡^­p«Ç¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "201304", "", check02$flag1)
+  #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G46¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G45¡F®t²§¦Ê¤À¤ñ-2.2%" & check02$organization_id == "201304", "", check02$flag95)
 
 #¨p¥ß§Ó¤¯¤¤¾Ç¶i­×¾Ç®Õ(361B09)
   #¹Ï®ÑÀ]¥D¥ô½s¨î¦bÁ`°È³B¤U
-#check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ¡]¶Q®Õ¦p¥¼³]¸m¤W¶}³B«Ç©Î¤H­û¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "361B09", "", check02$flag1)
+check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ¡]¶Q®Õ¦p¥¼³]¸m¤W¶}³B«Ç©Î¤H­û¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "361B09", "", check02$flag1)
   #­Ý¥ô±Ð®v³sÄò¸u¥ô¤£¤¤Â_µL»~
-#check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "361B09", "", check02$flag80)
+check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "361B09", "", check02$flag80)
+  #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G16¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G13¡F®t²§¦Ê¤À¤ñ-23.1%" & check02$organization_id == "361B09", "", check02$flag95)
+
+#¨p¥ß¦A¿³¤¤¾Ç(381304)
+  #½T¹ê¨S¦³³]¸m¹Ï®ÑÀ]¥DºÞ¡A¶È¦³²Õªø
+check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "381304", "", check02$flag1)
+  #¹Ï®Ñ«Çªº¥DºÞ¬°²Õªø¡AÂ¾ºÙµL»~
+check02$flag62 <- if_else(check02$flag95 != "" & check02$organization_id == "381304", "", check02$flag62)
+  #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G91¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G91¡F®t²§¦Ê¤À¤ñ0.0%" & check02$organization_id == "381304", "", check02$flag95)
+
+#¨p¥ß´º¤å°ª¤¤(381305)
+  #­Ý¥ô±Ð®v³sÄò¸u¥ô¤£¤¤Â_µL»~
+#check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "381305", "", check02$flag80)
+  #HALVERSONBrodyDEAN John Jeffrey Linskey MICHAEL Nicholas Anthony Corasaniti §d©÷«Û §dÄR©ú ©P©y½@ §Å¬ü®S ±i±X³ó ±iÂ§¨q ½²¦³©¾ ³¢ßNæ¢ ¶ÀÀR©É ¬Ò«D¥»¾Ç´Á°h¥ð©Î¦]¬GÂ÷Â¾¤H­û
+check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "381305", "", check02$flag86)
 
 #¨p¥ß¤å¼w¤k¤¤(401301)
-  #½T¹ê¨S¦³³]¸m¾Ç°È³B¥DºÞ ¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ(¶È¦³²Õªø)¡A¨S¦³±Ð°È³B¥DºÞ Á`°È³B¥DºÞ »²¾É«Ç¥DºÞ(±N°±©Û)
-#check02$flag1 <- if_else(check02$flag1 != "" & check02$organization_id == "401301", "", check02$flag1)
+  #½T¹ê¨S¦³³]¸m±Ð°È³B¥DºÞ ¾Ç°È³B¥DºÞ Á`°È³B¥DºÞ »²¾É«Ç¥DºÞ ¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ(±N°±©Û)
+check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G±Ð°È³B¥DºÞ ¾Ç°È³B¥DºÞ Á`°È³B¥DºÞ »²¾É«Ç¥DºÞ ¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "401301", "", check02$flag1)
   #­Ý¥ô±Ð®v³sÄò¸u¥ô¤£¤¤Â_µL»~
-#check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "401301", "", check02$flag80)
+check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "401301", "", check02$flag80)
+  #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G5¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G5¡F®t²§¦Ê¤À¤ñ0.0%" & check02$organization_id == "401301", "", check02$flag95)
 
 #»O¥_¥«¥®µØ°ª¤¤(421302)
   #½T¹ê¨S¦³³]¸m¹Ï®ÑÀ]¥DºÞ ¹ê²ß³B¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ
@@ -9441,6 +9474,15 @@ check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ ¹ê²ß³B
 check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "421302", "", check02$flag80)
   #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
 check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G48¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G47¡F®t²§¦Ê¤À¤ñ-2.1%" & check02$organization_id == "421302", "", check02$flag95)
+
+#¨p¥ß¤T«H®a°Ó(581402)
+  #¥D¡]·|¡^­p«Ç¥DºÞ¼È¯Ê
+check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¥D¡]·|¡^­p«Ç¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "581402", "", check02$flag1)
+  #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
+check02$flag90 <- if_else(check02$flag90 == "©m¦W¡G®}¤å¬Â¡]¬ù¸u¹µ¡^¡]¤H¨Æ¸ê®ÆÅã¥Ü¸Ó±Ð®v­Ý¥ô¦æ¬FÂ¾°È¡^¡]®Õ¤º¦æ¬FÂ¾°È­ì«h¥Ñ±M¥ô±Ð®v­Ý¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±Ð®v¬O§_­Ý¥ô¦æ¬FÂ¾¡A©Î¨ó§U¦A½T»{¤W­z±Ð®v¤§¸u¥ôÃþ§O¡^
+" & check02$organization_id == "581402", "", check02$flag90)
+  #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
+check02$flag96 <- if_else(check02$flag96 == "±Ð­û¸ê®Æªí¡G®}¤å¬Â¡]¬ù¸u¹µ ¹ê²ß³B¬ì¥D¥ô¡^¡F Â¾­û(¤u)¸ê®Æªí¡G¼B§Ó¤å¡]¬ù¸u¹µ ¤H¨Æ«Ç¥D¥ô¡^ ÁÂ¬F¹F¡]¬ù¸u¹µ ¾Ç°È³B¥D¥ô¡^ ªô¤h½å¡]¬ù¸u¹µ ©Û¥Í¤¤¤ß¥D¥ô¡^¡]®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^­ì«h¥Ñ±M¥ô±ÐÂ¾­û¾á¡]­Ý¡^¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¬O§_¾á¡]­Ý¡^¥ô®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^¡A©Î¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "581402", "", check02$flag96)
 
 
 check02$err_flag <- 0
