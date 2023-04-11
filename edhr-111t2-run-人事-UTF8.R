@@ -5801,7 +5801,7 @@ flag_person_wide_flag62$flag62_r <- gsub("\nNA+", replacement="", flag_person_wi
 
 #產生檢誤報告文字
 flag62_temp <- flag_person_wide_flag62 %>%
-  subset(flag62_r != "" & flag62_r != "\n") %>% 
+  subset(flag62_r != "") %>% 
   group_by(organization_id) %>%
   mutate(flag62_txt = paste(source, "之行政職資料不完整或不正確：", flag62_r, sep = ""), "") %>%
   subset(select = c(organization_id, flag62_txt)) %>%
@@ -9479,9 +9479,10 @@ check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：48人
   #主（會）計室主管暫缺
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：主（會）計室主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "581402", "", check02$flag1)
   #約聘僱可算全職，可暫不請學校修正
-check02$flag90 <- if_else(check02$flag90 == "姓名：徐文玲（約聘僱）（人事資料顯示該教師兼任行政職務）（校內行政職務原則由專任教師兼任，請協助再確認上述教師是否兼任行政職，或協助再確認上述教師之聘任類別）
-" & check02$organization_id == "581402", "", check02$flag90)
-  #約聘僱可算全職，可暫不請學校修正
+check02$flag90 <- if_else(check02$flag90 == "姓名：徐文玲（約聘僱）（人事資料顯示該教師兼任行政職務）（校內行政職務原則由專任教師兼任，請協助再確認上述教師是否兼任行政職，或協助再確認上述教師之聘任類別）" & check02$organization_id == "581402", "", check02$flag90)
+  #本項目不需請學校修正
+check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：64人；本資料庫專任教師、代理教師、校長、教官、主任教官人數：60；差異百分比-6.7%" & check02$organization_id == "581402", "", check02$flag95)
+#約聘僱可算全職，可暫不請學校修正
 check02$flag96 <- if_else(check02$flag96 == "教員資料表：徐文玲（約聘僱 實習處科主任）； 職員(工)資料表：劉志文（約聘僱 人事室主任） 謝政達（約聘僱 學務處主任） 邱士賢（約聘僱 招生中心主任）（校內一級主管（主任）原則由專任教職員擔（兼）任，請協助再確認上述教職員是否擔（兼）任校內一級主管（主任），或協助再確認上述教職員之聘任類別）" & check02$organization_id == "581402", "", check02$flag96)
 
 
