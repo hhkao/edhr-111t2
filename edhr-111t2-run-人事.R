@@ -5801,7 +5801,7 @@ flag_person_wide_flag62$flag62_r <- gsub("\nNA+", replacement="", flag_person_wi
 
 #產生檢誤報告文字
 flag62_temp <- flag_person_wide_flag62 %>%
-  subset(flag62_r != "") %>% 
+  subset(flag62_r != "" & flag62_r != "\n") %>% 
   group_by(organization_id) %>%
   mutate(flag62_txt = paste(source, "之行政職資料不完整或不正確：", flag62_r, sep = ""), "") %>%
   subset(select = c(organization_id, flag62_txt)) %>%
