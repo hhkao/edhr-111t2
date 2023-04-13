@@ -3108,8 +3108,6 @@ flag_person$irr_year <- if_else(flag_person$age > 75, 1, flag_person$irr_year)
 flag_person$irr_year <- if_else(flag_person$age > 75 & (flag_person$emptype == "兼任" | flag_person$emptype == "長期代課" | flag_person$emptype == "專職族語老師" | flag_person$emptype == "鐘點教師" | flag_person$emptype == "約聘僱" | flag_person$emptype == "約用" | flag_person$emptype == "派遣"), 0, flag_person$irr_year)
 flag_person$irr_year <- if_else(flag_person$age > 85 & (flag_person$emptype == "兼任" | flag_person$emptype == "長期代課" | flag_person$emptype == "專職族語老師" | flag_person$emptype == "鐘點教師" | flag_person$emptype == "約聘僱" | flag_person$emptype == "約用" | flag_person$emptype == "派遣"), 1, flag_person$irr_year)
 
-flag_person$name <- if_else(flag_person$irr_year == 1, paste(flag_person$name, "（", flag_person$birthdate, "）", sep = ""), flag_person$name)
-
 #姓名加註出生年月日
 flag_person$name <- case_when(
   flag_person$irr_year == 1 ~ paste(flag_person$name, "（", flag_person$birthdate, "）", sep = ""),
