@@ -5794,6 +5794,7 @@ flag_person_wide_flag62 <- flag_person_wide_flag62_1 %>%
   mutate(flag62_r = paste(flag62_1_r, flag62_2_1_r, flag62_2_2_r, flag62_2_3_r, sep = "\n"))
 flag_person_wide_flag62$flag62_r <- gsub("NA\n+", replacement="", flag_person_wide_flag62$flag62_r)
 flag_person_wide_flag62$flag62_r <- gsub("\nNA+", replacement="", flag_person_wide_flag62$flag62_r)
+flag_person_wide_flag62$flag62_r <- gsub("NA", replacement="", flag_person_wide_flag62$flag62_r)
 
 
 
@@ -8430,7 +8431,8 @@ flag_person$name <- gsub("（）", replacement = "", flag_person$name)
 # （請依照上開人員碩士學位畢業證書，填寫正確之系所名稱全稱。）
 # 
 # 40學分班之文字
-# （學分班非屬『學位授予法』規定之學位別，且依該法規定，須修業期滿、修滿應修學分並符畢業條件，始能獲頒學位。若謝員經確認未獲碩士學位，請於碩士學位畢業學校國別、畢業學校、畢業系所三欄填『N』）
+# （學分班非屬『學位授予法』規定之學位別，且依該法規定，須修業期滿、修滿應修學分並符畢業條件，始能獲頒學位。若*員經確認未獲碩士學位，請於碩士學位畢業學校國別、畢業學校、畢業系所三欄填『N』）
+# （學分班非屬『學位授予法』規定之學位別，且依該法規定，須修業期滿、修滿應修學分並符畢業條件，始能獲頒學位。若*員經確認未獲學士學位，請於學士學位畢業學校國別、畢業學校、畢業科系三欄填『N』）
 # （請確認*員最高學歷，若*員最高學歷不為大專以上，「最高學歷是否為大專以上」及各級學歷資訊欄位請皆填「N」。）
 
 #呈現姓名
@@ -8963,7 +8965,7 @@ flag86$flag86 <- gsub("； NA", replacement="", flag86$flag86)
 flag86 <- flag86 %>%
   subset(select = c(organization_id, flag86)) %>%
   distinct(organization_id, flag86) %>%
-  mutate(flag86 = paste(flag86, "（經比對貴校上一學年所填資料，上述人員並未出現於本學期的教員資料表或職員(工)資料表，請確認渠等是否於111學年度第一學期（111年8月1日-112年1月31日）退休或因故離職，若於該學期退休或因故離職，應於離退教職員(工)資料表填寫資料。如非於該學期退休或因故離職，或已介聘、調至他校，請來電告知。）", sep = ""))
+  mutate(flag86 = paste(flag86, "（經比對貴校上一學年所填資料，上述人員並未出現於本學期的教員資料表或職員(工)資料表，請確認渠等是否於111學年度第一學期（111年8月1日-112年1月31日）退休或因故離職等，若於該學期退休或因故離職等，應於離退教職員(工)資料表填寫資料。如非於該學期退休或因故離職，或已介聘、調至他校，請來電告知。）", sep = ""))
 }else{
 #偵測flag86是否存在。若不存在，則產生NA行
 if('flag86' %in% ls()){
@@ -9079,7 +9081,7 @@ moe_111_base0 <- moe_111_base0[-c(1:4), ] %>%
 
 #統計處"專任教師"定義：以實際現有(編制內)人數計算，包括校長(大專附設除外)、超額分發教師、專任輔導教師、長期代理教師、特教班專任教師、原住民專任教師及教官，不含運動教練。服兵役及留職停薪教師，以占實缺之長期代理教師資料計列。
 flag_person$count_emptype1 <- if_else(
-  flag_person$sertype == "教師" & (flag_person$emptype == "專任" | flag_person$emptype == "代理") | 
+  flag_person$sertype == "教師" & (flag_person$emptype == "專任" | flag_person$emptype == "代理" | flag_person$emptype == "代理(連)") | 
   flag_person$sertype == "校長" | 
   flag_person$sertype == "教官" | 
   flag_person$sertype == "主任教官"
@@ -9415,6 +9417,18 @@ check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：23人
   #約聘僱可算全職，可暫不請學校修正
 check02$flag96 <- if_else(check02$flag96 == "職員(工)資料表：呂時傑（約聘僱 學務處主任） 蔡永融（約聘僱 總務處主任）（校內一級主管（主任）原則由專任教職員擔（兼）任，請協助再確認上述教職員是否擔（兼）任校內一級主管（主任），或協助再確認上述教職員之聘任類別）" & check02$organization_id == "121318", "", check02$flag96)
 
+#私立旗美商工(121410)
+  #確實沒有設置學務處主管 輔導室主管
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：學務處主管 輔導室主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "121410", "", check02$flag1)
+  #沒有設置科主任或學程主任
+check02$flag2 <- if_else(check02$flag2 == "請學校確認是否設置科主任或學程主任" & check02$organization_id == "121410", "", check02$flag2)
+  #約聘僱可算全職，可暫不請學校修正
+check02$flag96 <- if_else(check02$flag96 == "職員(工)資料表：尹素月（約聘僱 會計室會計主任）（校內一級主管（主任）原則由專任教職員擔（兼）任，請協助再確認上述教職員是否擔（兼）任校內一級主管（主任），或協助再確認上述教職員之聘任類別）" & check02$organization_id == "121410", "", check02$flag96)
+  #林春貴 國立屏東大學	教育行政
+check02$spe6 <- if_else(check02$spe6 == "教員資料表之大學（學士）以上各教育階段學歷資料不完整或不正確：林春貴（博士學位畢業系所（一）：教育行政）" & check02$organization_id == "121410", "", check02$spe6)
+  #放過學校 一年以上與任教領域相關之業界實務工作經驗人數偏多。
+check02$flag18 <- if_else(check02$flag18 == "一年以上與任教領域相關之業界實務工作經驗人數偏多。（請再協助確認，『是否具備一年以上與任教領域相關之業界實務工作經驗』填寫『Y』之教員，是否確依欄位說明具備此經驗）" & check02$organization_id == "121410", "", check02$flag18)
+
 #私立曙光女中(181306)
   #確實沒有設置實習處主管
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：實習處主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "181306", "", check02$flag1)
@@ -9434,6 +9448,31 @@ check02$spe6 <- if_else(check02$spe6 == "教員資料表之大學（學士）以
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：主（會）計室主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "201304", "", check02$flag1)
   #本項目不需請學校修正
 check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：46人；本資料庫專任教師、代理教師、校長、教官、主任教官人數：45；差異百分比-2.2%" & check02$organization_id == "201304", "", check02$flag95)
+
+#私立東吳工家(201408)
+  #確實沒有圖書館主管
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "201408", "", check02$flag1)
+  #職稱無誤 張瓊惠（兼任行政職服務單位(一)：技藝學程中心 兼任行政職職稱(一)：組長） 林正凰（兼任行政職服務單位(一)：圖書室 兼任行政職職稱(一)：組長） 翁韻茹（兼任行政職服務單位(一)：實習處即測即評及發證中心 兼任行政職職稱(一)：組長） 
+#check02$flag62 <- if_else(check02$flag62 != "" & check02$organization_id == "201408", "", check02$flag62)
+
+#私立金甌女中(331302)
+  #確實沒有設置圖書館主管 實習處主管
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管 實習處主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "331302", "", check02$flag1)
+
+#私立東方工商(331402)
+  #確實沒有設置教務處主管 輔導室主管 圖書館主管 人事室主管
+check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：教務處主管 輔導室主管 圖書館主管 人事室主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "331402", "", check02$flag1)
+  #呂桂芳（0360220）出生年月日無誤
+check02$flag7 <- if_else(check02$flag7 == "職員(工)資料表：呂桂芳（0360220）（請確認出生年月日是否正確）" & check02$organization_id == "331402", "", check02$flag7)
+  #人事室的主管為組長，職稱無誤
+check02$flag62 <- if_else(check02$flag62 != "" & check02$organization_id == "331402", "", check02$flag62)
+  #兼任教師連續聘任不中斷無誤
+check02$flag80 <- if_else(check02$flag80 == "教員資料表需核對「本校到職日期」：簡偉倫（兼任教師 到職日:1100901）（請依欄位說明，再協助確認是否為本次任職聘書/聘約之到職日期。）" & check02$organization_id == "331402", "", check02$flag80)
+  #本項目不需請學校修正
+check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：8人；本資料庫專任教師、代理教師、校長、教官、主任教官人數：8；差異百分比0.0%" & check02$organization_id == "331402", "", check02$flag95)
+  #李崇懿，美國	加州大學洛杉磯分校	教育行政
+check02$spe6 <- if_else(check02$spe6 == "教員資料表之大學（學士）以上各教育階段學歷資料不完整或不正確：李崇懿（碩士學位畢業系所（一）：教育行政）" & check02$organization_id == "331402", "", check02$spe6)
+
 
 #私立志仁中學進修學校(361B09)
   #圖書館主任編制在總務處下
