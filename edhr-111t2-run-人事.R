@@ -9413,7 +9413,7 @@ check02 <- merge(x = check02, y = spe6, by = c("organization_id"), all.x = TRUE,
   #½T¹ê¨S¦³¹Ï®ÑÀ]¥DºÞ¡A¹ê»Ú¤W©ó±Ð°È³B·|¦³¤H¥hºÞ²z¹Ï®ÑÀ]
 check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "121318", "", check02$flag1)
   #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
-check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G23¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G22¡F®t²§¦Ê¤À¤ñ-4.5%" & check02$organization_id == "121318", "", check02$flag95)
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G23¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G25¡F®t²§¦Ê¤À¤ñ8.0%" & check02$organization_id == "121318", "", check02$flag95)
   #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
 check02$flag96 <- if_else(check02$flag96 == "Â¾­û(¤u)¸ê®Æªí¡G§f®É³Ç¡]¬ù¸u¹µ ¾Ç°È³B¥D¥ô¡^ ½²¥Ã¿Ä¡]¬ù¸u¹µ Á`°È³B¥D¥ô¡^¡]®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^­ì«h¥Ñ±M¥ô±ÐÂ¾­û¾á¡]­Ý¡^¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¬O§_¾á¡]­Ý¡^¥ô®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^¡A©Î¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "121318", "", check02$flag96)
 
@@ -9473,6 +9473,9 @@ check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G8¤H¡F¥»¸ê®Æ®w±M
   #§õ±RÅt¡A¬ü°ê	¥[¦{¤j¾Ç¬¥§üÁF¤À®Õ	±Ð¨|¦æ¬F
 check02$spe6 <- if_else(check02$spe6 == "±Ð­û¸ê®Æªí¤§¤j¾Ç¡]¾Ç¤h¡^¥H¤W¦U±Ð¨|¶¥¬q¾Ç¾ú¸ê®Æ¤£§¹¾ã©Î¤£¥¿½T¡G§õ±RÅt¡]ºÓ¤h¾Ç¦ì²¦·~¨t©Ò¡]¤@¡^¡G±Ð¨|¦æ¬F¡^" & check02$organization_id == "331402", "", check02$spe6)
 
+#¨p¥ß«nµØ°ª¤¤¶i­×¾Ç®Õ(351B09)
+  #½T¹ê¨S¦³³]¸m¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ
+check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "351B09", "", check02$flag1)
 
 #¨p¥ß§Ó¤¯¤¤¾Ç¶i­×¾Ç®Õ(361B09)
   #¹Ï®ÑÀ]¥D¥ô½s¨î¦bÁ`°È³B¤U
@@ -9496,7 +9499,7 @@ check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "381
   #HALVERSONBrodyDEAN John Jeffrey Linskey MICHAEL Nicholas Anthony Corasaniti §d©÷«Û §dÄR©ú ©P©y½@ §Å¬ü®S ±i±X³ó ±iÂ§¨q ½²¦³©¾ ³¢ßNæ¢ ¶ÀÀR©É ¬Ò«D¥»¾Ç´Á°h¥ð©Î¦]¬GÂ÷Â¾¤H­û
 check02$flag86 <- if_else(check02$flag86 != "" & check02$organization_id == "381305", "", check02$flag86)
   #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
-check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G77¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G71¡F®t²§¦Ê¤À¤ñ-8.5%" & check02$organization_id == "381305", "", check02$flag95)
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G77¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G76¡F®t²§¦Ê¤À¤ñ-1.3%" & check02$organization_id == "381305", "", check02$flag95)
 
 #¨p¥ß¤å¼w¤k¤¤(401301)
   #½T¹ê¨S¦³³]¸m±Ð°È³B¥DºÞ ¾Ç°È³B¥DºÞ Á`°È³B¥DºÞ »²¾É«Ç¥DºÞ ¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ ¥D¡]·|¡^­p«Ç¥DºÞ(±N°±©Û)
@@ -9512,7 +9515,7 @@ check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ ¹ê²ß³B
   #­Ý¥ô±Ð®v¡BÄÁÂI±Ð®v³sÄò¸u¥ô¤£¤¤Â_µL»~
 check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "421302", "", check02$flag80)
   #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
-check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G48¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G47¡F®t²§¦Ê¤À¤ñ-2.1%" & check02$organization_id == "421302", "", check02$flag95)
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G48¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G50¡F®t²§¦Ê¤À¤ñ4.0%" & check02$organization_id == "421302", "", check02$flag95)
 
 #¨p¥ß¤T«H®a°Ó(581402)
   #¥D¡]·|¡^­p«Ç¥DºÞ¼È¯Ê
@@ -9520,7 +9523,7 @@ check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¥D¡]·|¡^­p«Ç¥DºÞ¡
   #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
 check02$flag90 <- if_else(check02$flag90 == "©m¦W¡G®}¤å¬Â¡]¬ù¸u¹µ¡^¡]¤H¨Æ¸ê®ÆÅã¥Ü¸Ó±Ð®v­Ý¥ô¦æ¬FÂ¾°È¡^¡]®Õ¤º¦æ¬FÂ¾°È­ì«h¥Ñ±M¥ô±Ð®v­Ý¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±Ð®v¬O§_­Ý¥ô¦æ¬FÂ¾¡A©Î¨ó§U¦A½T»{¤W­z±Ð®v¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "581402", "", check02$flag90)
   #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
-check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G64¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G60¡F®t²§¦Ê¤À¤ñ-6.7%" & check02$organization_id == "581402", "", check02$flag95)
+check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G64¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G63¡F®t²§¦Ê¤À¤ñ-1.6%" & check02$organization_id == "581402", "", check02$flag95)
   #¬ù¸u¹µ¥iºâ¥þÂ¾¡A¥i¼È¤£½Ð¾Ç®Õ­×¥¿
 check02$flag96 <- if_else(check02$flag96 == "±Ð­û¸ê®Æªí¡G®}¤å¬Â¡]¬ù¸u¹µ ¹ê²ß³B¬ì¥D¥ô¡^¡F Â¾­û(¤u)¸ê®Æªí¡G¼B§Ó¤å¡]¬ù¸u¹µ Á`°È³B¥D¥ô¡^¡]¬ù¸u¹µ ¤H¨Æ«Ç¥D¥ô¡^ ÁÂ¬F¹F¡]¬ù¸u¹µ ¾Ç°È³B¥D¥ô¡^ ªô¤h½å¡]¬ù¸u¹µ ©Û¥Í¤¤¤ß¥D¥ô¡^¡]®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^­ì«h¥Ñ±M¥ô±ÐÂ¾­û¾á¡]­Ý¡^¥ô¡A½Ð¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¬O§_¾á¡]­Ý¡^¥ô®Õ¤º¤@¯Å¥DºÞ¡]¥D¥ô¡^¡A©Î¨ó§U¦A½T»{¤W­z±ÐÂ¾­û¤§¸u¥ôÃþ§O¡^" & check02$organization_id == "581402", "", check02$flag96)
 
