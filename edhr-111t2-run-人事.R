@@ -5794,6 +5794,7 @@ flag_person_wide_flag62 <- flag_person_wide_flag62_1 %>%
   mutate(flag62_r = paste(flag62_1_r, flag62_2_1_r, flag62_2_2_r, flag62_2_3_r, sep = "\n"))
 flag_person_wide_flag62$flag62_r <- gsub("NA\n+", replacement="", flag_person_wide_flag62$flag62_r)
 flag_person_wide_flag62$flag62_r <- gsub("\nNA+", replacement="", flag_person_wide_flag62$flag62_r)
+flag_person_wide_flag62$flag62_r <- gsub("NA", replacement="", flag_person_wide_flag62$flag62_r)
 
 
 
@@ -9080,7 +9081,7 @@ moe_111_base0 <- moe_111_base0[-c(1:4), ] %>%
 
 #統計處"專任教師"定義：以實際現有(編制內)人數計算，包括校長(大專附設除外)、超額分發教師、專任輔導教師、長期代理教師、特教班專任教師、原住民專任教師及教官，不含運動教練。服兵役及留職停薪教師，以占實缺之長期代理教師資料計列。
 flag_person$count_emptype1 <- if_else(
-  flag_person$sertype == "教師" & (flag_person$emptype == "專任" | flag_person$emptype == "代理") | 
+  flag_person$sertype == "教師" & (flag_person$emptype == "專任" | flag_person$emptype == "代理" | flag_person$emptype == "代理(連)") | 
   flag_person$sertype == "校長" | 
   flag_person$sertype == "教官" | 
   flag_person$sertype == "主任教官"
