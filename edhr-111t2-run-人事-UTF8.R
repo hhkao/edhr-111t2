@@ -3492,8 +3492,10 @@ if('flag16' %in% ls()){
 # flag18: 人事資料表各欄位是否有資料分布異常的情形。 -------------------------------------------------------------------
 flag_person <- drev_person_1
 
-flag_person$count_emptype <- if_else(flag_person$emptype == "專任", 1, 0)
-flag_person$count_empunit <- if_else(flag_person$empunit == "高中部日間部" | flag_person$empunit == "國中部日間部" | flag_person$empunit == "中學部", 1, 0)
+flag_person$count_emptype <- if_else(flag_person$emptype == "專任" & flag_person$source == "教員資料表", 1, 0)
+flag_person$count_emptype2 <- if_else(flag_person$emptype == "專任" & flag_person$source == "職員(工)資料表", 1, 0)
+flag_person$count_empunit <- if_else((flag_person$empunit == "高中部日間部" | flag_person$empunit == "國中部日間部" | flag_person$empunit == "中學部") & flag_person$source == "教員資料表", 1, 0)
+flag_person$count_empunit2 <- if_else((flag_person$empunit == "高中部日間部" | flag_person$empunit == "國中部日間部" | flag_person$empunit == "中學部") & flag_person$source == "職員(工)資料表", 1, 0)
 flag_person$count_sertype <- if_else(flag_person$sertype == "教師", 1, 0)
 flag_person$count_sertype2 <- if_else(flag_person$sertype == "校長", 1, 0)
 flag_person$count_skillteacher <- if_else(flag_person$skillteacher == "N", 1, 0)
@@ -3561,13 +3563,13 @@ for (x in temp){
 
 flag_person$jj <- 1
 
-flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_empunit, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_joiteacher2, count_joiteacher3, count_expecter, count_workexp, count_study, count_admin2, count_admin3, count_admin4, count_admin5, count_admin6, count_admin8, count_admin9, jj) ~ organization_id + source, flag_person, sum)
+flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_emptype2, count_empunit, count_empunit2, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_joiteacher2, count_joiteacher3, count_expecter, count_workexp, count_study, count_admin2, count_admin3, count_admin4, count_admin5, count_admin6, count_admin8, count_admin9, jj) ~ organization_id + source, flag_person, sum)
 
 flag_person_wide_flag18$flag_err <- 0
 flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emptype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教員資料表專任教學人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整教員名單資料。", "")
-flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emptype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員工資料表", "職員(工)資料表專任人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整職員(工)名單資料。", "")
+flag_person_wide_flag18$err_emptype2 <- if_else(flag_person_wide_flag18$count_emptype2 / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員(工)資料表", "職員(工)資料表專任人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整職員(工)名單資料。", "")
 flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教員資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
-flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員工資料表", "職員(工)資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_empunit2 <- if_else(flag_person_wide_flag18$count_empunit2 / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員(工)資料表", "職員(工)資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_sertype <- if_else(flag_person_wide_flag18$count_sertype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教師人數偏低，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_sertype2 <- if_else(flag_person_wide_flag18$count_sertype2 > 1 & flag_person_wide_flag18$source == "教員資料表", "校長人數超過一位，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_skillteacher <- if_else(flag_person_wide_flag18$count_skillteacher / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "專業及技術教師人數偏多，請再協助確認實際聘任情況。", "")
@@ -3604,7 +3606,9 @@ flag_person_wide_flag18$err_admin9 <- if_else(flag_person_wide_flag18$count_admi
 
 
 flag_person_wide_flag18$err_flag_txt <- paste(flag_person_wide_flag18$err_emptype, 
+                                              flag_person_wide_flag18$err_emptype2, 
                                               flag_person_wide_flag18$err_empunit, 
+                                              flag_person_wide_flag18$err_empunit2, 
                                               flag_person_wide_flag18$err_sertype, 
                                               flag_person_wide_flag18$err_sertype2, 
                                               flag_person_wide_flag18$err_admin2, 
@@ -9476,6 +9480,8 @@ check02$spe6 <- if_else(check02$spe6 == "教員資料表之大學（學士）以
 #私立南華高中進修學校(351B09)
   #確實沒有設置圖書館主管 人事室主管
 check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書館主管 人事室主管（請確認是否填報完整名單，倘貴校上開主任尚未到職，請來電告知）" & check02$organization_id == "351B09", "", check02$flag1)
+  #進修學校，主聘單位全部都填"高中部進修部"
+check02$flag18 <- if_else(check02$flag18 == "職員(工)資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。；教員資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。" & check02$organization_id == "351B09", "", check02$flag18)
 
 #私立志仁中學進修學校(361B09)
   #圖書館主任編制在總務處下
@@ -9516,6 +9522,10 @@ check02$flag1 <- if_else(check02$flag1 == "尚待增補之學校主管：圖書�
 check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "421302", "", check02$flag80)
   #本項目不需請學校修正
 check02$flag95 <- if_else(check02$flag95 == "統計處專任教師人數：48人；本資料庫專任教師、代理教師、校長、教官、主任教官人數：50；差異百分比4.0%" & check02$organization_id == "421302", "", check02$flag95)
+
+#私立復華高中(581301)
+  #放過學校
+check02$flag18 <- if_else(check02$flag18 == "職員(工)資料表專任人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整職員(工)名單資料。；教員資料表專任教學人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整教員名單資料。" & check02$organization_id == "581301", "", check02$flag18)
 
 #私立三信家商(581402)
   #主（會）計室主管暫缺
