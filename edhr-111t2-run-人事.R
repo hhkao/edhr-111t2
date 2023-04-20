@@ -3492,8 +3492,10 @@ if('flag16' %in% ls()){
 # flag18: ¤H¨Æ¸ê®Æªí¦UÄæ¦ì¬O§_¦³¸ê®Æ¤À¥¬²§±`ªº±¡§Î¡C -------------------------------------------------------------------
 flag_person <- drev_person_1
 
-flag_person$count_emptype <- if_else(flag_person$emptype == "±M¥ô", 1, 0)
-flag_person$count_empunit <- if_else(flag_person$empunit == "°ª¤¤³¡¤é¶¡³¡" | flag_person$empunit == "°ê¤¤³¡¤é¶¡³¡" | flag_person$empunit == "¤¤¾Ç³¡", 1, 0)
+flag_person$count_emptype <- if_else(flag_person$emptype == "±M¥ô" & flag_person$source == "±Ð­û¸ê®Æªí", 1, 0)
+flag_person$count_emptype2 <- if_else(flag_person$emptype == "±M¥ô" & flag_person$source == "Â¾­û(¤u)¸ê®Æªí", 1, 0)
+flag_person$count_empunit <- if_else((flag_person$empunit == "°ª¤¤³¡¤é¶¡³¡" | flag_person$empunit == "°ê¤¤³¡¤é¶¡³¡" | flag_person$empunit == "¤¤¾Ç³¡") & flag_person$source == "±Ð­û¸ê®Æªí", 1, 0)
+flag_person$count_empunit2 <- if_else((flag_person$empunit == "°ª¤¤³¡¤é¶¡³¡" | flag_person$empunit == "°ê¤¤³¡¤é¶¡³¡" | flag_person$empunit == "¤¤¾Ç³¡") & flag_person$source == "Â¾­û(¤u)¸ê®Æªí", 1, 0)
 flag_person$count_sertype <- if_else(flag_person$sertype == "±Ð®v", 1, 0)
 flag_person$count_sertype2 <- if_else(flag_person$sertype == "®Õªø", 1, 0)
 flag_person$count_skillteacher <- if_else(flag_person$skillteacher == "N", 1, 0)
@@ -3561,13 +3563,13 @@ for (x in temp){
 
 flag_person$jj <- 1
 
-flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_empunit, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_joiteacher2, count_joiteacher3, count_expecter, count_workexp, count_study, count_admin2, count_admin3, count_admin4, count_admin5, count_admin6, count_admin8, count_admin9, jj) ~ organization_id + source, flag_person, sum)
+flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_emptype2, count_empunit, count_empunit2, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_joiteacher2, count_joiteacher3, count_expecter, count_workexp, count_study, count_admin2, count_admin3, count_admin4, count_admin5, count_admin6, count_admin8, count_admin9, jj) ~ organization_id + source, flag_person, sum)
 
 flag_person_wide_flag18$flag_err <- 0
 flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emptype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "±Ð­û¸ê®Æªí", "±Ð­û¸ê®Æªí±M¥ô±Ð¾Ç¤H­û¤H¼Æ°¾§C¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡A©Î½Ð½T»{¬O§_¶ñ³ø§¹¾ã±Ð­û¦W³æ¸ê®Æ¡C", "")
-flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emptype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "Â¾­û¤u¸ê®Æªí", "Â¾­û(¤u)¸ê®Æªí±M¥ô¤H­û¤H¼Æ°¾§C¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡A©Î½Ð½T»{¬O§_¶ñ³ø§¹¾ãÂ¾­û(¤u)¦W³æ¸ê®Æ¡C", "")
+flag_person_wide_flag18$err_emptype2 <- if_else(flag_person_wide_flag18$count_emptype2 / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "Â¾­û(¤u)¸ê®Æªí", "Â¾­û(¤u)¸ê®Æªí±M¥ô¤H­û¤H¼Æ°¾§C¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡A©Î½Ð½T»{¬O§_¶ñ³ø§¹¾ãÂ¾­û(¤u)¦W³æ¸ê®Æ¡C", "")
 flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "±Ð­û¸ê®Æªí", "±Ð­û¸ê®Æªí¥D¸u³æ¦ì¦UÃþ§O¤H¼Æ¤À¥¬²§±`¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C", "")
-flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "Â¾­û¤u¸ê®Æªí", "Â¾­û(¤u)¸ê®Æªí¥D¸u³æ¦ì¦UÃþ§O¤H¼Æ¤À¥¬²§±`¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C", "")
+flag_person_wide_flag18$err_empunit2 <- if_else(flag_person_wide_flag18$count_empunit2 / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "Â¾­û(¤u)¸ê®Æªí", "Â¾­û(¤u)¸ê®Æªí¥D¸u³æ¦ì¦UÃþ§O¤H¼Æ¤À¥¬²§±`¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C", "")
 flag_person_wide_flag18$err_sertype <- if_else(flag_person_wide_flag18$count_sertype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "±Ð­û¸ê®Æªí", "±Ð®v¤H¼Æ°¾§C¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C", "")
 flag_person_wide_flag18$err_sertype2 <- if_else(flag_person_wide_flag18$count_sertype2 > 1 & flag_person_wide_flag18$source == "±Ð­û¸ê®Æªí", "®Õªø¤H¼Æ¶W¹L¤@¦ì¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C", "")
 flag_person_wide_flag18$err_skillteacher <- if_else(flag_person_wide_flag18$count_skillteacher / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "±Ð­û¸ê®Æªí", "±M·~¤Î§Þ³N±Ð®v¤H¼Æ°¾¦h¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C", "")
@@ -3604,7 +3606,9 @@ flag_person_wide_flag18$err_admin9 <- if_else(flag_person_wide_flag18$count_admi
 
 
 flag_person_wide_flag18$err_flag_txt <- paste(flag_person_wide_flag18$err_emptype, 
+                                              flag_person_wide_flag18$err_emptype2, 
                                               flag_person_wide_flag18$err_empunit, 
+                                              flag_person_wide_flag18$err_empunit2, 
                                               flag_person_wide_flag18$err_sertype, 
                                               flag_person_wide_flag18$err_sertype2, 
                                               flag_person_wide_flag18$err_admin2, 
@@ -9476,6 +9480,8 @@ check02$spe6 <- if_else(check02$spe6 == "±Ð­û¸ê®Æªí¤§¤j¾Ç¡]¾Ç¤h¡^¥H¤W¦U±Ð¨|¶¥¬q¾
 #¨p¥ß«nµØ°ª¤¤¶i­×¾Ç®Õ(351B09)
   #½T¹ê¨S¦³³]¸m¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ
 check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ ¤H¨Æ«Ç¥DºÞ¡]½Ð½T»{¬O§_¶ñ³ø§¹¾ã¦W³æ¡A­Õ¶Q®Õ¤W¶}¥D¥ô©|¥¼¨ìÂ¾¡A½Ð¨Ó¹q§iª¾¡^" & check02$organization_id == "351B09", "", check02$flag1)
+  #¶i­×¾Ç®Õ¡A¥D¸u³æ¦ì¥þ³¡³£¶ñ"°ª¤¤³¡¶i­×³¡"
+check02$flag18 <- if_else(check02$flag18 == "Â¾­û(¤u)¸ê®Æªí¥D¸u³æ¦ì¦UÃþ§O¤H¼Æ¤À¥¬²§±`¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C¡F±Ð­û¸ê®Æªí¥D¸u³æ¦ì¦UÃþ§O¤H¼Æ¤À¥¬²§±`¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡C" & check02$organization_id == "351B09", "", check02$flag18)
 
 #¨p¥ß§Ó¤¯¤¤¾Ç¶i­×¾Ç®Õ(361B09)
   #¹Ï®ÑÀ]¥D¥ô½s¨î¦bÁ`°È³B¤U
@@ -9516,6 +9522,10 @@ check02$flag1 <- if_else(check02$flag1 == "©|«Ý¼W¸É¤§¾Ç®Õ¥DºÞ¡G¹Ï®ÑÀ]¥DºÞ ¹ê²ß³B
 check02$flag80 <- if_else(check02$flag80 != "" & check02$organization_id == "421302", "", check02$flag80)
   #¥»¶µ¥Ø¤£»Ý½Ð¾Ç®Õ­×¥¿
 check02$flag95 <- if_else(check02$flag95 == "²Î­p³B±M¥ô±Ð®v¤H¼Æ¡G48¤H¡F¥»¸ê®Æ®w±M¥ô±Ð®v¡B¥N²z±Ð®v¡B®Õªø¡B±Ð©x¡B¥D¥ô±Ð©x¤H¼Æ¡G50¡F®t²§¦Ê¤À¤ñ4.0%" & check02$organization_id == "421302", "", check02$flag95)
+
+#¨p¥ß´_µØ°ª¤¤(581301)
+  #©ñ¹L¾Ç®Õ
+check02$flag18 <- if_else(check02$flag18 == "Â¾­û(¤u)¸ê®Æªí±M¥ô¤H­û¤H¼Æ°¾§C¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡A©Î½Ð½T»{¬O§_¶ñ³ø§¹¾ãÂ¾­û(¤u)¦W³æ¸ê®Æ¡C¡F±Ð­û¸ê®Æªí±M¥ô±Ð¾Ç¤H­û¤H¼Æ°¾§C¡A½Ð¦A¨ó§U½T»{¹ê»Ú¸u¥ô±¡ªp¡A©Î½Ð½T»{¬O§_¶ñ³ø§¹¾ã±Ð­û¦W³æ¸ê®Æ¡C" & check02$organization_id == "581301", "", check02$flag18)
 
 #¨p¥ß¤T«H®a°Ó(581402)
   #¥D¡]·|¡^­p«Ç¥DºÞ¼È¯Ê
