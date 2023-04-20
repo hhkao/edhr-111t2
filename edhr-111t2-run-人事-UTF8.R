@@ -3491,11 +3491,8 @@ if('flag16' %in% ls()){
 }
 # flag18: 人事資料表各欄位是否有資料分布異常的情形。 -------------------------------------------------------------------
 flag_person <- drev_person_1
-
-flag_person$count_emptype <- if_else(flag_person$emptype == "專任" & flag_person$source == "教員資料表", 1, 0)
-flag_person$count_emptype2 <- if_else(flag_person$emptype == "專任" & flag_person$source == "職員(工)資料表", 1, 0)
-flag_person$count_empunit <- if_else((flag_person$empunit == "高中部日間部" | flag_person$empunit == "國中部日間部" | flag_person$empunit == "中學部") & flag_person$source == "教員資料表", 1, 0)
-flag_person$count_empunit2 <- if_else((flag_person$empunit == "高中部日間部" | flag_person$empunit == "國中部日間部" | flag_person$empunit == "中學部") & flag_person$source == "職員(工)資料表", 1, 0)
+flag_person$count_emptype <- if_else(flag_person$emptype == "專任", 1, 0)
+flag_person$count_empunit <- if_else(flag_person$empunit == "高中部日間部" | flag_person$empunit == "國中部日間部" | flag_person$empunit == "中學部", 1, 0)
 flag_person$count_sertype <- if_else(flag_person$sertype == "教師", 1, 0)
 flag_person$count_sertype2 <- if_else(flag_person$sertype == "校長", 1, 0)
 flag_person$count_skillteacher <- if_else(flag_person$skillteacher == "N", 1, 0)
@@ -3507,10 +3504,8 @@ flag_person$count_joiteacher3 <- if_else(flag_person$joiteacher == "N", 1, 0)
 flag_person$count_expecter <- if_else(flag_person$expecter == "N", 1, 0)
 flag_person$count_workexp <- if_else(flag_person$workexp == "N", 1, 0)
 flag_person$count_study <- if_else(flag_person$study == "N", 1, 0)
-
 flag_person <- flag_person %>%
   mutate(count_admin2 = 0, count_admin3 = 0, count_admin4 = 0, count_admin5 = 0, count_admin6 = 0, count_admin8 = 0, count_admin9 = 0)
-
 temp <- c("0", "1", "2", "3")
 for (x in temp){
   flag_person$count_admin2 <- case_when(
@@ -3554,22 +3549,18 @@ for (x in temp){
     TRUE ~ flag_person$count_admin9
   )
 }  
-
 #調整NA
 temp <- c("count_emptype", "count_empunit", "count_sertype", "count_sertype2", "count_skillteacher", "count_counselor", "count_speteacher", "count_counselor", "count_speteacher", "count_joiteacher", "count_joiteacher2", "count_joiteacher3", "count_expecter", "count_workexp", "count_study", "count_admin2", "count_admin3", "count_admin4", "count_admin5", "count_admin6", "count_admin8", "count_admin9")
 for (x in temp){
   flag_person[[x]][is.na(flag_person[[x]])] <- 0
 }
-
 flag_person$jj <- 1
-
-flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_emptype2, count_empunit, count_empunit2, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_joiteacher2, count_joiteacher3, count_expecter, count_workexp, count_study, count_admin2, count_admin3, count_admin4, count_admin5, count_admin6, count_admin8, count_admin9, jj) ~ organization_id + source, flag_person, sum)
-
+flag_person_wide_flag18 <- aggregate(cbind(count_emptype, count_empunit, count_sertype, count_sertype2, count_skillteacher, count_counselor, count_speteacher, count_joiteacher, count_joiteacher2, count_joiteacher3, count_expecter, count_workexp, count_study, count_admin2, count_admin3, count_admin4, count_admin5, count_admin6, count_admin8, count_admin9, jj) ~ organization_id + source, flag_person, sum)
 flag_person_wide_flag18$flag_err <- 0
 flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emptype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教員資料表專任教學人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整教員名單資料。", "")
-flag_person_wide_flag18$err_emptype2 <- if_else(flag_person_wide_flag18$count_emptype2 / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員(工)資料表", "職員(工)資料表專任人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整職員(工)名單資料。", "")
+flag_person_wide_flag18$err_emptype <- if_else(flag_person_wide_flag18$count_emptype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員工資料表", "職員(工)資料表專任人員人數偏低，請再協助確認實際聘任情況，或請確認是否填報完整職員(工)名單資料。", "")
 flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教員資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
-flag_person_wide_flag18$err_empunit2 <- if_else(flag_person_wide_flag18$count_empunit2 / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員(工)資料表", "職員(工)資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
+flag_person_wide_flag18$err_empunit <- if_else(flag_person_wide_flag18$count_empunit / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "職員工資料表", "職員(工)資料表主聘單位各類別人數分布異常，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_sertype <- if_else(flag_person_wide_flag18$count_sertype / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "教師人數偏低，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_sertype2 <- if_else(flag_person_wide_flag18$count_sertype2 > 1 & flag_person_wide_flag18$source == "教員資料表", "校長人數超過一位，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_skillteacher <- if_else(flag_person_wide_flag18$count_skillteacher / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "專業及技術教師人數偏多，請再協助確認實際聘任情況。", "")
@@ -3581,21 +3572,16 @@ flag_person_wide_flag18$err_joiteacher3 <- if_else(flag_person_wide_flag18$count
 flag_person_wide_flag18$err_expecter <- if_else(flag_person_wide_flag18$count_expecter / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "業界專家人數偏多，請再協助確認實際聘任情況，或請確認是否將專業及技術教師誤填為業界專家。", "")
 flag_person_wide_flag18$err_workexp <- if_else(flag_person_wide_flag18$count_workexp / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "一年以上與任教領域相關之業界實務工作經驗人數偏多。（請再協助確認，『是否具備一年以上與任教領域相關之業界實務工作經驗』填寫『Y』之教員，是否確依欄位說明具備此經驗）", "")
 flag_person_wide_flag18$err_study <- if_else(flag_person_wide_flag18$count_study / flag_person_wide_flag18$jj < 0.5 & flag_person_wide_flag18$source == "教員資料表", "近六年內進行與專業或技術有關之研習或研究的人數偏多，請再協助確認實際聘任情況。", "")
-
 #如果err_joiteacher、err_joiteacher2、err_joiteacher3同時皆被抓出的調整
 idx <- which(flag_person_wide_flag18$err_joiteacher != "" & flag_person_wide_flag18$err_joiteacher2 != "" & flag_person_wide_flag18$err_joiteacher3 != "")
 flag_person_wide_flag18[idx, c("err_joiteacher", "err_joiteacher2")] <- ""
-
 idx <- which(flag_person_wide_flag18$err_joiteacher != "" & flag_person_wide_flag18$err_joiteacher2 != "" & flag_person_wide_flag18$err_joiteacher3 == "")
 flag_person_wide_flag18[idx, c("err_joiteacher", "err_joiteacher2")] <- ""
 flag_person_wide_flag18[idx, c("err_joiteacher3")] <- "合聘教師與巡迴教師人數偏多（請確認校內合聘教師、巡迴教師情形）"
-
 idx <- which(flag_person_wide_flag18$err_joiteacher != "" & flag_person_wide_flag18$err_joiteacher2 == "" & flag_person_wide_flag18$err_joiteacher3 != "")
 flag_person_wide_flag18[idx, c("err_joiteacher")] <- ""
-
 idx <- which(flag_person_wide_flag18$err_joiteacher == "" & flag_person_wide_flag18$err_joiteacher2 != "" & flag_person_wide_flag18$err_joiteacher3 != "")
 flag_person_wide_flag18[idx, c("err_joiteacher2")] <- ""
-
 flag_person_wide_flag18$err_admin2 <- if_else(flag_person_wide_flag18$count_admin2 > 1, "教務處主管人數超過一位，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_admin3 <- if_else(flag_person_wide_flag18$count_admin3 > 1, "學務處主管人數超過一位，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_admin4 <- if_else(flag_person_wide_flag18$count_admin4 > 1, "總務處主管人數超過一位，請再協助確認實際聘任情況。", "")
@@ -3603,12 +3589,8 @@ flag_person_wide_flag18$err_admin5 <- if_else(flag_person_wide_flag18$count_admi
 flag_person_wide_flag18$err_admin6 <- if_else(flag_person_wide_flag18$count_admin6 > 1, "圖書館主管人數超過一位，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_admin8 <- if_else(flag_person_wide_flag18$count_admin8 > 1, "人事室主管人數超過一位，請再協助確認實際聘任情況。", "")
 flag_person_wide_flag18$err_admin9 <- if_else(flag_person_wide_flag18$count_admin9 > 1, "主（會）計室主管人數超過一位，請再協助確認實際聘任情況。", "")
-
-
 flag_person_wide_flag18$err_flag_txt <- paste(flag_person_wide_flag18$err_emptype, 
-                                              flag_person_wide_flag18$err_emptype2, 
                                               flag_person_wide_flag18$err_empunit, 
-                                              flag_person_wide_flag18$err_empunit2, 
                                               flag_person_wide_flag18$err_sertype, 
                                               flag_person_wide_flag18$err_sertype2, 
                                               flag_person_wide_flag18$err_admin2, 
