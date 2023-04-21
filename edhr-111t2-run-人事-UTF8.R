@@ -5153,6 +5153,7 @@ flag_person$err_admintitle1 <- if_else(grepl("教官$", flag_person$admintitle1)
 
 
 #兼任行政職服務單位（一）
+flag_person$err_adminunit1 <- 1
 flag_person$err_adminunit1 <- if_else(grepl("^校長室$", flag_person$adminunit1), 0, flag_person$err_adminunit1)
 flag_person$err_adminunit1 <- if_else(grepl("^副校長室$", flag_person$adminunit1), 0, flag_person$err_adminunit1)
 flag_person$err_adminunit1 <- if_else(grepl("^秘書室$", flag_person$adminunit1), 0, flag_person$err_adminunit1)
@@ -5312,6 +5313,7 @@ flag_person$err_admintitle2 <- if_else(grepl("教官$", flag_person$admintitle2)
 
 
 #兼任行政職服務單位（二）
+flag_person$err_adminunit2 <- 1
 flag_person$err_adminunit2 <- if_else(grepl("^校長室$", flag_person$adminunit2), 0, flag_person$err_adminunit2)
 flag_person$err_adminunit2 <- if_else(grepl("^副校長室$", flag_person$adminunit2), 0, flag_person$err_adminunit2)
 flag_person$err_adminunit2 <- if_else(grepl("^秘書室$", flag_person$adminunit2), 0, flag_person$err_adminunit2)
@@ -5471,6 +5473,7 @@ flag_person$err_admintitle3 <- if_else(grepl("教官$", flag_person$admintitle3)
 
 
 #兼任行政職服務單位（三）
+flag_person$err_adminunit3 <- 1
 flag_person$err_adminunit3 <- if_else(grepl("^校長室$", flag_person$adminunit3), 0, flag_person$err_adminunit3)
 flag_person$err_adminunit3 <- if_else(grepl("^副校長室$", flag_person$adminunit3), 0, flag_person$err_adminunit3)
 flag_person$err_adminunit3 <- if_else(grepl("^秘書室$", flag_person$adminunit3), 0, flag_person$err_adminunit3)
