@@ -4360,7 +4360,7 @@ flag48_temp <- flag_person_wide_flag48 %>%
   mutate(flag48_txt = 
     case_when(
       flag48_temp$source == "教員資料表" ~ paste(flag48_temp$source, "需核對「服務身分別」與「兼任行政職職稱(一)」：", flag48_temp$flag48_r, sep = ""),
-      flag48_temp$source == "職員工資料表" ~ paste(flag48_temp$source, "「職務名稱」與「兼任行政職職稱」重複：", flag48_temp$flag48_r, sep = "")
+      flag48_temp$source == "職員(工)資料表" ~ paste(flag48_temp$source, "「職務名稱」與「兼任行政職職稱」重複：", flag48_temp$flag48_r, sep = "")
     )) %>%
   group_by(organization_id) %>%
   subset(select = c(organization_id, flag48_txt)) %>%
@@ -4433,7 +4433,7 @@ flag_person$err_adm2 <- if_else(grepl("Ｎ", flag_person$admintitle0), 1, flag_pe
 
 flag_person$err_flag <- flag_person$err_adm1 + flag_person$err_adm2
 flag_person$err_adm <- 0
-flag_person$err_adm <- if_else(flag_person$err_flag != 0 & flag_person$source == "職員工資料表", 1, flag_person$err_adm)
+flag_person$err_adm <- if_else(flag_person$err_flag != 0 & flag_person$source == "職員(工)資料表", 1, flag_person$err_adm)
 
 #加註
 flag_person$name <- paste(flag_person$name, "（", sep = "")
@@ -6297,11 +6297,11 @@ flag_person <- drev_person_1
 #職員工若為專任，職務名稱不可出現"約僱"、"約聘雇"、"約雇"、"約聘雇"、"約聘"之關鍵字
 #私立學校flag94還是檢查，但屬於確認項目
 flag_person$err_flag <- 0
-flag_person$err_flag <- if_else(grepl("約僱", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員工資料表", 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(grepl("約聘僱", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員工資料表", 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(grepl("約雇", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員工資料表", 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(grepl("約聘雇", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員工資料表", 1, flag_person$err_flag)
-flag_person$err_flag <- if_else(grepl("約聘", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員工資料表", 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(grepl("約僱", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員(工)資料表", 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(grepl("約聘僱", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員(工)資料表", 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(grepl("約雇", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員(工)資料表", 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(grepl("約聘雇", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員(工)資料表", 1, flag_person$err_flag)
+flag_person$err_flag <- if_else(grepl("約聘", flag_person$admintitle0) & flag_person$emptype == "專任" & flag_person$source == "職員(工)資料表", 1, flag_person$err_flag)
 
 #加註
 flag_person$name <- paste(flag_person$name, "（職務名稱：", flag_person$admintitle0, "；）", sep = "")
@@ -7435,7 +7435,7 @@ flag_person$err_bdegreeu1 <- if_else(grepl("^日本國立埼玉大學教養學部$", flag_pe
 flag_person$err_bdegreeu1 <- if_else(grepl("^日本國立奈良教育大學（學院）$", flag_person$bdegreeu1), 0, flag_person$err_bdegreeu1)
 flag_person$err_bdegreeu1 <- if_else(grepl("^日本國立熊本大學$", flag_person$bdegreeu1), 0, flag_person$err_bdegreeu1)
 flag_person$err_bdegreeu1 <- if_else(grepl("^ConservatoriostatalediMilano“GiuseppeVerdi”Italia$", flag_person$bdegreeu1), 0, flag_person$err_bdegreeu1)
-flag_person$err_bdegreeu1 <- if_else(grepl("研究所$", flag_person$bdegreeu1), 1, flag_person$err_bdegreeu1)
+flag_person$err_bdegreeu1 <- if_else(grepl("所", flag_person$bdegreeu1), 1, flag_person$err_bdegreeu1)
 flag_person$err_bdegreeu1 <- if_else(grepl("逕行修讀", flag_person$bdegreeu1), 0, flag_person$err_bdegreeu1)
 
 #學士學位畢業系所（一）
@@ -7482,7 +7482,9 @@ flag_person$err_bdegreeg1 <- if_else(grepl("^逕行修讀碩士$", flag_person$bdegree
 flag_person$err_bdegreeg1 <- if_else(grepl("肄業", flag_person$bdegreeg1), 1, flag_person$err_bdegreeg1)
 flag_person$err_bdegreeg1 <- if_else(grepl("學分班", flag_person$bdegreeg1), 1, flag_person$err_bdegreeg1)
 flag_person$err_bdegreeg1 <- if_else(grepl("行政$", flag_person$bdegreeg1), 1, flag_person$err_bdegreeg1)
-flag_person$err_bdegreeg1 <- if_else(grepl("研究所$", flag_person$bdegreeg1), 1, flag_person$err_bdegreeg1)
+flag_person$err_bdegreeg1 <- if_else(grepl("所", flag_person$bdegreeg1), 1, flag_person$err_bdegreeg1)
+flag_person$err_bdegreeg1 <- if_else(grepl("碩士", flag_person$bdegreeg1), 1, flag_person$err_bdegreeg1)
+flag_person$err_bdegreeg1 <- if_else(grepl("^逕讀碩士$", flag_person$bdegreeg1), 0, flag_person$err_bdegreeg1)
 
 #學士學位畢業學校國別（二）
 flag_person$err_bdegreen2 <- 0
@@ -7642,7 +7644,7 @@ flag_person$err_bdegreeu2 <- if_else(grepl("^日本國立埼玉大學教養學部$", flag_pe
 flag_person$err_bdegreeu2 <- if_else(grepl("^日本國立奈良教育大學（學院）$", flag_person$bdegreeu2), 0, flag_person$err_bdegreeu2)
 flag_person$err_bdegreeu2 <- if_else(grepl("^日本國立熊本大學$", flag_person$bdegreeu2), 0, flag_person$err_bdegreeu2)
 flag_person$err_bdegreeu2 <- if_else(grepl("^ConservatoriostatalediMilano“GiuseppeVerdi”Italia$", flag_person$bdegreeu2), 0, flag_person$err_bdegreeu2)
-flag_person$err_bdegreeu2 <- if_else(grepl("研究所$", flag_person$bdegreeu2), 1, flag_person$err_bdegreeu2)
+flag_person$err_bdegreeu2 <- if_else(grepl("所", flag_person$bdegreeu2), 1, flag_person$err_bdegreeu2)
 
 #學士學位畢業系所（二）
 flag_person$err_bdegreeg2 <- 0
@@ -7687,7 +7689,9 @@ flag_person$err_bdegreeg2 <- if_else(grepl("^逕獨碩士$", flag_person$bdegreeg2),
 flag_person$err_bdegreeg2 <- if_else(grepl("肄業", flag_person$bdegreeg2), 1, flag_person$err_bdegreeg2)
 flag_person$err_bdegreeg2 <- if_else(grepl("學分班", flag_person$bdegreeg2), 1, flag_person$err_bdegreeg2)
 flag_person$err_bdegreeg2 <- if_else(grepl("行政$", flag_person$bdegreeg2), 1, flag_person$err_bdegreeg2)
-flag_person$err_bdegreeg2 <- if_else(grepl("研究所$", flag_person$bdegreeg2), 1, flag_person$err_bdegreeg2)
+flag_person$err_bdegreeg2 <- if_else(grepl("所", flag_person$bdegreeg2), 1, flag_person$err_bdegreeg2)
+flag_person$err_bdegreeg2 <- if_else(grepl("碩士", flag_person$bdegreeg2), 1, flag_person$err_bdegreeg2)
+flag_person$err_bdegreeg2 <- if_else(grepl("^逕讀碩士$", flag_person$bdegreeg2), 0, flag_person$err_bdegreeg2)
 
 #副學士學位畢業學校國別（一）
 flag_person$err_adegreen1 <- 0
@@ -7799,7 +7803,6 @@ flag_person$err_adegreeu1 <- if_else(grepl("Hochschule", flag_person$adegreeu1),
 flag_person$err_adegreeu1 <- if_else(grepl("BergenSchoolofArchitecture", flag_person$adegreeu1), 0, flag_person$err_adegreeu1)
 flag_person$err_adegreeu1 <- if_else(grepl("Universitat", flag_person$adegreeu1), 0, flag_person$err_adegreeu1)
 flag_person$err_adegreeu1 <- if_else(grepl("^TUDarmstadt$", flag_person$adegreeu1), 0, flag_person$err_adegreeu1)
-flag_person$err_adegreeu1 <- if_else(grepl("大?$", flag_person$adegreeu1), 0, flag_person$err_adegreeu1)
 flag_person$err_adegreeu1 <- if_else(grepl("^N$", flag_person$adegreeu1), 0, flag_person$err_adegreeu1)
 flag_person$err_adegreeu1 <- if_else(grepl("^待查詢$", flag_person$adegreeu1), 0, flag_person$err_adegreeu1)
 flag_person$err_adegreeu1 <- if_else(grepl("職業學校", flag_person$adegreeu1), 1, flag_person$err_adegreeu1)
